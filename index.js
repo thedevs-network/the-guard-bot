@@ -1,6 +1,6 @@
 'use strict';
 
-const DEBUG = false;
+const DEBUG = true;
 
 // validate config
 require('child_process').execSync('node init.js', { stdio: 'inherit' });
@@ -8,9 +8,9 @@ require('child_process').execSync('node init.js', { stdio: 'inherit' });
 const Telegraf = require('telegraf');
 
 // Utils
-const { link } = require('./utils/tg');
 const { loadJSON } = require('./utils/json');
 const { print, logError } = require('./utils/log');
+const { link, deleteAfter } = require('./utils/tg');
 
 // DBs
 const bans = require('./stores/bans');
@@ -25,6 +25,13 @@ const replyOptions = {
 const config = loadJSON('config.json');
 
 const bot = new Telegraf(config.token);
+
+bot.command('adminme', ctx =>
+	(admins.admin(ctx.from),
+		ctx.reply('Admined')));
+
+bot.on('new_chat_member', deleteAfter(10 * 60 * 1000));
+bot.on('left_chat_member', deleteAfter(10 * 60 * 1000));
 
 bot.use(async (ctx, next) => {
 	DEBUG && print(ctx.update);
@@ -41,9 +48,41 @@ bot.use(async (ctx, next) => {
 	return next();
 });
 
-bot.command('adminme', ctx =>
-	(admins.admin(ctx.from),
-		ctx.reply('Admined!')));
+bot.on('message', async ({ message, chat, reply }) => {
+	if (
+		message.forward_from_chat &&
+		message.forward_from_chat.type !== 'private' &&
+		message.forward_from_chat.username !== 'thedevs'
+	) {
+		const userToWarn = message.from;
+		if (await admins.isAdmin(userToWarn)) {
+			return null;
+		}
+		const reason = 'Forward from unknown ' +
+			message.forward_from_chat.type +
+			': ' + link(message.forward_from_chat);
+		const warnCount = await warns.warn(userToWarn, reason);
+		const promises = [
+			bot.telegram.deleteMessage(chat.id, message.message_id)
+		];
+		if (warnCount < 3) {
+			promises.push(reply(
+				`${link(userToWarn)} warned! (${warnCount}/3)\n` +
+				`Reason: ${reason}`,
+				replyOptions));
+		} else {
+			promises.push(bot.telegram.kickChatMember(chat.id, userToWarn.id));
+			promises.push(bans.ban(userToWarn,
+				'Reached max number of warnings'));
+			promises.push(reply(
+				`${link(userToWarn)} <b>banned</b>! (${warnCount}/3)\n` +
+				'Reason: Reached max number of warnings',
+				replyOptions));
+		}
+		return Promise.all(promises).catch(logError(DEBUG));
+	}
+	return null;
+});
 
 bot.command('warn', async ({ message, chat, reply }) => {
 	if (!await admins.isAdmin(message.from)) {
@@ -61,6 +100,10 @@ bot.command('warn', async ({ message, chat, reply }) => {
 		return reply('Need a reason');
 	}
 
+	if (await admins.isAdmin(userToWarn)) {
+		return reply('Can\'t warn other admin');
+	}
+
 	const warnCount = await warns.warn(userToWarn, reason);
 	const promises = [
 		bot.telegram.deleteMessage(chat.id, messageToWarn.message_id),
@@ -72,7 +115,6 @@ bot.command('warn', async ({ message, chat, reply }) => {
 			`${link(userToWarn)} warned! (${warnCount}/3)\n` +
 			`Reason: ${reason}`,
 			replyOptions));
-
 	} else {
 		promises.push(bot.telegram.kickChatMember(chat.id, userToWarn.id));
 		promises.push(bans.ban(userToWarn, 'Reached max number of warnings'));
@@ -96,7 +138,7 @@ bot.command('unwarn', async ({ message, reply }) => {
 	const messageToUnwarn = message.reply_to_message;
 	const userToUnwarn = messageToUnwarn.from;
 
-	const warnCount = await warns.warns(userToUnwarn);
+	const warnCount = await warns.getWarns(userToUnwarn);
 	const warn = await warns.unwarn(userToUnwarn);
 
 	return reply(
@@ -104,6 +146,15 @@ bot.command('unwarn', async ({ message, reply }) => {
 		replyOptions);
 });
 
-bot.command('unban');
+bot.command('warns', async ({ message, reply }) => {
+	if (!await admins.isAdmin(message.from)) {
+		return null;
+	}
+	if (!message.reply_to_message) {
+		return reply('Reply to a message');
+	}
+	return reply((await warns.getWarns(message.reply_to_message.from))
+		.join('\n'));
+});
 
 bot.startPolling();
