@@ -1,0 +1,23 @@
+{
+  "name": "thedevs_bot",
+  "version": "0.1.0",
+  "description": "Official Bot for TheDevs Network!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheDevs-Network/bot.git"
+  },
+  "keywords": [
+    "bot",
+    "thedevs"
+  ],
+  "author": "Thomas Rory Gummerson <thomas@gummerson.no> (https://trgwii.no)",
+  "license": "Beerware",
+  "bugs": {
+    "url": "https://github.com/TheDevs-Network/bot/issues"
+  },
+  "homepage": "https://github.com/TheDevs-Network/bot#readme"
+}
