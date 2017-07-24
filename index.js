@@ -26,7 +26,7 @@ const config = loadJSON('config.json');
 
 const bot = new Telegraf(config.token);
 
-bot.command('adminme', ctx =>
+DEBUG && bot.command('adminme', ctx =>
 	(admins.admin(ctx.from),
 		ctx.reply('Admined')));
 
