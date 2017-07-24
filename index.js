@@ -26,10 +26,17 @@ const config = loadJSON('config.json');
 
 const bot = new Telegraf(config.token);
 
-bot.command('admin', ({ message, reply }) => {
+bot.command('admin', async ({ message, reply }) => {
+	if (message.from.id !== config.masterID) {
+		return null;
+	}
 	const userToAdmin = message.reply_to_message
 		? message.reply_to_message.from
 		: message.from;
+
+	if (await admins.isAdmin(userToAdmin)) {
+		return reply('Already admin');
+	}
 	return admins.admin(userToAdmin).then(() =>
 		reply('Admined ' + link(userToAdmin), replyOptions));
 });

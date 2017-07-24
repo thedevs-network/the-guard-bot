@@ -4,6 +4,11 @@ const { existsSync, mkdirSync } = require('fs');
 const { createInterface } = require('readline');
 const { loadJSON, saveJSON } = require('./utils/json');
 
+const defaultConfig = {
+	masterID: 'masterID',
+	token: 'token'
+};
+
 function dirs() {
 	if (!existsSync('data')) {
 		mkdirSync('data');
@@ -14,19 +19,20 @@ function loadConfig() {
 	try {
 		return loadJSON('config.json');
 	} catch (err) {
-		return {
-			token: 'token'
-		};
+		return defaultConfig;
 	}
 }
 
 async function validateConfig(input, config) {
-	config = Object.assign({}, config);
+	config = Object.assign({}, defaultConfig, config);
 	for (const key in config) {
 		while (config[key] === key || config[key] === '') {
 			console.log('Enter ' + key + ': ');
 			/* eslint no-await-in-loop: "off" */
-			config[key] = (await input()).trim();
+			const value = (await input()).trim();
+			config[key] = Number.isNaN(Number(value))
+				? value
+				: Number(value);
 		}
 	}
 	return config;
