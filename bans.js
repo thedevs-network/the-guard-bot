@@ -26,5 +26,6 @@ const isBanned = user =>
 
 module.exports = {
 	ban,
-	unban
+	unban,
+	isBanned
 };

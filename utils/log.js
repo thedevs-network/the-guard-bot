@@ -1,5 +1,7 @@
 'use strict';
 
+const { inspect } = require('util');
+
 const logError = err =>
 	console.error(`${err.name}: ${err.message}`);
 

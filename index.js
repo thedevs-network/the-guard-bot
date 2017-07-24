@@ -1,9 +1,10 @@
 'use strict';
 
+const DEBUG = false;
+
 // validate config
 require('child_process').execSync('node init.js', { stdio: 'inherit' });
 
-const { inspect } = require('util');
 const Telegraf = require('telegraf');
 
 // Utils
@@ -25,9 +26,20 @@ const config = loadJSON('config.json');
 
 const bot = new Telegraf(config.token);
 
-bot.use((ctx, next) =>
-	(print(ctx.update),
-	next()));
+bot.use(async (ctx, next) => {
+	DEBUG && print(ctx.update);
+	const banned = await bans.isBanned(ctx.from);
+	if (banned) {
+		return bot.telegram.kickChatMember(ctx.chat.id, ctx.from.id)
+			.then(() => reply(
+				`${link(ctx.from)} <b>banned</b>!\n` +
+				`Reason: ${banned}`,
+				replyOptions))
+			.catch(logError)
+			.then(next);
+	}
+	return next();
+});
 
 bot.command('adminme', ctx =>
 	(admins.admin(ctx.from),
@@ -50,13 +62,26 @@ bot.command('warn', async ({ message, chat, reply }) => {
 	}
 
 	const warnCount = await warns.warn(userToWarn, reason);
-	return Promise.all([
+	const promises = [
 		bot.telegram.deleteMessage(chat.id, messageToWarn.message_id),
-		bot.telegram.deleteMessage(chat.id, message.message_id),
-		reply(
-			`${link(userToWarn)} warned! (${warnCount}/3)\nReason: ${reason}`,
-			replyOptions)
-	]).catch(logError);
+		bot.telegram.deleteMessage(chat.id, message.message_id)
+	];
+	if (warnCount < 3) {
+		promises.push(reply(
+			`${link(userToWarn)} warned! (${warnCount}/3)\n` +
+			`Reason: ${reason}`,
+			replyOptions));
+		
+	} else {
+		promises.push(bot.telegram.kickChatMember(chat.id, userToWarn.id));
+		promises.push(bans.ban(userToWarn, 'Reached max number of warnings'));
+		promises.push(reply(
+			`${link(userToWarn)} <b>banned</b>! (${warnCount}/3)\n` +
+			`Reason: Reached max number of warnings`,
+			replyOptions));
+	}
+
+	return Promise.all(promises).catch(logError);
 });
 
 bot.startPolling();
