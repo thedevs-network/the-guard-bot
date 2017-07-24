@@ -35,7 +35,7 @@ bot.use(async (ctx, next) => {
 				`${link(ctx.from)} <b>banned</b>!\n` +
 				`Reason: ${banned}`,
 				replyOptions))
-			.catch(logError)
+			.catch(logError(DEBUG))
 			.then(next);
 	}
 	return next();
@@ -50,7 +50,7 @@ bot.command('warn', async ({ message, chat, reply }) => {
 		return;
 	}
 	if (!message.reply_to_message) {
-		return;
+		return reply('Reply to a message');
 	}
 
 	const messageToWarn = message.reply_to_message;
@@ -66,6 +66,7 @@ bot.command('warn', async ({ message, chat, reply }) => {
 		bot.telegram.deleteMessage(chat.id, messageToWarn.message_id),
 		bot.telegram.deleteMessage(chat.id, message.message_id)
 	];
+
 	if (warnCount < 3) {
 		promises.push(reply(
 			`${link(userToWarn)} warned! (${warnCount}/3)\n` +
@@ -81,7 +82,18 @@ bot.command('warn', async ({ message, chat, reply }) => {
 			replyOptions));
 	}
 
-	return Promise.all(promises).catch(logError);
+	return Promise.all(promises).catch(logError(DEBUG));
+});
+
+bot.command('unwarn', async ({ message }) => {
+	if (!await admins.isAdmin(message.from)) {
+		return;
+	}
+	if (!message.reply_to_message) {
+		return reply('Reply to a message');
+	}
+
+	
 });
 
 bot.startPolling();
