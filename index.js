@@ -26,9 +26,13 @@ const config = loadJSON('config.json');
 
 const bot = new Telegraf(config.token);
 
-DEBUG && bot.command('adminme', ctx =>
-	(admins.admin(ctx.from),
-		ctx.reply('Admined')));
+bot.command('admin', ({ message, reply }) => {
+	const userToAdmin = message.reply_to_message
+		? message.reply_to_message.from
+		: message.from;
+	return admins.admin(userToAdmin).then(() =>
+		reply('Admined ' + link(userToAdmin), replyOptions));
+});
 
 bot.on('new_chat_member', deleteAfter(10 * 60 * 1000));
 bot.on('left_chat_member', deleteAfter(10 * 60 * 1000));
