@@ -23,5 +23,8 @@
   "dependencies": {
     "nedb-promise": "^2.0.1",
     "telegraf": "^3.9.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.3.0"
   }
 }

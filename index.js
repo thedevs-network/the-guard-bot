@@ -18,8 +18,8 @@ const warns = require('./stores/warns');
 const admins = require('./stores/admins');
 
 const replyOptions = {
-	parse_mode: 'HTML',
-	disable_web_page_preview: true
+	disable_web_page_preview: true,
+	parse_mode: 'HTML'
 };
 
 const config = loadJSON('config.json');
@@ -31,7 +31,7 @@ bot.use(async (ctx, next) => {
 	const banned = await bans.isBanned(ctx.from);
 	if (banned) {
 		return bot.telegram.kickChatMember(ctx.chat.id, ctx.from.id)
-			.then(() => reply(
+			.then(() => ctx.reply(
 				`${link(ctx.from)} <b>banned</b>!\n` +
 				`Reason: ${banned}`,
 				replyOptions))
@@ -43,11 +43,11 @@ bot.use(async (ctx, next) => {
 
 bot.command('adminme', ctx =>
 	(admins.admin(ctx.from),
-	ctx.reply('Admined!')));
+		ctx.reply('Admined!')));
 
 bot.command('warn', async ({ message, chat, reply }) => {
 	if (!await admins.isAdmin(message.from)) {
-		return;
+		return null;
 	}
 	if (!message.reply_to_message) {
 		return reply('Reply to a message');
@@ -72,28 +72,38 @@ bot.command('warn', async ({ message, chat, reply }) => {
 			`${link(userToWarn)} warned! (${warnCount}/3)\n` +
 			`Reason: ${reason}`,
 			replyOptions));
-		
+
 	} else {
 		promises.push(bot.telegram.kickChatMember(chat.id, userToWarn.id));
 		promises.push(bans.ban(userToWarn, 'Reached max number of warnings'));
 		promises.push(reply(
 			`${link(userToWarn)} <b>banned</b>! (${warnCount}/3)\n` +
-			`Reason: Reached max number of warnings`,
+			'Reason: Reached max number of warnings',
 			replyOptions));
 	}
 
 	return Promise.all(promises).catch(logError(DEBUG));
 });
 
-bot.command('unwarn', async ({ message }) => {
+bot.command('unwarn', async ({ message, reply }) => {
 	if (!await admins.isAdmin(message.from)) {
-		return;
+		return null;
 	}
 	if (!message.reply_to_message) {
 		return reply('Reply to a message');
 	}
 
-	
+	const messageToUnwarn = message.reply_to_message;
+	const userToUnwarn = messageToUnwarn.from;
+
+	const warnCount = await warns.warns(userToUnwarn);
+	const warn = await warns.unwarn(userToUnwarn);
+
+	return reply(
+		`${link(userToUnwarn)} pardoned for: ${warn}\n(${warnCount}/3)`,
+		replyOptions);
 });
+
+bot.command('unban');
 
 bot.startPolling();

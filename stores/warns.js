@@ -3,8 +3,8 @@
 const Datastore = require('nedb-promise');
 
 const warns = new Datastore({
-	filename: 'data/warns.db',
-	autoload: true
+	autoload: true,
+	filename: 'data/warns.db'
 });
 
 warns.ensureIndex({
@@ -16,20 +16,25 @@ warns.ensureIndex({
 const warn = (user, reason) =>
 	warns.findOne({ id: user.id }).then(exists =>
 		exists || warns.insert(Object.assign({}, user, { warns: [] })))
-	.then(user => (warns.update(
-		{ id: user.id },
-		{ $push: { warns: reason } }), user))
-	.then(user => user.warns.length + 1);
+		.then(loadedUser => (warns.update(
+			{ id: loadedUser.id },
+			{ $push: { warns: reason } }), loadedUser))
+		.then(loadedUser => loadedUser.warns.length + 1);
 
 const unwarn = user =>
+	warns.findOne({ id: user.id })
+		.then(exists => exists && exists.warns.pop())
+		.then(lastWarn =>
+			(lastWarn && warns.update({ id: user.id }, { $pop: { warns: 1 } }),
+				lastWarn));
+
+const getWarns = user =>
 	warns.findOne({ id: user.id }).then(exists =>
-		exists && exists.warns.pop())
-	.then(warn =>
-		(warn && warns.update({ id: user.id }, { $pop: { warns: 1 } })),
-		warn);
-	
+		exists && exists.warns)
+		.then(loadedWarns => loadedWarns || []);
 
 module.exports = {
-	warn,
-	unwarn
+	getWarns,
+	unwarn,
+	warn
 };

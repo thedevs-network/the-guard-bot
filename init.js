@@ -9,15 +9,15 @@ function loadConfig() {
 	} catch (err) {
 		return {
 			token: 'token'
-		}
+		};
 	}
 }
-
 async function validateConfig(input, config) {
 	config = Object.assign({}, config);
 	for (const key in config) {
 		while (config[key] === key || config[key] === '') {
 			console.log('Enter ' + key + ': ');
+			/* eslint no-await-in-loop: "off" */
 			config[key] = (await input()).trim();
 		}
 	}
@@ -30,7 +30,7 @@ const line = () =>
 	new Promise(resolve =>
 		rl.once('line', resolve));
 
-validateConfig(line, loadConfig()).then(config => 
+validateConfig(line, loadConfig()).then(config =>
 	(saveJSON('config.json', config),
-	rl.close(),
-	console.log('Config OK')));
+		rl.close(),
+		console.log('Config OK')));

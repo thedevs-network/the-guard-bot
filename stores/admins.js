@@ -3,8 +3,8 @@
 const Datastore = require('nedb-promise');
 
 const admins = new Datastore({
-	filename: 'data/admins.db',
-	autoload: true
+	autoload: true,
+	filename: 'data/admins.db'
 });
 
 admins.ensureIndex({
@@ -23,6 +23,6 @@ const isAdmin = user =>
 
 module.exports = {
 	admin,
-	unadmin,
-	isAdmin
+	isAdmin,
+	unadmin
 };

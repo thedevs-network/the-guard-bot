@@ -3,8 +3,8 @@
 const Datastore = require('nedb-promise');
 
 const bans = new Datastore({
-	filename: 'data/bans.db',
-	autoload: true
+	autoload: true,
+	filename: 'data/bans.db'
 });
 
 bans.ensureIndex({
@@ -19,13 +19,13 @@ const unban = user =>
 	bans.remove({ id: user.id });
 
 const isBanned = user =>
-	bans.findOne({ id: user.id }).then(user =>
-		user
-			? user.reason
-			: user);
+	bans.findOne({ id: user.id }).then(bannedUser =>
+		bannedUser
+			? bannedUser.reason
+			: bannedUser);
 
 module.exports = {
 	ban,
-	unban,
-	isBanned
+	isBanned,
+	unban
 };
