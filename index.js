@@ -1,6 +1,6 @@
 'use strict';
 
-const DEBUG = true;
+const DEBUG = false;
 
 // validate config
 require('child_process').execSync('node init.js', { stdio: 'inherit' });
@@ -41,7 +41,19 @@ bot.command('admin', async ({ message, reply }) => {
 		reply('Admined ' + link(userToAdmin), replyOptions));
 });
 
-bot.on('new_chat_member', deleteAfter(10 * 60 * 1000));
+bot.on('new_chat_member', ctx => {
+	if (
+		ctx.new_chat_member.username &&
+		ctx.new_chat_member.username.substr(-3).toLowerCase() === 'bot'
+	) {
+		return ctx.telegram.kickChatMember(ctx.chat.id, ctx.new_chat_member.id)
+			.then(() => ctx.telegram.deleteMessage(ctx.message.message_id))
+			.then(() => ctx.reply(`Kicked bot: ${link(ctx.new_chat_member)}`))
+			.catch(logError(DEBUG));
+	}
+	return deleteAfter(10 * 60 * 1000)(ctx);
+});
+
 bot.on('left_chat_member', deleteAfter(10 * 60 * 1000));
 
 bot.use(async (ctx, next) => {
