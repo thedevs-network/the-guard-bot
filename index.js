@@ -13,9 +13,9 @@ const { loadJSON } = require('./utils/json');
 const { print, logError } = require('./utils/log');
 
 // DBs
-const bans = require('./bans');
-const warns = require('./warns');
-const admins = require('./admins');
+const bans = require('./stores/bans');
+const warns = require('./stores/warns');
+const admins = require('./stores/admins');
 
 const replyOptions = {
 	parse_mode: 'HTML',
