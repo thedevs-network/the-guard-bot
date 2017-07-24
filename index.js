@@ -119,7 +119,7 @@ bot.command('warns', async ({ message, reply }) => {
 	}
 	let i = 0;
 	const theUser = message.reply_to_message.from;
-	return reply('Warns for ' + link(theUser) + '\n' +
+	return reply('Warns for ' + link(theUser) + ':\n' +
 		(await warns.getWarns(theUser))
 			.map(x => ++i + '. ' + x)
 			.join('\n'), replyOptions);
