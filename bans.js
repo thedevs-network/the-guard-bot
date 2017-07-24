@@ -18,6 +18,12 @@ const ban = (user, reason) =>
 const unban = user =>
 	bans.remove({ id: user.id });
 
+const isBanned = user =>
+	bans.findOne({ id: user.id }).then(user =>
+		user
+			? user.reason
+			: user);
+
 module.exports = {
 	ban,
 	unban
