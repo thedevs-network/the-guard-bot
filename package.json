@@ -19,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/TheDevs-Network/bot/issues"
   },
-  "homepage": "https://github.com/TheDevs-Network/bot#readme"
+  "homepage": "https://github.com/TheDevs-Network/bot#readme",
+  "dependencies": {
+    "nedb-promise": "^2.0.1",
+    "telegraf": "^3.9.0"
+  }
 }
