@@ -9,16 +9,16 @@
   - [ ] `/warn <reason>` command to warn users.
   - [ ] Auto warn and remove forwarded messages if they're not from specified channel(s).
   - [ ] Auto warn and remove Telegram links if they're not one specified groups or the channel.
-  - [ ] `/warns' get the list of warns with their reason for a user (by reply or mention).
+  - [ ] `/warns` get the list of warns with their reason for a user (by reply or mention).
   - [ ] `/unwarn` to remove the latest warn from a user (by reply or mention).
-  - [ ] `/nowarns' to clear all warns (by reply or mention).
+  - [ ] `/nowarns` to clear all warns (by reply or mention).
   - [ ] 3 warns automatically bans the user.
   - [ ] Synchronize warns across the groups.
 - [ ] Bans
   - [ ] `/ban <reason>` command to ban users.
   - [ ] Remove the message which was replied with a ban command.
   - [ ] Ban all bots when they're added (except approved ones).
-  - [ ] `/unban <id>' unban a user.
+  - [ ] `/unban <id>` unban a user.
   - [ ] Synchronize ban across the groups.
 - [ ] All command be available with both `!` and `/`.
 - [ ] Auto remove commands if they're not sent by admins.
