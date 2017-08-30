@@ -24,6 +24,7 @@
 - [ ] Auto remove commands if they're not sent by admins.
 - [ ] Auto remove joining messages.
 - [ ] Ban and remove Arabic/Russian/Indian text.
+- [ ] `/report` and `@admin` to report a message to admins. 
 - [ ] `/link` to get the link of current group.
 - [ ] `/groups` to get the list of groups' link.
 - [ ] `/channel` to get the channel link.
