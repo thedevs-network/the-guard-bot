@@ -1,4 +1,4 @@
-List of todo's in order of priority:
+## List of todo's in priority order:
 
 - [ ] Admins
   - [ ] Only the creator with master ID can use `/admin` and `/unadmin` command.
