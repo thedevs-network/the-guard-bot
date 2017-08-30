@@ -1,0 +1,30 @@
+List of todo's in order of priority:
+
+- [ ] Admins
+  - [ ] Only the creator with master ID can use `/admin` and `/unadmin` command.
+  - [ ] `/admin` to make an user admin (by reply or mention).
+  - [ ] `/unadmin` to remove an user from admin list.
+- [ ] Warnings
+  - [ ] `/warn <reason>` command to warn users.
+  - [ ] Auto warn and remove forwarded messages if they're not from specified channel(s).
+  - [ ] Auto warn and remove Telegram links if they're not one specified groups or the channel.
+  - [ ] `/warns' get the list of warns with their reason for a user (by reply or mention).
+  - [ ] `/unwarn` to remove the latest warn from a user (by reply or mention).
+  - [ ] `/nowarns' to clear all warns (by reply or mention).
+  - [ ] 3 warns automatically bans the user.
+  - [ ] Synchronize warns across the groups.
+- [ ] Bans
+  - [ ] `/ban <reason>` command to ban users.
+  - [ ] Remove the message which was replied with a ban command.
+  - [ ] Ban all bots when they're added (except approved ones).
+  - [ ] `/unban <id>' unban a user.
+  - [ ] Synchronize ban across the groups.
+- [ ] All command be available with both `!` and `/`.
+- [ ] Auto remove commands if they're not sent by admins.
+- [ ] Auto remove joining messages.
+- [ ] Ban and remove Arabic/Russian/Indian text.
+- [ ] `/link` to get the link of current group.
+- [ ] `/groups` to get the list of groups' link.
+- [ ] `/channel` to get the channel link.
+- [ ] `/rules` to get rules. Only admins can use this command.
+- [ ] `/acceptbot <id>` to add the bot to the list of approved bots.
