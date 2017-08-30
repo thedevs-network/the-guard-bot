@@ -4,6 +4,7 @@ List of todo's in order of priority:
   - [ ] Only the creator with master ID can use `/admin` and `/unadmin` command.
   - [ ] `/admin` to make an user admin (by reply or mention).
   - [ ] `/unadmin` to remove an user from admin list.
+  - [ ] Admins cannot be warned or banned.
 - [ ] Warnings
   - [ ] `/warn <reason>` command to warn users.
   - [ ] Auto warn and remove forwarded messages if they're not from specified channel(s).
