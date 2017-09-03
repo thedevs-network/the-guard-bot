@@ -25,8 +25,9 @@
 - [ ] Auto remove joining messages.
 - [ ] Ban and remove Arabic/Russian/Indian text.
 - [ ] `/report` and `@admin` to report a message to admins. 
-- [ ] `/link` to get the link of current group.
-- [ ] `/groups` to get the list of groups' link.
-- [ ] `/channel` to get the channel link.
-- [ ] `/rules` to get rules. Only admins can use this command.
+- [ ] `/link` to show the link of current group.
+- [ ] `/groups` to show the list of groups' link.
+- [ ] `/channel` to show the channel link.
+- [ ] `/staff` to show the list of admins.
+- [ ] `/rules` to show rules. Only admins can use this command.
 - [ ] `/acceptbot <id>` to add the bot to the list of approved bots.
