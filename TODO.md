@@ -7,6 +7,7 @@
   - [ ] Admins cannot be warned or banned.
 - [ ] Warnings
   - [ ] `/warn <reason>` command to warn users.
+  - [ ] Warned message get deleted automatically.
   - [ ] Auto warn and remove forwarded messages if they're not from specified channel(s).
   - [ ] Auto warn and remove Telegram links if they're not one specified groups or the channel.
   - [ ] `/warns` get the list of warns with their reason for a user (by reply or mention).
