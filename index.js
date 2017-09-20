@@ -2,9 +2,6 @@
 
 const DEBUG = true;
 
-// validate config
-require('child_process').execSync('node init.js', { stdio: 'inherit' });
-
 const Telegraf = require('telegraf');
 
 // Utils
@@ -14,7 +11,7 @@ const { link, deleteAfter } = require('./utils/tg');
 
 // DBs
 const bans = require('./stores/bans');
-const warns = require('./stores/warns');
+const Warn = require('./stores/warn');
 const admins = require('./stores/admins');
 
 const replyOptions = {
@@ -62,7 +59,7 @@ bot.on('new_chat_member', ctx => {
 bot.on('left_chat_member', deleteAfter(10 * 60 * 1000));
 
 bot.use(async (ctx, next) => {
-	DEBUG && ctx.message && print(ctx.message);
+	// DEBUG && ctx.message && print(ctx.message);
 	const banned = await bans.isBanned(ctx.from);
 	if (banned) {
 		return bot.telegram.kickChatMember(ctx.chat.id, ctx.from.id)
@@ -77,6 +74,7 @@ bot.use(async (ctx, next) => {
 });
 
 bot.command('warn', async ({ message, chat, reply }) => {
+	console.log('asfafasfafs');
 	if (!await admins.isAdmin(message.from)) {
 		return null;
 	}
@@ -96,7 +94,7 @@ bot.command('warn', async ({ message, chat, reply }) => {
 		return reply('Can\'t warn other admin');
 	}
 
-	const warnCount = await warns.warn(userToWarn, reason);
+	const warnCount = await Warn.warn(userToWarn, reason);
 	const promises = [
 		bot.telegram.deleteMessage(chat.id, messageToWarn.message_id),
 		bot.telegram.deleteMessage(chat.id, message.message_id)
@@ -130,8 +128,8 @@ bot.command('unwarn', async ({ message, reply }) => {
 	const messageToUnwarn = message.reply_to_message;
 	const userToUnwarn = messageToUnwarn.from;
 
-	const warnCount = await warns.getWarns(userToUnwarn);
-	const warn = await warns.unwarn(userToUnwarn);
+	const warnCount = await Warn.getWarns(userToUnwarn);
+	const warn = await Warn.unwarn(userToUnwarn);
 
 	return reply(
 		`${link(userToUnwarn)} pardoned for: ${warn}\n(${warnCount}/3)`,
@@ -148,7 +146,7 @@ bot.command('warns', async ({ message, reply }) => {
 	let i = 0;
 	const theUser = message.reply_to_message.from;
 	return reply('Warns for ' + link(theUser) + ':\n' +
-		(await warns.getWarns(theUser))
+		(await Warn.getWarns(theUser))
 			.map(x => ++i + '. ' + x)
 			.join('\n'), replyOptions);
 });
@@ -166,7 +164,7 @@ bot.on('message', async ({ message, chat, reply }) => {
 		const reason = 'Forward from ' +
 			message.forward_from_chat.type +
 			': ' + link(message.forward_from_chat);
-		const warnCount = await warns.warn(userToWarn, reason);
+		const warnCount = await Warn.warn(userToWarn, reason);
 		const promises = [
 			bot.telegram.deleteMessage(chat.id, message.message_id)
 		];

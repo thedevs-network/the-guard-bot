@@ -1,7 +1,7 @@
 {
   "name": "thedevs_bot",
   "version": "0.1.0",
-  "description": "Official Bot for TheDevs Network!",
+  "description": "Official Bot for The Devs community.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,10 +12,14 @@
   },
   "keywords": [
     "bot",
-    "thedevs"
+    "thedevs",
+    "telegram"
   ],
   "author": "Thomas Rory Gummerson <thomas@gummerson.no> (https://trgwii.no)",
-  "license": "Beerware",
+  "contributors": [
+    "Pouria Ezzati <pouria@thedevs.network> (https://thedevs.network)"
+  ],
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/TheDevs-Network/bot/issues"
   },
