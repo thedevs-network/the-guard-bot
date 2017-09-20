@@ -18,7 +18,7 @@
 - [ ] Bans
   - [ ] `/ban <reason>` command to ban users.
   - [ ] Remove the message which was replied with a ban command.
-  - [ ] Ban all bots when they're added (except approved ones).
+  - [ ] Ban all bots when they're added (unless added by admin).
   - [ ] `/unban <id>` unban a user.
   - [ ] Synchronize ban across the groups.
 - [ ] All command be available with both `!` and `/`.
@@ -31,4 +31,3 @@
 - [ ] `/channel` to show the channel link.
 - [ ] `/staff` to show the list of admins.
 - [ ] `/rules` to show rules. Only admins can use this command.
-- [ ] `/acceptbot <id>` to add the bot to the list of approved bots.
