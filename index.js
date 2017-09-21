@@ -7,6 +7,10 @@ const { deleteAfter } = require('./utils/tg');
 // Bot
 const bot = require('./bot');
 
+bot.telegram.getMe().then((botInfo) => {
+	bot.options.username = botInfo.username;
+});
+
 // Handlers
 const middlewareHandler = require('./handlers/middleware');
 const adminHandler = require('./handlers/admin');
