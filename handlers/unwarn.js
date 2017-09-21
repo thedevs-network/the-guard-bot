@@ -21,11 +21,11 @@ const unwarnHandler = async ({ message, reply }) => {
 	const messageToUnwarn = message.reply_to_message;
 	const userToUnwarn = messageToUnwarn.from;
 
-	const warnCount = await Warn.getWarns(userToUnwarn);
+	const allWarns = await Warn.getWarns(userToUnwarn);
 	const warn = await Warn.unwarn(userToUnwarn);
 
 	return reply(
-		`${link(userToUnwarn)} pardoned for: ${warn}\n(${warnCount}/3)`,
+		`${link(userToUnwarn)} pardoned for: ${warn}\n(${allWarns.length}/3)`,
 		replyOptions);
 };
 

@@ -41,7 +41,7 @@ const warnHandler = async ({ message, chat, reply }) => {
 
 	if (warnCount < 3) {
 		promises.push(reply(
-			`${link(userToWarn)} <b>warned!</b> (${warnCount}/3)\n\n` +
+			`${link(userToWarn)} <b>got warned!</b> (${warnCount}/3)\n\n` +
 			`Reason: ${reason}`,
 			replyOptions));
 	} else {
