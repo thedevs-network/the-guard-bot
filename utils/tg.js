@@ -1,9 +1,7 @@
 'use strict';
 
-const link = user =>
-	user.username
-		? `<a href="https://t.me/${user.username}">${user.username}</a>`
-		: `<code>${user.first_name}</code>`;
+const link = ({ id, username, first_name }) =>
+	`<a href="tg://user?id=${id}">${username ? username : first_name}</a>`;
 
 const deleteAfter = ms => ctx =>
 	setTimeout(() =>

@@ -14,23 +14,25 @@ Warn.ensureIndex({
 
 
 const warn = (user, reason) =>
-	Warn.findOne({ user_id: user.id }).then(exists =>
-		exists || Warn.insert({ reasons: [], user_id: user.id }))
+	Warn.findOne({ user_id: user.id })
+		.then(isUser =>
+			isUser || Warn.insert({ reasons: [], user_id: user.id }))
 		.then(loadedUser => (Warn.update(
 			{ user_id: loadedUser.user_id },
-			{ $push: { reasons: reason } }), loadedUser))
+			{ $push: { reasons: reason } }
+		), loadedUser))
 		.then(loadedUser => loadedUser.reasons.length + 1);
 
 const unwarn = user =>
 	Warn.findOne({ user_id: user.id })
-		.then(exists => exists && exists.reasons.pop())
+		.then(isUser => isUser && isUser.reasons.pop())
 		.then(lastWarn =>
 			(lastWarn && Warn.update({ user_id: user.id }, { $pop: { reasons: 1 } }),
 				lastWarn));
 
 const getWarns = user =>
-	Warn.findOne({ user_id: user.id }).then(exists =>
-		exists && exists.reasons)
+	Warn.findOne({ user_id: user.id }).then(isUser =>
+		isUser && isUser.reasons)
 		.then(loadedWarns => loadedWarns || []);
 
 module.exports = {
