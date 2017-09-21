@@ -6,15 +6,15 @@
   - [ ] `/unadmin` to remove an user from admin list.
   - [ ] Admins cannot be warned or banned.
 - [ ] Warnings
-  - [-] `/warn <reason>` command to warn users.
-  - [-] Warned message get deleted automatically.
+  - [x] `/warn <reason>` command to warn users.
+  - [x] Warned message get deleted automatically.
   - [ ] Auto warn and remove forwarded messages if they're not from specified channel(s).
   - [ ] Auto warn and remove Telegram links if they're not one specified groups or the channel.
   - [ ] `/warns` get the list of warns with their reason for a user (by reply or mention).
-  - [-] `/unwarn` to remove the latest warn from a user (by reply or mention).
+  - [x] `/unwarn` to remove the latest warn from a user (by reply or mention).
   - [ ] `/nowarns` to clear all warns (by reply or mention).
-  - [-] 3 warns automatically bans the user.
-  - [-] Synchronize warns across the groups.
+  - [x] 3 warns automatically bans the user.
+  - [x] Synchronize warns across the groups.
 - [ ] Bans
   - [ ] `/ban <reason>` command to ban users.
   - [ ] Remove the message which was replied with a ban command.
