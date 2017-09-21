@@ -2,17 +2,17 @@
 
 - [ ] Admins
   - [ ] Only the creator with master ID can use `/admin` and `/unadmin` command.
-  - [ ] `/admin` to make an user admin (by reply or mention).
+  - [x] `/admin` to make an user admin (by reply or mention).
   - [ ] `/unadmin` to remove an user from admin list.
   - [ ] Admins cannot be warned or banned.
-- [ ] Warnings
+- [x] Warnings
   - [x] `/warn <reason>` command to warn users.
   - [x] Warned message get deleted automatically.
-  - [ ] Auto warn and remove forwarded messages if they're not from specified channel(s).
-  - [ ] Auto warn and remove Telegram links if they're not one specified groups or the channel.
-  - [ ] `/warns` get the list of warns with their reason for a user (by reply or mention).
+  - [x] Auto warn and remove forwarded messages if they're not from specified channel(s).
+  - [x] Auto warn and remove Telegram links if they're not one specified groups or the channel.
+  - [x] `/getwarns` get the list of warns with their reason for a user (by reply or mention).
   - [x] `/unwarn` to remove the latest warn from a user (by reply or mention).
-  - [ ] `/nowarns` to clear all warns (by reply or mention).
+  - [x] `/nowarns` to clear all warns (by reply or mention).
   - [x] 3 warns automatically bans the user.
   - [x] Synchronize warns across the groups.
 - [ ] Bans
