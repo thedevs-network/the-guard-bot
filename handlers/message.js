@@ -1,43 +1,55 @@
 'use strict';
 
 // Utils
+const { loadJSON } = require('../utils/json');
 const { link } = require('../utils/tg');
 const { logError } = require('../utils/log');
+
+// Config
+const { 
+	excludedChannels,
+	excludedGroups,
+	numberOfWarnsToBan 
+} = loadJSON('config.json');
 
 // Bot
 const bot = require('../bot');
 const { replyOptions } = require('../bot/options');
 
 // DB
-const Warn = require('../stores/warn');
-const bans = require('../stores/bans');
-const admins = require('../stores/admins');
+const { warn } = require('../stores/warn');
+const { ban } = require('../stores/bans');
+const { isAdmin } = require('../stores/admins');
 
 const messageHandler = async ({ message, chat, reply }) => {
 	if (
 		message.forward_from_chat &&
-		message.forward_from_chat.type !== 'private' &&
-		message.forward_from_chat.username !== 'thedevs'
+			message.forward_from_chat.type !== 'private' &&
+			!excludedChannels.includes(message.forward_from_chat.username) ||
+		message.text &&
+			(message.text.includes('t.me') ||
+			message.text.includes('telegram.me')) &&
+			!(excludedChannels.includes(message.text) ||
+			excludedGroups.includes(message.text.split('/joinchat/')[1]))
 	) {
 		const userToWarn = message.from;
-		if (await admins.isAdmin(userToWarn)) {
+		if (await isAdmin(userToWarn)) {
 			return null;
 		}
-		const reason = 'Forward from ' +
-			message.forward_from_chat.type +
-			': ' + link(message.forward_from_chat);
-		const warnCount = await Warn.warn(userToWarn, reason);
+		const reason = 'Sent a message which was forwarded ' +
+			'from other channels or included their link';
+		const warnCount = await warn(userToWarn, reason);
 		const promises = [
 			bot.telegram.deleteMessage(chat.id, message.message_id)
 		];
-		if (warnCount < 3) {
+		if (warnCount < numberOfWarnsToBan) {
 			promises.push(reply(
 				`${link(userToWarn)} warned! (${warnCount}/3)\n` +
 				`Reason: ${reason}`,
 				replyOptions));
 		} else {
 			promises.push(bot.telegram.kickChatMember(chat.id, userToWarn.id));
-			promises.push(bans.ban(userToWarn,
+			promises.push(ban(userToWarn,
 				'Reached max number of warnings'));
 			promises.push(reply(
 				`${link(userToWarn)} <b>banned</b>! (${warnCount}/3)\n` +

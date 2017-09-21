@@ -32,6 +32,14 @@ const unwarn = user =>
 				{ $pop: { reasons: 1 } })
 				.then(() => lastWarn));
 
+const nowarns = user =>
+	Warn.findOne({ user_id: user.id })
+		.then(isUser => isUser && Warn.update(
+			{ user_id: user.id },
+			{ $set: { reasons: [] } })
+			.then(updatedUser => updatedUser)
+		);
+
 const getWarns = user =>
 	Warn.findOne({ user_id: user.id })
 		.then(isUser =>
@@ -40,6 +48,7 @@ const getWarns = user =>
 
 module.exports = {
 	getWarns,
+	nowarns,
 	unwarn,
 	warn
 };

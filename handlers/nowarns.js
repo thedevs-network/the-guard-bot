@@ -7,10 +7,10 @@ const { link } = require('../utils/tg');
 const { replyOptions } = require('../bot/options');
 
 // DB
-const Warn = require('../stores/warn');
+const { nowarns } = require('../stores/warn');
 const admins = require('../stores/admins');
 
-const unwarnHandler = async ({ message, reply }) => {
+const nowarnsHandler = async ({ message, reply }) => {
 	if (!await admins.isAdmin(message.from)) {
 		return null;
 	}
@@ -21,13 +21,12 @@ const unwarnHandler = async ({ message, reply }) => {
 	const messageToUnwarn = message.reply_to_message;
 	const userToUnwarn = messageToUnwarn.from;
 
-	const allWarns = await Warn.getWarns(userToUnwarn);
-	const warn = await Warn.unwarn(userToUnwarn);
-
+  await nowarns(userToUnwarn);
+  
 	return reply(
-		`${link(userToUnwarn)} was pardoned for: ${warn}\n(${allWarns.length}/3)`,
+		`${link(userToUnwarn)} was pardoned for all of their warnings.`,
 		replyOptions);
 };
 
 
-module.exports = unwarnHandler;
+module.exports = nowarnsHandler;

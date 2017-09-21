@@ -10,7 +10,7 @@ const { replyOptions } = require('../bot/options');
 const Warn = require('../stores/warn');
 const admins = require('../stores/admins');
 
-const warnsHandler = async ({ message, reply }) => {
+const getWarnsHandler = async ({ message, reply }) => {
 	if (!await admins.isAdmin(message.from)) {
 		return null;
 	}
@@ -19,10 +19,10 @@ const warnsHandler = async ({ message, reply }) => {
 	}
 	let i = 0;
 	const theUser = message.reply_to_message.from;
-	return reply('Warns for ' + link(theUser) + ':\n' +
+	return reply('Warns for ' + link(theUser) + ':\n\n' +
 		(await Warn.getWarns(theUser))
 			.map(x => ++i + '. ' + x)
-			.join('\n'), replyOptions);
+			.join('\n\n'), replyOptions);
 };
 
-module.exports = warnsHandler;
+module.exports = getWarnsHandler;

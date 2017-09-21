@@ -1,8 +1,12 @@
 'use strict';
 
 // Utils
+const { loadJSON } = require('../utils/json');
 const { link } = require('../utils/tg');
 const { logError } = require('../utils/log');
+
+// Config
+const { numberOfWarnsToBan } = loadJSON('config.json');
 
 // Bot
 const bot = require('../bot');
@@ -39,7 +43,7 @@ const warnHandler = async ({ message, chat, reply }) => {
 		bot.telegram.deleteMessage(chat.id, message.message_id)
 	];
 
-	if (warnCount < 3) {
+	if (warnCount < numberOfWarnsToBan) {
 		promises.push(reply(
 			`${link(userToWarn)} <b>got warned!</b> (${warnCount}/3)\n\n` +
 			`Reason: ${reason}`,
