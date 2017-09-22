@@ -5,7 +5,7 @@ const { isAdmin } = require('../stores/admin');
 
 const link = user => '@' + user.username;
 
-const newChatMemberHandler = async (ctx, next) => {
+const antibotHandler = async (ctx, next) => {
 	const msg = ctx.message;
 
 	const bots = msg.new_chat_members.filter(user =>
@@ -29,4 +29,4 @@ const newChatMemberHandler = async (ctx, next) => {
 	return next();
 };
 
-module.exports = newChatMemberHandler;
+module.exports = antibotHandler;

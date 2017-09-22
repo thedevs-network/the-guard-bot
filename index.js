@@ -22,7 +22,7 @@ const getWarnsHandler = require('./handlers/getwarns');
 const banHandler = require('./handlers/ban');
 const unbanHandler = require('./handlers/unban');
 const messageHandler = require('./handlers/message');
-const newChatMemberHandler = require('./handlers/newChatMember');
+const antibotHandler = require('./handlers/antibot');
 const addedToGroup = require('./handlers/addedToGroup');
 const leaveUnmanaged = require('./handlers/leaveUnmanaged');
 
@@ -38,7 +38,7 @@ bot.command('getwarns', getWarnsHandler);
 bot.command('ban', banHandler);
 bot.command('unban', unbanHandler);
 bot.on('message', messageHandler);
-bot.on('new_chat_members', newChatMemberHandler);
+bot.on('new_chat_members', antibotHandler);
 bot.on(['new_chat_members', 'left_chat_member'], deleteAfter(10 * 60 * 1000));
 
 bot.startPolling();
