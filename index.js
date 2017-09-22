@@ -23,7 +23,11 @@ const banHandler = require('./handlers/ban');
 const unbanHandler = require('./handlers/unban');
 const messageHandler = require('./handlers/message');
 const newChatMemberHandler = require('./handlers/newChatMember');
+const addedToGroup = require('./handlers/addedToGroup');
+const leaveUnmanaged = require('./handlers/leaveUnmanaged');
 
+bot.on('new_chat_members', addedToGroup);
+bot.use(leaveUnmanaged);
 bot.use(middlewareHandler);
 bot.command('admin', adminHandler);
 bot.command('unadmin', unAdminHandler);
