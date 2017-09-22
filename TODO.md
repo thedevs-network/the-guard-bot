@@ -24,6 +24,7 @@
 - [ ] All command be available with both `!` and `/`.
 - [x] Auto remove commands if they're not sent by admins.
 - [x] Auto remove joining messages.
+- [ ] Commands work with username too.
 - [ ] Ban and remove Arabic/Russian/Indian text.
 - [ ] `/report` and `@admin` to report a message to admins. 
 - [ ] `/link` to show the link of current group.
