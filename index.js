@@ -38,7 +38,7 @@ bot.command('getwarns', getWarnsHandler);
 bot.command('ban', banHandler);
 bot.command('unban', unbanHandler);
 bot.on('message', messageHandler);
-bot.on('new_chat_member', newChatMemberHandler);
-bot.on('left_chat_member', deleteAfter(10 * 60 * 1000));
+bot.on('new_chat_members', newChatMemberHandler);
+bot.on(['new_chat_members', 'left_chat_member'], deleteAfter(10 * 60 * 1000));
 
 bot.startPolling();

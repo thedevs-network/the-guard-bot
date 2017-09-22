@@ -1,28 +1,32 @@
 'use strict';
 
-// Utils
-const { link, deleteAfter } = require('../utils/tg');
-const { logError } = require('../utils/log');
+// DB
+const { isAdmin } = require('../stores/admin');
 
-// Bot
-const { replyOptions } = require('../bot/options');
+const link = user => '@' + user.username;
 
-const newChatMemberHandler = ctx => {
-	if (
-		ctx.message.new_chat_member &&
-		ctx.message.new_chat_member.username &&
-		ctx.message.new_chat_member.username.substr(-3).toLowerCase() === 'bot'
-	) {
-		return ctx.telegram.kickChatMember(ctx.chat.id,
-			ctx.message.new_chat_member.id)
-			.then(() =>
-				ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id))
-			.then(() =>
-				ctx.reply(`Kicked bot: ${link(ctx.message.new_chat_member)}`,
-					replyOptions))
-			.catch(logError(process.env.DEBUG));
+const newChatMemberHandler = async (ctx, next) => {
+	const msg = ctx.message;
+
+	const bots = msg.new_chat_members.filter(user =>
+		user.is_bot && user.username !== ctx.me
+	);
+
+	if (bots.length === 0) {
+		return next();
 	}
-	return deleteAfter(10 * 60 * 1000)(ctx);
+
+	if (await isAdmin(ctx.from)) {
+		return next();
+	}
+
+	for (const bot of bots) {
+		ctx.telegram.kickChatMember(ctx.chat.id, bot.id);
+	}
+
+	ctx.reply(`Kicked bot(s): ${bots.map(link).join(', ')}`);
+
+	return next();
 };
 
 module.exports = newChatMemberHandler;

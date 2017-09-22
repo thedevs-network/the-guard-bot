@@ -18,7 +18,7 @@
 - [x] Bans
   - [x] `/ban <reason>` command to ban users.
   - [x] Remove the message which was replied with a ban command.
-  - [ ] Ban all bots when they're added (unless added by admin).
+  - [X] Ban all bots when they're added (unless added by admin).
   - [x] `/unban <id>` unban a user.
   - [x] Synchronize ban across the groups.
 - [ ] All command be available with both `!` and `/`.
