@@ -29,7 +29,7 @@ const gifs = [
 
 const randomChoice = arr => arr[Math.floor(Math.random() * arr.length)];
 
-const leaveUnmanaged = async (ctx, next) => {
+const leaveUnmanagedHandler = async (ctx, next) => {
 	if (ctx.chat.type === 'private' || await managesGroup(ctx.chat)) {
 		return next();
 	}
@@ -38,4 +38,4 @@ const leaveUnmanaged = async (ctx, next) => {
 	return ctx.telegram.leaveChat(ctx.chat.id);
 };
 
-module.exports = leaveUnmanaged;
+module.exports = leaveUnmanagedHandler;
