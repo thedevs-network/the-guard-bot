@@ -1,10 +1,10 @@
 ## List of todo's in priority order:
 
-- [ ] Admins
-  - [ ] Only the creator with master ID can use `/admin` and `/unadmin` command.
+- [x] Admins
+  - [x] Only the creator with master ID can use `/admin` and `/unadmin` command.
   - [x] `/admin` to make an user admin (by reply or mention).
-  - [ ] `/unadmin` to remove an user from admin list.
-  - [ ] Admins cannot be warned or banned.
+  - [x] `/unadmin` to remove an user from admin list.
+  - [x] Admins cannot be warned or banned.
 - [x] Warnings
   - [x] `/warn <reason>` command to warn users.
   - [x] Warned message get deleted automatically.
@@ -15,15 +15,15 @@
   - [x] `/nowarns` to clear all warns (by reply or mention).
   - [x] 3 warns automatically bans the user.
   - [x] Synchronize warns across the groups.
-- [ ] Bans
-  - [ ] `/ban <reason>` command to ban users.
-  - [ ] Remove the message which was replied with a ban command.
+- [x] Bans
+  - [x] `/ban <reason>` command to ban users.
+  - [x] Remove the message which was replied with a ban command.
   - [ ] Ban all bots when they're added (unless added by admin).
-  - [ ] `/unban <id>` unban a user.
-  - [ ] Synchronize ban across the groups.
+  - [x] `/unban <id>` unban a user.
+  - [x] Synchronize ban across the groups.
 - [ ] All command be available with both `!` and `/`.
-- [ ] Auto remove commands if they're not sent by admins.
-- [ ] Auto remove joining messages.
+- [x] Auto remove commands if they're not sent by admins.
+- [x] Auto remove joining messages.
 - [ ] Ban and remove Arabic/Russian/Indian text.
 - [ ] `/report` and `@admin` to report a message to admins. 
 - [ ] `/link` to show the link of current group.
