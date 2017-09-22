@@ -8,7 +8,7 @@ const { replyOptions } = require('../bot/options');
 
 // DB
 const Warn = require('../stores/warn');
-const admins = require('../stores/admins');
+const admins = require('../stores/admin');
 
 const getWarnsHandler = async ({ message, reply }) => {
 	if (!await admins.isAdmin(message.from)) {

@@ -8,7 +8,7 @@ const { replyOptions } = require('../bot/options');
 
 // DB
 const Warn = require('../stores/warn');
-const admins = require('../stores/admins');
+const admins = require('../stores/admin');
 
 const unwarnHandler = async ({ message, reply }) => {
 	if (!await admins.isAdmin(message.from)) {
@@ -25,7 +25,8 @@ const unwarnHandler = async ({ message, reply }) => {
 	const warn = await Warn.unwarn(userToUnwarn);
 
 	return reply(
-		`${link(userToUnwarn)} was pardoned for: ${warn}\n(${allWarns.length}/3)`,
+		`${link(userToUnwarn)} was pardoned for: ${warn}\n` +
+		`(${allWarns.length}/3)`,
 		replyOptions);
 };
 

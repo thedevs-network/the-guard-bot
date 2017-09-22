@@ -14,8 +14,8 @@ const { replyOptions } = require('../bot/options');
 
 // DB
 const { warn } = require('../stores/warn');
-const { ban } = require('../stores/bans');
-const { isAdmin } = require('../stores/admins');
+const { ban } = require('../stores/ban');
+const { isAdmin } = require('../stores/admin');
 
 const warnHandler = async ({ message, chat, reply }) => {
 	if (!await isAdmin(message.from)) {

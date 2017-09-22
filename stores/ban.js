@@ -2,24 +2,24 @@
 
 const Datastore = require('nedb-promise');
 
-const bans = new Datastore({
+const Ban = new Datastore({
 	autoload: true,
-	filename: 'data/bans.db'
+	filename: 'data/Ban.db'
 });
 
-bans.ensureIndex({
-	fieldName: 'id',
+Ban.ensureIndex({
+	fieldName: 'user_id',
 	unique: true
 });
 
 const ban = (user, reason) =>
-	bans.insert(Object.assign({}, user, { reason })).then(() => reason);
+	Ban.insert({ reason, user_id: user.id });
 
 const unban = user =>
-	bans.remove({ id: user.id });
+	Ban.remove({ user_id: user.id });
 
 const isBanned = user =>
-	bans.findOne({ id: user.id }).then(bannedUser =>
+	Ban.findOne({ user_id: user.id }).then(bannedUser =>
 		bannedUser
 			? bannedUser.reason
 			: bannedUser);

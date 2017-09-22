@@ -2,24 +2,24 @@
 
 const Datastore = require('nedb-promise');
 
-const admins = new Datastore({
+const Admin = new Datastore({
 	autoload: true,
-	filename: 'data/admins.db'
+	filename: 'data/Admin.db'
 });
 
-admins.ensureIndex({
-	fieldName: 'id',
+Admin.ensureIndex({
+	fieldName: 'user_id',
 	unique: true
 });
 
 const admin = user =>
-	admins.insert(user);
+	Admin.insert({ user_id: user.id });
 
 const unadmin = user =>
-	admins.remove({ id: user.id });
+	Admin.remove({ user_id: user.id });
 
 const isAdmin = user =>
-	admins.findOne({ id: user.id });
+	Admin.findOne({ user_id: user.id });
 
 module.exports = {
 	admin,
