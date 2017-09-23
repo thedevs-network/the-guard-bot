@@ -1,8 +1,8 @@
 'use strict';
 
-const { managesGroup } = require('../stores/groups');
+const { managesGroup } = require('../../stores/groups');
 
-const pkg = require('../package.json');
+const pkg = require('../../package.json');
 
 
 const caption = `\

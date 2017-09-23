@@ -1,16 +1,16 @@
 'use strict';
 
 // Utils
-const { link } = require('../utils/tg');
-const { print, logError } = require('../utils/log');
+const { link } = require('../../utils/tg');
+const { print, logError } = require('../../utils/log');
 
 // Bot
-const bot = require('../bot');
-const { replyOptions } = require('../bot/options');
+const bot = require('../../bot');
+const { replyOptions } = require('../../bot/options');
 
 // DB
-const { addUser, isUser } = require('../stores/user');
-const { isBanned } = require('../stores/ban');
+const { addUser, isUser } = require('../../stores/user');
+const { isBanned } = require('../../stores/ban');
 
 const middlewareHandler = async ({ chat, from, message, reply }, next) => {
 	process.env.DEBUG === 'true' && message && print(message);

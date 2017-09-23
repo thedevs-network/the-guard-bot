@@ -1,21 +1,21 @@
 'use strict';
 
 // Utils
-const { loadJSON } = require('../utils/json');
-const { link } = require('../utils/tg');
-const { logError } = require('../utils/log');
+const { loadJSON } = require('../../utils/json');
+const { link } = require('../../utils/tg');
+const { logError } = require('../../utils/log');
 
 // Config
 const { numberOfWarnsToBan } = loadJSON('config.json');
 
 // Bot
-const bot = require('../bot');
-const { replyOptions } = require('../bot/options');
+const bot = require('../../bot');
+const { replyOptions } = require('../../bot/options');
 
 // DB
-const { warn } = require('../stores/warn');
-const { ban } = require('../stores/ban');
-const { isAdmin } = require('../stores/admin');
+const { warn } = require('../../stores/warn');
+const { ban } = require('../../stores/ban');
+const { isAdmin } = require('../../stores/admin');
 
 const warnHandler = async ({ message, chat, reply }) => {
 	if (!await isAdmin(message.from)) {

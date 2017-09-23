@@ -1,7 +1,7 @@
 'use strict';
 
 // DB
-const { isAdmin } = require('../stores/admin');
+const { isAdmin } = require('../../stores/admin');
 
 const link = user => '@' + user.username;
 

@@ -11,24 +11,29 @@ bot.telegram.getMe().then((botInfo) => {
 	bot.options.username = botInfo.username;
 });
 
-// Handlers
-const middlewareHandler = require('./handlers/middleware');
-const adminHandler = require('./handlers/admin');
-const unAdminHandler = require('./handlers/unadmin');
-const warnHandler = require('./handlers/warn');
-const unwarnHandler = require('./handlers/unwarn');
-const nowarnsHandler = require('./handlers/nowarns');
-const getWarnsHandler = require('./handlers/getwarns');
-const banHandler = require('./handlers/ban');
-const unbanHandler = require('./handlers/unban');
-const messageHandler = require('./handlers/message');
-const antibotHandler = require('./handlers/antibot');
-const addedToGroupHandler = require('./handlers/addedToGroup');
-const leaveUnmanagedHandler = require('./handlers/leaveUnmanaged');
+// Middleware Handlers
+const leaveUnmanagedHandler = require('./handlers/middlewares/leaveUnmanaged');
+const middlewareHandler = require('./handlers/middlewares/middleware');
+const messageHandler = require('./handlers/middlewares/message');
+const antibotHandler = require('./handlers/middlewares/antibot');
+const addedToGroupHandler = require('./handlers/middlewares/addedToGroup');
 
-bot.on('new_chat_members', addedToGroupHandler);
+// Commmands Handlers
+const adminHandler = require('./handlers/commands/admin');
+const unAdminHandler = require('./handlers/commands/unadmin');
+const warnHandler = require('./handlers/commands/warn');
+const unwarnHandler = require('./handlers/commands/unwarn');
+const nowarnsHandler = require('./handlers/commands/nowarns');
+const getWarnsHandler = require('./handlers/commands/getwarns');
+const banHandler = require('./handlers/commands/ban');
+const unbanHandler = require('./handlers/commands/unban');
+
 bot.use(leaveUnmanagedHandler);
 bot.use(middlewareHandler);
+bot.on('message', messageHandler);
+bot.on('new_chat_members', addedToGroupHandler);
+bot.on('new_chat_members', antibotHandler);
+bot.on([ 'new_chat_members', 'left_chat_member' ], deleteAfter(10 * 60 * 1000));
 bot.command('admin', adminHandler);
 bot.command('unadmin', unAdminHandler);
 bot.command('warn', warnHandler);
@@ -37,8 +42,5 @@ bot.command('nowarns', nowarnsHandler);
 bot.command('getwarns', getWarnsHandler);
 bot.command('ban', banHandler);
 bot.command('unban', unbanHandler);
-bot.on('message', messageHandler);
-bot.on('new_chat_members', antibotHandler);
-bot.on(['new_chat_members', 'left_chat_member'], deleteAfter(10 * 60 * 1000));
 
 bot.startPolling();

@@ -1,14 +1,14 @@
 'use strict';
 
 // Utils
-const { link } = require('../utils/tg');
+const { link } = require('../../utils/tg');
 
 // Bot
-const { replyOptions } = require('../bot/options');
+const { replyOptions } = require('../../bot/options');
 
 // DB
-const Warn = require('../stores/warn');
-const admins = require('../stores/admin');
+const Warn = require('../../stores/warn');
+const admins = require('../../stores/admin');
 
 const unwarnHandler = async ({ message, reply }) => {
 	if (!await admins.isAdmin(message.from)) {

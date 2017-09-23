@@ -1,17 +1,17 @@
 'use strict';
 
 // Utils
-const { loadJSON } = require('../utils/json');
-const { link } = require('../utils/tg');
+const { loadJSON } = require('../../utils/json');
+const { link } = require('../../utils/tg');
 
 // Config
 const { masterID } = loadJSON('config.json');
 
 // Bot
-const { replyOptions } = require('../bot/options');
+const { replyOptions } = require('../../bot/options');
 
 // DB
-const { isAdmin, unadmin } = require('../stores/admin');
+const { isAdmin, unadmin } = require('../../stores/admin');
 
 const unAdminHandler = async ({ message, reply }) => {
 	if (message.from.id !== masterID) {

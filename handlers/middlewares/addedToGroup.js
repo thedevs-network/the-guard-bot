@@ -1,7 +1,7 @@
 'use strict';
 
-const { addGroup } = require('../stores/groups');
-const { masterID } = require('../config.json');
+const { addGroup } = require('../../stores/groups');
+const { masterID } = require('../../config.json');
 
 const addedToGroupHandler = (ctx, next) => {
 	const msg = ctx.message;
