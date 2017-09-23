@@ -7,10 +7,11 @@ const { link } = require('../utils/tg');
 const { replyOptions } = require('../bot/options');
 
 // DB
+const { listGroups } = require('../stores/groups');
 const { isBanned, unban } = require('../stores/ban');
 const admins = require('../stores/admin');
 
-const unbanHandler = async ({ message, reply }) => {
+const unbanHandler = async ({ message, reply, telegram }) => {
 	if (!await admins.isAdmin(message.from)) {
 		return null;
 	}
@@ -24,6 +25,13 @@ const unbanHandler = async ({ message, reply }) => {
 	if (!await isBanned(userToUnban)) {
 		return reply('User is not banned.');
 	}
+
+	const groups = await listGroups();
+
+	const unbans = groups.map(group =>
+		telegram.unbanChatMember(group.id, userToUnban.id));
+
+	await Promise.all(unbans);
 
 	await unban(userToUnban);
 
