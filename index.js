@@ -14,7 +14,7 @@ bot.telegram.getMe().then((botInfo) => {
 // Middleware Handlers
 const leaveUnmanagedHandler = require('./handlers/middlewares/leaveUnmanaged');
 const middlewareHandler = require('./handlers/middlewares/middleware');
-const messageHandler = require('./handlers/middlewares/message');
+const removeLinksHandler = require('./handlers/middlewares/removeLinks');
 const antibotHandler = require('./handlers/middlewares/antibot');
 const addedToGroupHandler = require('./handlers/middlewares/addedToGroup');
 
@@ -30,7 +30,7 @@ const unbanHandler = require('./handlers/commands/unban');
 
 bot.use(leaveUnmanagedHandler);
 bot.use(middlewareHandler);
-bot.on('message', messageHandler);
+bot.on('message', removeLinksHandler);
 bot.on('new_chat_members', addedToGroupHandler);
 bot.on('new_chat_members', antibotHandler);
 bot.on([ 'new_chat_members', 'left_chat_member' ], deleteAfter(10 * 60 * 1000));

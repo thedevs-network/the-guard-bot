@@ -1,17 +1,17 @@
 'use strict';
 
 // Utils
-const { link } = require('../utils/tg');
+const { link } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 
 // Bot
-const bot = require('../bot');
-const { replyOptions } = require('../bot/options');
+const bot = require('../../bot');
+const { replyOptions } = require('../../bot/options');
 
 // DB
-const { listGroups } = require('../stores/groups');
-const { isBanned, ban } = require('../stores/ban');
-const { isAdmin } = require('../stores/admin');
+const { listGroups } = require('../../stores/groups');
+const { isBanned, ban } = require('../../stores/ban');
+const { isAdmin } = require('../../stores/admin');
 
 const banHandler = async ({ chat, message, reply, telegram }) => {
 	if (!await isAdmin(message.from)) {

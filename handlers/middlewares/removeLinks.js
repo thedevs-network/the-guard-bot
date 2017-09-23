@@ -21,20 +21,20 @@ const { warn } = require('../../stores/warn');
 const { ban } = require('../../stores/ban');
 const { isAdmin } = require('../../stores/admin');
 
-const messageHandler = async ({ message, chat, reply }) => {
+const removeLinks = async ({ message, chat, reply }, next) => {
 	if (
 		message.forward_from_chat &&
-			message.forward_from_chat.type !== 'private' &&
-			!excludedChannels.includes(message.forward_from_chat.username) ||
+		message.forward_from_chat.type !== 'private' &&
+		!excludedChannels.includes(message.forward_from_chat.username) ||
 		message.text &&
-			(message.text.includes('t.me') ||
+		(message.text.includes('t.me') ||
 			message.text.includes('telegram.me')) &&
-			!(excludedChannels.includes(message.text) ||
+		!(excludedChannels.includes(message.text) ||
 			excludedGroups.includes(message.text.split('/joinchat/')[1]))
 	) {
 		const userToWarn = message.from;
 		if (await isAdmin(userToWarn)) {
-			return null;
+			return next();
 		}
 		const reason = 'Sent a message which was forwarded ' +
 			'from other channels or included their link';
@@ -56,9 +56,14 @@ const messageHandler = async ({ message, chat, reply }) => {
 				'Reason: Reached max number of warnings',
 				replyOptions));
 		}
-		return Promise.all(promises).catch(logError(process.env.DEBUG));
+		try {
+			await Promise.all(promises).catch(logError(process.env.DEBUG));
+		} catch (err) {
+			logError(process.env.DEBUG)(err);
+		}
+		return next();
 	}
-	return null;
+	return next();
 };
 
-module.exports = messageHandler;
+module.exports = removeLinks;
