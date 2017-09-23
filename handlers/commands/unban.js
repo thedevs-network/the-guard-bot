@@ -2,6 +2,7 @@
 
 // Utils
 const { link } = require('../../utils/tg');
+const { logError } = require('../../utils/log');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
@@ -31,9 +32,17 @@ const unbanHandler = async ({ message, reply, telegram }) => {
 	const unbans = groups.map(group =>
 		telegram.unbanChatMember(group.id, userToUnban.id));
 
-	await Promise.all(unbans);
+	try {
+		await Promise.all(unbans);
+	} catch (err) {
+		logError(process.env.DEBUG)(err);
+	}
 
-	await unban(userToUnban);
+	try {
+		await unban(userToUnban);
+	} catch (err) {
+		logError(process.env.DEBUG)(err);
+	}
 
 	return reply(`${link(userToUnban)} has been unbanned.`, replyOptions);
 };

@@ -2,6 +2,7 @@
 
 // Utils
 const { link } = require('../utils/tg');
+const { logError } = require('../../utils/log');
 
 // Bot
 const bot = require('../bot');
@@ -38,14 +39,22 @@ const banHandler = async ({ chat, message, reply, telegram }) => {
 		return reply('User is already banned.');
 	}
 
-	await ban(userToBan, reason);
+	try {
+		await ban(userToBan, reason);
+	} catch (err) {
+		logError(process.env.DEBUG)(err);
+	}
 
 	const groups = await listGroups();
 
 	const bans = groups.map(group =>
 		telegram.kickChatMember(group.id, userToBan.id));
 
-	await Promise.all(bans);
+	try {
+		await Promise.all(bans);
+	} catch (err) {
+		logError(process.env.DEBUG)(err);
+	}
 
 	return reply(`${link(userToBan)} has been <b>banned</b>.\n\n` +
 		`Reason: ${reason}`, replyOptions);

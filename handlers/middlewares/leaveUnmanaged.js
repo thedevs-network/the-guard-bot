@@ -1,5 +1,8 @@
 'use strict';
 
+// Utils
+const { logError } = require('../../utils/log');
+
 const { managesGroup } = require('../../stores/groups');
 
 const pkg = require('../../package.json');
@@ -34,7 +37,12 @@ const leaveUnmanagedHandler = async (ctx, next) => {
 		return next();
 	}
 
-	await ctx.replyWithVideo(randomChoice(gifs), { caption, reply_markup });
+	try {
+		await ctx.replyWithVideo(randomChoice(gifs), { caption, reply_markup });
+	} catch (err) {
+		logError(process.env.DEBUG)(err);
+	}
+
 	return ctx.telegram.leaveChat(ctx.chat.id);
 };
 

@@ -3,6 +3,7 @@
 // Utils
 const { loadJSON } = require('../../utils/json');
 const { link } = require('../../utils/tg');
+const { logError } = require('../../utils/log');
 
 // Config
 const { masterID } = loadJSON('config.json');
@@ -28,7 +29,11 @@ const unAdminHandler = async ({ message, reply }) => {
 		return reply(`${link(userToUnadmin)} is not admin.`, replyOptions);
 	}
 
-	await unadmin(userToUnadmin);
+	try {
+		await unadmin(userToUnadmin);
+	} catch (err) {
+		logError(process.env.DEBUG)(err);
+	}
 
 	return reply(`${link(userToUnadmin)} is no longer admin.`, replyOptions);
 };

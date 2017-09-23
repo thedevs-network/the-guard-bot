@@ -15,7 +15,11 @@ const { isBanned } = require('../../stores/ban');
 const middlewareHandler = async ({ chat, from, message, reply }, next) => {
 	process.env.DEBUG === 'true' && message && print(message);
 	if (message && message.from && !await isUser(message.from)) {
-		await addUser(message.from);
+		try {
+			await addUser(message.from);
+		} catch (err) {
+			logError(process.env.DEBUG)(err);
+		}
 	}
 	if (
 		message &&
@@ -23,7 +27,11 @@ const middlewareHandler = async ({ chat, from, message, reply }, next) => {
 		message.text[0] === '/' &&
 		message.text[1].match(/\w/)
 	) {
-		await bot.telegram.deleteMessage(chat.id, message.message_id);
+		try {
+			await bot.telegram.deleteMessage(chat.id, message.message_id);
+		} catch (err) {
+			logError(process.env.DEBUG)(err);
+		}
 	}
 	const banned = await isBanned(from);
 	if (banned) {

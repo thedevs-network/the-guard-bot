@@ -3,6 +3,7 @@
 // Utils
 const { loadJSON } = require('../../utils/json');
 const { link } = require('../../utils/tg');
+const { logError } = require('../../utils/log');
 
 // Config
 const { masterID } = loadJSON('config.json');
@@ -25,7 +26,11 @@ const adminHandler = async ({ message, reply }) => {
 		return reply('Already admin');
 	}
 
-	await admin(userToAdmin);
+	try {
+		await admin(userToAdmin);
+	} catch (err) {
+		logError(process.env.DEBUG)(err);
+	}
 
 	return reply(`${link(userToAdmin)} is now <b>admin</b>.`, replyOptions);
 };
