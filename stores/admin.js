@@ -15,6 +15,9 @@ Admin.ensureIndex({
 const admin = user =>
 	Admin.insert({ user_id: user.id });
 
+const allAdmins = () =>
+	Admin.find({});
+
 const unadmin = user =>
 	Admin.remove({ user_id: user.id });
 
@@ -23,6 +26,7 @@ const isAdmin = user =>
 
 module.exports = {
 	admin,
+	allAdmins,
 	isAdmin,
 	unadmin
 };
