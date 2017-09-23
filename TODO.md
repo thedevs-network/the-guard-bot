@@ -28,7 +28,7 @@
 - [x] Auto remove joining messages.
 - [ ] Commands work with username too.
 - [ ] Ban and remove Arabic/Russian/Indian text.
-- [ ] `/report` and `@admin` to report a message to admins. 
+- [x] `/report` and `@admin` to report a message to admins.
 - [ ] `/link` to show the link of current group.
 - [ ] `/groups` to show the list of groups' link.
 - [ ] `/channel` to show the channel link.

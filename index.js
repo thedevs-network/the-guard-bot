@@ -27,7 +27,7 @@ const nowarnsHandler = require('./handlers/commands/nowarns');
 const getWarnsHandler = require('./handlers/commands/getwarns');
 const banHandler = require('./handlers/commands/ban');
 const unbanHandler = require('./handlers/commands/unban');
-const reportHandler = require('./handlers/report');
+const reportHandler = require('./handlers/commands/report');
 
 bot.use(leaveUnmanagedHandler);
 bot.use(middlewareHandler);

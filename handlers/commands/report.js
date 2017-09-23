@@ -1,10 +1,10 @@
 'use strict';
 
 // Utils
-const { link } = require('../utils/tg');
+const { link } = require('../../utils/tg');
 
 // DB
-const { allAdmins } = require('../stores/admin');
+const { allAdmins } = require('../../stores/admin');
 
 const reportHandler = async ctx => {
 	const msg = ctx.message;
