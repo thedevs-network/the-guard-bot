@@ -8,10 +8,11 @@ const bot = require('../bot');
 const { replyOptions } = require('../bot/options');
 
 // DB
+const { listGroups } = require('../stores/groups');
 const { isBanned, ban } = require('../stores/ban');
 const { isAdmin } = require('../stores/admin');
 
-const banHandler = async ({ chat, message, reply }) => {
+const banHandler = async ({ chat, message, reply, telegram }) => {
 	if (!await isAdmin(message.from)) {
 		return null;
 	}
@@ -32,12 +33,19 @@ const banHandler = async ({ chat, message, reply }) => {
 	if (await isAdmin(userToBan)) {
 		return reply('Can\'t ban other admin');
 	}
-	
+
 	if (await isBanned(userToBan)) {
 		return reply('User is already banned.');
 	}
 
 	await ban(userToBan, reason);
+
+	const groups = await listGroups();
+
+	const bans = groups.map(group =>
+		telegram.kickChatMember(group.id, userToBan.id));
+
+	await Promise.all(bans);
 
 	return reply(`${link(userToBan)} has been <b>banned</b>.\n\n` +
 		`Reason: ${reason}`, replyOptions);
