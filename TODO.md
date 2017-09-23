@@ -5,6 +5,8 @@
   - [x] `/admin` to make an user admin (by reply or mention).
   - [x] `/unadmin` to remove an user from admin list.
   - [x] Admins cannot be warned or banned.
+  - [ ] '/admin' command should clear all warnings of the user
+  - [ ] '/admin' command on banned users should throw a warning and cancle the command.
 - [x] Warnings
   - [x] `/warn <reason>` command to warn users.
   - [x] Warned message get deleted automatically.
