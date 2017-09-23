@@ -32,8 +32,8 @@ const banHandler = async ({ chat, message, reply }) => {
 	if (await isAdmin(userToBan)) {
 		return reply('Can\'t ban other admin');
 	}
-
-	if (!await isBanned(userToBan)) {
+	
+	if (await isBanned(userToBan)) {
 		return reply('User is already banned.');
 	}
 
