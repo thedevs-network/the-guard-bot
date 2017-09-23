@@ -13,7 +13,7 @@ const { addUser, isUser } = require('../stores/user');
 const { isBanned } = require('../stores/ban');
 
 const middlewareHandler = async ({ chat, from, message, reply }, next) => {
-	process.env.DEBUG && message && print(message);
+	process.env.DEBUG === 'true' && message && print(message);
 	if (message && message.from && !await isUser(message.from)) {
 		await addUser(message.from);
 	}
