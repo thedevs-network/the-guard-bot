@@ -27,6 +27,7 @@ const nowarnsHandler = require('./handlers/commands/nowarns');
 const getWarnsHandler = require('./handlers/commands/getwarns');
 const banHandler = require('./handlers/commands/ban');
 const unbanHandler = require('./handlers/commands/unban');
+const reportHandler = require('./handlers/report');
 
 bot.use(leaveUnmanagedHandler);
 bot.use(middlewareHandler);
@@ -42,5 +43,7 @@ bot.command('nowarns', nowarnsHandler);
 bot.command('getwarns', getWarnsHandler);
 bot.command('ban', banHandler);
 bot.command('unban', unbanHandler);
+bot.command('report', reportHandler);
+bot.hears(/^@admins?$/i, reportHandler);
 
 bot.startPolling();
