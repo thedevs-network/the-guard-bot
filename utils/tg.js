@@ -13,5 +13,6 @@ const deleteAfter = ms => ctx =>
 
 module.exports = {
 	deleteAfter,
+	escapeHtml,
 	link
 };
