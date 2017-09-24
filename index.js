@@ -29,10 +29,10 @@ const banHandler = require('./handlers/commands/ban');
 const unbanHandler = require('./handlers/commands/unban');
 const reportHandler = require('./handlers/commands/report');
 
+bot.on('new_chat_members', addedToGroupHandler);
 bot.use(leaveUnmanagedHandler);
 bot.use(middlewareHandler);
 bot.on('message', removeLinksHandler);
-bot.on('new_chat_members', addedToGroupHandler);
 bot.on('new_chat_members', antibotHandler);
 bot.on([ 'new_chat_members', 'left_chat_member' ], deleteAfter(10 * 60 * 1000));
 bot.command('admin', adminHandler);
