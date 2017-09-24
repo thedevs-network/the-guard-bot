@@ -34,6 +34,7 @@
 - [x] `/report` and `@admin` to report a message to admins.
 - [ ] `/link` to show the link of current group.
 - [ ] `/groups` to show the list of groups' link.
+- [ ] custom commands -- seeing a defined command, bot should reply with static text, read from db. Can be used to implement `/channel` and `/rules`.
 - [ ] `/channel` to show the channel link.
 - [x] `/staff` to show the list of admins.
 - [ ] `/rules` to show rules. Only admins can use this command.
