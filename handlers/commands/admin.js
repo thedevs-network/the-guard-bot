@@ -13,6 +13,8 @@ const { replyOptions } = require('../../bot/options');
 
 // DB
 const { isAdmin, admin } = require('../../stores/admin');
+const { isBanned } = require('../../stores/ban');
+const { getWarns, nowarns } = require('../../stores/warn');
 
 const adminHandler = async ({ message, reply }) => {
 	if (message.from.id !== masterID) {
@@ -22,8 +24,20 @@ const adminHandler = async ({ message, reply }) => {
 		? message.reply_to_message.from
 		: message.from;
 
+	if (await isBanned(userToAdmin)) {
+		return reply('Can\'t admin banned user');
+	}
+
 	if (await isAdmin(userToAdmin)) {
 		return reply('Already admin');
+	}
+
+	if (await getWarns(userToAdmin)) {
+		try {
+			await nowarns(userToAdmin);
+		} catch (err) {
+			logError(process.env.DEBUG)(err);
+		}
 	}
 
 	try {
