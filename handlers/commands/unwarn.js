@@ -25,8 +25,8 @@ const unwarnHandler = async ({ message, reply }) => {
 	const warn = await Warn.unwarn(userToUnwarn);
 
 	return reply(
-		`❎ ${link(userToUnwarn)} <b>was pardoned for:</b>\n\n${warn}` +
-		`(${allWarns.length}/3)`,
+		`❎ ${link(message.from)} <b>pardoned</b> ${link(userToUnwarn)} ` +
+		`<b>for:</b>\n\n${warn} (${allWarns.length}/3)`,
 		replyOptions);
 };
 

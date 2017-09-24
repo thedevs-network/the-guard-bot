@@ -45,15 +45,16 @@ const warnHandler = async ({ message, chat, reply }) => {
 
 	if (warnCount < numberOfWarnsToBan) {
 		promises.push(reply(
-			`⚠️ ${link(userToWarn)} <b>got warned!</b> (${warnCount}/3)\n\n` +
-			`Reason: ${reason}`,
+			`⚠️ ${link(message.from)} <b>warned</b> ${link(userToWarn)} ` +
+			`<b>for:</b>\n\n ${reason} (${warnCount}/3)`,
 			replyOptions));
 	} else {
 		promises.push(bot.telegram.kickChatMember(chat.id, userToWarn.id));
 		promises.push(ban(userToWarn, 'Reached max number of warnings'));
 		promises.push(reply(
-			`🚫 ${link(userToWarn)} <b>got banned!</b> (${warnCount}/3)\n\n` +
-			'Reason: Reached max number of warnings',
+			`🚫 ${link(message.from)} <b>banned</b> ${link(userToWarn)} ` +
+			'<b>for:</b>\n\nReached max number of warnings ' +
+			`(${warnCount}/3)\n\n`,
 			replyOptions));
 	}
 

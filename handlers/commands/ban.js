@@ -57,8 +57,8 @@ const banHandler = async ({ chat, message, reply, telegram }) => {
 		logError(process.env.DEBUG)(err);
 	}
 
-	return reply(`🚫 ${link(userToBan)} <b>got banned</b>.\n\n` +
-		`Reason: ${reason}`, replyOptions);
+	return reply(`🚫 ${link(message.from)} <b>banned</b> ${link(userToBan)} ` +
+		`<b>for:</b>\n\n${reason}`, replyOptions);
 };
 
 module.exports = banHandler;

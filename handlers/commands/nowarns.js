@@ -34,8 +34,8 @@ const nowarnsHandler = async ({ message, reply }) => {
 	}
 
 	return reply(
-		`♻️ ${link(userToUnwarn)} <b>was pardoned for ` +
-		'all of their warnings.</b>',
+		`♻️ ${link(message.from)} <b>pardoned</b> ${link(userToUnwarn)} ` +
+		'<b>for all of their warnings.</b>',
 		replyOptions);
 };
 

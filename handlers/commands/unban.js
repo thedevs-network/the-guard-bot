@@ -44,8 +44,8 @@ const unbanHandler = async ({ message, reply, telegram }) => {
 		logError(process.env.DEBUG)(err);
 	}
 
-	return reply(`♻️ ${link(userToUnban)} <b>is unbanned.</b>`,
-		replyOptions);
+	return reply(`♻️ ${link(message.from)} <b>unbanned</b> ` +
+		`${link(userToUnban)}.`, replyOptions);
 };
 
 module.exports = unbanHandler;
