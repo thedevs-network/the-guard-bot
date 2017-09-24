@@ -4,7 +4,7 @@ const Datastore = require('nedb-promise');
 
 const groups = new Datastore({
 	autoload: true,
-	filename: 'data/groups.db',
+	filename: 'data/Group.db',
 });
 
 groups.ensureIndex({
