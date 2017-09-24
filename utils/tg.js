@@ -1,7 +1,10 @@
 'use strict';
 
-const link = ({ id, username, first_name }) =>
-	`<a href="tg://user?id=${id}">${username ? username : first_name}</a>`;
+const escapeHtml = s => s
+	.replace(/</g, '&lt;');
+
+const link = ({ id, first_name }) =>
+	`<a href="tg://user?id=${id}">${escapeHtml(first_name)}</a>`;
 
 const deleteAfter = ms => ctx =>
 	setTimeout(() =>
