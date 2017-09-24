@@ -24,7 +24,7 @@
   - [X] Ban all bots when they're added (unless added by admin).
   - [x] `/unban <id>` unban a user.
   - [x] Synchronize ban across the groups.
-- [ ] All command be available with both `!` and `/`.
+- ~~[ ] All command be available with both `!` and `/`.~~
 - [x] Auto remove commands if they're not sent by admins.
 - [x] Auto remove joining messages.
 - [x] Use first name instead of username for link.
