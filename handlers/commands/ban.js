@@ -22,21 +22,22 @@ const banHandler = async ({ chat, message, reply, telegram }) => {
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
 
 	if (reason.length === 0) {
-		return reply('Need a reason to ban');
+		return reply('ℹ️ <b>Need a reason to ban.</b>', replyOptions);
 	}
 
 	if (!message.reply_to_message) {
-		return reply('Reply to a message');
+		return reply('ℹ️ <b>Reply to a message.</b>', replyOptions);
 	}
 
 	bot.telegram.deleteMessage(chat.id, message.reply_to_message.message_id);
 
 	if (await isAdmin(userToBan)) {
-		return reply('Can\'t ban other admin');
+		return reply('ℹ️ <b>Can\'t ban other admins.</b>', replyOptions);
 	}
 
 	if (await isBanned(userToBan)) {
-		return reply('User is already banned.');
+		return reply(`🚫 ${link(userToBan)} <b>is already banned.</b>`,
+			replyOptions);
 	}
 
 	try {
@@ -56,7 +57,7 @@ const banHandler = async ({ chat, message, reply, telegram }) => {
 		logError(process.env.DEBUG)(err);
 	}
 
-	return reply(`${link(userToBan)} has been <b>banned</b>.\n\n` +
+	return reply(`🚫 ${link(userToBan)} <b>got banned</b>.\n\n` +
 		`Reason: ${reason}`, replyOptions);
 };
 

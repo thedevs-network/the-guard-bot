@@ -20,13 +20,14 @@ const unAdminHandler = async ({ message, reply }) => {
 	}
 
 	if (!message.reply_to_message) {
-		return reply('Reply to a message');
+		return reply('ℹ️ <b>Reply to a message.</b>', replyOptions);
 	}
 
 	const userToUnadmin = message.reply_to_message.from;
 
 	if (!await isAdmin(userToUnadmin)) {
-		return reply(`${link(userToUnadmin)} is not admin.`, replyOptions);
+		return reply(`ℹ️ ${link(userToUnadmin)} <b>is not admin.</b>`,
+			replyOptions);
 	}
 
 	try {
@@ -35,7 +36,8 @@ const unAdminHandler = async ({ message, reply }) => {
 		logError(process.env.DEBUG)(err);
 	}
 
-	return reply(`${link(userToUnadmin)} is no longer admin.`, replyOptions);
+	return reply(`❗️ ${link(userToUnadmin)} <b>is no longer admin.</b>`,
+		replyOptions);
 };
 
 module.exports = unAdminHandler;

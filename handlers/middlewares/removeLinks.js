@@ -36,24 +36,23 @@ const removeLinks = async ({ message, chat, reply }, next) => {
 		if (await isAdmin(userToWarn)) {
 			return next();
 		}
-		const reason = 'Sent a message which was forwarded ' +
-			'from other channels or included their link';
+		const reason = 'Channel forward/link';
 		const warnCount = await warn(userToWarn, reason);
 		const promises = [
 			bot.telegram.deleteMessage(chat.id, message.message_id)
 		];
 		if (warnCount < numberOfWarnsToBan) {
 			promises.push(reply(
-				`${link(userToWarn)} warned! (${warnCount}/3)\n` +
-				`Reason: ${reason}`,
+				`⚠️ ${link(userToWarn)} <b>got warned!</b> (${warnCount}/3)` +
+				`\n\nReason: ${reason}`,
 				replyOptions));
 		} else {
 			promises.push(bot.telegram.kickChatMember(chat.id, userToWarn.id));
 			promises.push(ban(userToWarn,
 				'Reached max number of warnings'));
 			promises.push(reply(
-				`${link(userToWarn)} <b>banned</b>! (${warnCount}/3)\n` +
-				'Reason: Reached max number of warnings',
+				`🚫 ${link(userToWarn)} <b>got banned</b>! (${warnCount}/3)` +
+				'\n\nReason: Reached max number of warnings',
 				replyOptions));
 		}
 		try {

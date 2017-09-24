@@ -18,13 +18,13 @@ const unbanHandler = async ({ message, reply, telegram }) => {
 	}
 
 	if (!message.reply_to_message) {
-		return reply('Reply to a message');
+		return reply('ℹ️ <b>Reply to a message.</b>', replyOptions);
 	}
 
 	const userToUnban = message.reply_to_message.from;
 
 	if (!await isBanned(userToUnban)) {
-		return reply('User is not banned.');
+		return reply('ℹ️ <b>User is not banned.</b>', replyOptions);
 	}
 
 	const groups = await listGroups();
@@ -44,7 +44,8 @@ const unbanHandler = async ({ message, reply, telegram }) => {
 		logError(process.env.DEBUG)(err);
 	}
 
-	return reply(`${link(userToUnban)} has been unbanned.`, replyOptions);
+	return reply(`♻️ ${link(userToUnban)} <b>is unbanned.</b>`,
+		replyOptions);
 };
 
 module.exports = unbanHandler;

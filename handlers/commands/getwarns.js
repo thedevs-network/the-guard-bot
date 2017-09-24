@@ -15,13 +15,13 @@ const getWarnsHandler = async ({ message, reply }) => {
 		return null;
 	}
 	if (!message.reply_to_message) {
-		return reply('Reply to a message');
+		return reply('ℹ️ <b>Reply to a message.</b>', replyOptions);
 	}
 	let i = 0;
 	const theUser = message.reply_to_message.from;
-	return reply('Warns for ' + link(theUser) + ':\n\n' +
+	return reply(`⚠️ <b>Warns for</b> ${link(theUser)}:\n\n` +
 		(await Warn.getWarns(theUser))
-			.map(x => ++i + '. ' + x)
+			.map(warn => ++i + '. ' + warn)
 			.join('\n\n'), replyOptions);
 };
 

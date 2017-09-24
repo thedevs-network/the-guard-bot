@@ -25,11 +25,12 @@ const adminHandler = async ({ message, reply }) => {
 		: message.from;
 
 	if (await isBanned(userToAdmin)) {
-		return reply('Can\'t admin banned user');
+		return reply('ℹ️ <b>Can\'t admin banned user.</b>', replyOptions);
 	}
 
 	if (await isAdmin(userToAdmin)) {
-		return reply('Already admin');
+		return reply(`⭐️ ${link(userToAdmin)} <b>is already admin.</b>.`,
+			replyOptions);
 	}
 
 	if (await getWarns(userToAdmin)) {
@@ -46,7 +47,7 @@ const adminHandler = async ({ message, reply }) => {
 		logError(process.env.DEBUG)(err);
 	}
 
-	return reply(`${link(userToAdmin)} is now <b>admin</b>.`, replyOptions);
+	return reply(`⭐️ ${link(userToAdmin)} <b>is now admin.</b>.`, replyOptions);
 };
 
 module.exports = adminHandler;

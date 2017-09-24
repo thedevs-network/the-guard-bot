@@ -22,7 +22,7 @@ const warnHandler = async ({ message, chat, reply }) => {
 		return null;
 	}
 	if (!message.reply_to_message) {
-		return reply('Reply to a message');
+		return reply('ℹ️ <b>Reply to a message.</b>', replyOptions);
 	}
 
 	const messageToWarn = message.reply_to_message;
@@ -30,11 +30,11 @@ const warnHandler = async ({ message, chat, reply }) => {
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
 
 	if (reason.length === 0) {
-		return reply('Need a reason to warn');
+		return reply('ℹ️ <b>Need a reason to warn.</b>', replyOptions);
 	}
 
 	if (await isAdmin(userToWarn)) {
-		return reply('Can\'t warn other admin');
+		return reply('ℹ️ <b>Can\'t warn other admins.</b>', replyOptions);
 	}
 
 	const warnCount = await warn(userToWarn, reason);
@@ -45,14 +45,14 @@ const warnHandler = async ({ message, chat, reply }) => {
 
 	if (warnCount < numberOfWarnsToBan) {
 		promises.push(reply(
-			`${link(userToWarn)} <b>got warned!</b> (${warnCount}/3)\n\n` +
+			`⚠️ ${link(userToWarn)} <b>got warned!</b> (${warnCount}/3)\n\n` +
 			`Reason: ${reason}`,
 			replyOptions));
 	} else {
 		promises.push(bot.telegram.kickChatMember(chat.id, userToWarn.id));
 		promises.push(ban(userToWarn, 'Reached max number of warnings'));
 		promises.push(reply(
-			`${link(userToWarn)} <b>banned</b>! (${warnCount}/3)\n` +
+			`🚫 ${link(userToWarn)} <b>got banned!</b> (${warnCount}/3)\n\n` +
 			'Reason: Reached max number of warnings',
 			replyOptions));
 	}

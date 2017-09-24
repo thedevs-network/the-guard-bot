@@ -1,5 +1,8 @@
 'use strict';
 
+// Bot
+const { replyOptions } = require('../../bot/options');
+
 // DB
 const { isAdmin } = require('../../stores/admin');
 
@@ -24,7 +27,8 @@ const antibotHandler = async (ctx, next) => {
 		ctx.telegram.kickChatMember(ctx.chat.id, bot.id);
 	}
 
-	ctx.reply(`Kicked bot(s): ${bots.map(link).join(', ')}`);
+	ctx.reply(`🚫 <b>Kicked bot(s):</b> ${bots.map(link).join(', ')}`,
+		replyOptions);
 
 	return next();
 };

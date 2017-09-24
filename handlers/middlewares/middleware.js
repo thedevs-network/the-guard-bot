@@ -37,7 +37,7 @@ const middlewareHandler = async ({ chat, from, message, reply }, next) => {
 	if (banned) {
 		return bot.telegram.kickChatMember(chat.id, from.id)
 			.then(() => reply(
-				`${link(from)} <b>banned</b>!\n` +
+				`🚫 ${link(from)} <b>is banned</b>!\n\n` +
 				`Reason: ${banned}`,
 				replyOptions))
 			.catch(logError(process.env.DEBUG))
