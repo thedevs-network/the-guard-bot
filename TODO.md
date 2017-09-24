@@ -35,5 +35,5 @@
 - [ ] `/link` to show the link of current group.
 - [ ] `/groups` to show the list of groups' link.
 - [ ] `/channel` to show the channel link.
-- [ ] `/staff` to show the list of admins.
+- [x] `/staff` to show the list of admins.
 - [ ] `/rules` to show rules. Only admins can use this command.
