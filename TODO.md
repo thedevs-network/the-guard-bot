@@ -17,7 +17,7 @@
   - [x] `/nowarns` to clear all warns (by reply or mention).
   - [x] 3 warns automatically bans the user.
   - [x] Synchronize warns across the groups.
-  - [ ] All warning commands should first check if there's warnings.
+  - [x] All warning commands should first check if there's warnings.
 - [x] Bans
   - [x] `/ban <reason>` command to ban users.
   - [x] Remove the message which was replied with a ban command.
