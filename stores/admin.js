@@ -13,7 +13,10 @@ Admin.ensureIndex({
 });
 
 const admin = user =>
-	Admin.insert({ user_id: user.id });
+	Admin.insert({
+		first_name: user.first_name,
+		user_id: user.id,
+	});
 
 const allAdmins = () =>
 	Admin.find({});
