@@ -7,7 +7,7 @@ const { link } = require('../../utils/tg');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const Warn = require('../../stores/warn');
+const { getWarns } = require('../../stores/warn');
 const admins = require('../../stores/admin');
 
 const getWarnsHandler = async ({ message, reply }) => {
@@ -19,8 +19,12 @@ const getWarnsHandler = async ({ message, reply }) => {
 	}
 	let i = 0;
 	const theUser = message.reply_to_message.from;
+	const warns = await getWarns(theUser);
+	if (warns.length < 1) {
+		return reply(`✅ <b>no warns for:</b> ${link(theUser)}`, replyOptions);
+	}
 	return reply(`⚠️ <b>Warns for</b> ${link(theUser)}:\n\n` +
-		(await Warn.getWarns(theUser))
+		warns
 			.map(warn => ++i + '. ' + warn)
 			.join('\n\n'), replyOptions);
 };
