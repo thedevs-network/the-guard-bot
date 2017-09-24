@@ -37,3 +37,4 @@
 - [ ] `/channel` to show the channel link.
 - [x] `/staff` to show the list of admins.
 - [ ] `/rules` to show rules. Only admins can use this command.
+- [ ] `/start`, showing basic info about the bot, `/help` explaining all the commands (probably grouped by normie commands, admin commands and custom commands) (I think it's best to implement `/start` and `/help` after we're done with other stuff, so we don't have to revisit them).
