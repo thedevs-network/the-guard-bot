@@ -3,6 +3,7 @@ require('dotenv').config();
 
 // Utils
 const { deleteAfter } = require('./utils/tg');
+const { logErrorProperly } = require('./utils/log');
 
 // Bot
 const bot = require('./bot');
@@ -47,5 +48,7 @@ bot.command('unban', unbanHandler);
 bot.command('report', reportHandler);
 bot.hears(/^@admins?$/i, reportHandler);
 bot.command('staff', staffHandler);
+
+bot.catch(logErrorProperly);
 
 bot.startPolling();
