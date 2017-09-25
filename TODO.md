@@ -35,7 +35,7 @@
 - [ ] `/link` to show the link of current group.
 - [x] `/groups` to show the list of groups' link.
 - [ ] custom commands -- seeing a defined command, bot should reply with static text, read from db. Can be used to implement `/channel` and `/rules`.
-- [ ] `/channel` to show the channel link.
+- [ ] ~~`/channel` to show the channel link.~~
 - [x] `/staff` to show the list of admins.
-- [ ] `/rules` to show rules. Only admins can use this command.
+- [ ] ~~`/rules` to show rules. Only admins can use this command.~~
 - [ ] `/start`, showing basic info about the bot, `/help` explaining all the commands (probably grouped by normie commands, admin commands and custom commands) (I think it's best to implement `/start` and `/help` after we're done with other stuff, so we don't have to revisit them).
