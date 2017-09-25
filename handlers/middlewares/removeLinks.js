@@ -28,7 +28,10 @@ const removeLinks = async ({ message, chat, reply }, next) => {
 		...groups.map(group => group.link
 			? group.link.split('/joinchat/')[1]
 			: ''),
-		...excludedGroups
+		...excludedGroups.map(group =>
+			group.includes('/joinchat/')
+				? group.split('/joinchat/')[1]
+				: group)
 	];
 	if (
 		message.forward_from_chat &&
