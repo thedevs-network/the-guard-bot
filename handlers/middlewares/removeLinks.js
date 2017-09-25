@@ -20,8 +20,16 @@ const { replyOptions } = require('../../bot/options');
 const { warn } = require('../../stores/warn');
 const { ban } = require('../../stores/ban');
 const { isAdmin } = require('../../stores/admin');
+const { listGroups } = require('../../stores/group');
 
 const removeLinks = async ({ message, chat, reply }, next) => {
+	const groups = await listGroups();
+	const groupLinks = [
+		...groups.map(group => group.link
+			? group.link.split('/joinchat/')[1]
+			: ''),
+		...excludedGroups
+	];
 	if (
 		message.forward_from_chat &&
 		message.forward_from_chat.type !== 'private' &&
@@ -30,7 +38,7 @@ const removeLinks = async ({ message, chat, reply }, next) => {
 		(message.text.includes('t.me') ||
 			message.text.includes('telegram.me')) &&
 		!(excludedChannels.includes(message.text) ||
-			excludedGroups.includes(message.text.split('/joinchat/')[1]))
+			groupLinks.includes(message.text.split('/joinchat/')[1]))
 	) {
 		const userToWarn = message.from;
 		if (await isAdmin(userToWarn)) {
