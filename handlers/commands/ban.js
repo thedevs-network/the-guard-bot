@@ -9,7 +9,7 @@ const bot = require('../../bot');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { listGroups } = require('../../stores/groups');
+const { listGroups } = require('../../stores/group');
 const { isBanned, ban } = require('../../stores/ban');
 const { isAdmin } = require('../../stores/admin');
 

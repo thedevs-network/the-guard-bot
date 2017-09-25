@@ -4,7 +4,7 @@
 const bot = require('../../bot');
 const { replyOptions } = require('../../bot/options');
 
-const { addGroup } = require('../../stores/groups');
+const { addGroup } = require('../../stores/group');
 const { masterID } = require('../../config.json');
 
 const addedToGroupHandler = async (ctx, next) => {

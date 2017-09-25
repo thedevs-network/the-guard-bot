@@ -3,7 +3,7 @@
 // Utils
 const { logError } = require('../../utils/log');
 
-const { managesGroup } = require('../../stores/groups');
+const { managesGroup } = require('../../stores/group');
 
 const pkg = require('../../package.json');
 

@@ -5,25 +5,25 @@ const { logError } = require('../utils/log');
 
 const Datastore = require('nedb-promise');
 
-const groups = new Datastore({
+const Group = new Datastore({
 	autoload: true,
 	filename: 'data/Group.db',
 });
 
-groups.ensureIndex({
+Group.ensureIndex({
 	fieldName: 'id',
 	unique: true,
 });
 
 const addGroup = group =>
-	groups.insert(group)
+	Group.insert(group)
 		.catch(logError(process.env.DEBUG));
 
 const listGroups = () =>
-	groups.find({});
+	Group.find({});
 
 const managesGroup = group =>
-	groups.findOne({ id: group.id });
+	Group.findOne({ id: group.id });
 
 module.exports = {
 	addGroup,

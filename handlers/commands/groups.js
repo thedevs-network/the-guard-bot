@@ -4,7 +4,7 @@
 const { escapeHtml } = require('../../utils/tg');
 
 // DB
-const { listGroups } = require('../../stores/groups');
+const { listGroups } = require('../../stores/group');
 
 const config = require('../../config.json');
 

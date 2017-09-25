@@ -8,7 +8,7 @@ const { logError } = require('../../utils/log');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { listGroups } = require('../../stores/groups');
+const { listGroups } = require('../../stores/group');
 const { isBanned, unban } = require('../../stores/ban');
 const admins = require('../../stores/admin');
 
