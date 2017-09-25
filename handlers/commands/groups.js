@@ -8,10 +8,9 @@ const { listGroups } = require('../../stores/groups');
 
 const config = require('../../config.json');
 
-const entry = group =>
-	'» ' + (group.username
-		? '@' + group.username
-		: escapeHtml(group.title));
+const entry = group => group.username
+	? `- @${group.username}`
+	: `- <a href="${group.link}">${escapeHtml(group.title)}</a>`;
 
 const groupsHandler = async ctx => {
 	if (config.groupsString) {
@@ -22,9 +21,8 @@ const groupsHandler = async ctx => {
 
 	const entries = groups.map(entry).join('\n');
 
-	return ctx.replyWithHTML(`<b>Groups I manage</b>:\n${entries}`);
+	return ctx.replyWithHTML(`🛠 <b>Groups I manage</b>:\n\n${entries}`);
 
-	/* TODO: Obtain invite links as well, maybe cache them in db */
 };
 
 module.exports = groupsHandler;
