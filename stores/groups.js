@@ -1,5 +1,8 @@
 'use strict';
 
+// Utils
+const { logError } = require('../utils/log');
+
 const Datastore = require('nedb-promise');
 
 const groups = new Datastore({
@@ -13,7 +16,8 @@ groups.ensureIndex({
 });
 
 const addGroup = group =>
-	groups.insert(group);
+	groups.insert(group)
+		.catch(logError(process.env.DEBUG));
 
 const listGroups = () =>
 	groups.find({});

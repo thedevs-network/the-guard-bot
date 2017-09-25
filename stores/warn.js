@@ -1,5 +1,8 @@
 'use strict';
 
+// Utils
+const { logError } = require('../utils/log');
+
 const Datastore = require('nedb-promise');
 
 const Warn = new Datastore({
@@ -21,7 +24,8 @@ const warn = (user, reason) =>
 			Warn.update(
 				{ user_id: loadedUser.user_id },
 				{ $push: { reasons: reason } })
-				.then(() => loadedUser.reasons.length + 1));
+				.then(() => loadedUser.reasons.length + 1))
+		.catch(logError(process.env.DEBUG));
 
 const unwarn = user =>
 	Warn.findOne({ user_id: user.id })
@@ -30,15 +34,16 @@ const unwarn = user =>
 			lastWarn && Warn.update(
 				{ user_id: user.id },
 				{ $pop: { reasons: 1 } })
-				.then(() => lastWarn));
+				.then(() => lastWarn))
+		.catch(logError(process.env.DEBUG));
 
 const nowarns = user =>
 	Warn.findOne({ user_id: user.id })
 		.then(isUser => isUser && Warn.update(
 			{ user_id: user.id },
 			{ $set: { reasons: [] } })
-			.then(updatedUser => updatedUser)
-		);
+			.then(updatedUser => updatedUser))
+		.catch(logError(process.env.DEBUG));
 
 const getWarns = user =>
 	Warn.findOne({ user_id: user.id })

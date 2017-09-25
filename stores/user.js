@@ -1,5 +1,8 @@
 'use strict';
 
+// Utils
+const { logError } = require('../utils/log');
+
 const Datastore = require('nedb-promise');
 
 const User = new Datastore({
@@ -13,7 +16,8 @@ User.ensureIndex({
 });
 
 const addUser = ({ id, first_name = '', last_name = '', username = '' }) =>
-	User.insert({ first_name, id, last_name, username });
+	User.insert({ first_name, id, last_name, username })
+		.catch(logError(process.env.DEBUG));
 
 const isUser = ({ id }) =>
 	User.findOne({ id });

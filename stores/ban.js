@@ -1,5 +1,8 @@
 'use strict';
 
+// Utils
+const { logError } = require('../utils/log');
+
 const Datastore = require('nedb-promise');
 
 const Ban = new Datastore({
@@ -13,10 +16,12 @@ Ban.ensureIndex({
 });
 
 const ban = (user, reason) =>
-	Ban.insert({ reason, user_id: user.id });
+	Ban.insert({ reason, user_id: user.id })
+		.catch(logError(process.env.DEBUG));
 
 const unban = user =>
-	Ban.remove({ user_id: user.id });
+	Ban.remove({ user_id: user.id })
+		.catch(logError(process.env.DEBUG));
 
 const isBanned = user =>
 	Ban.findOne({ user_id: user.id }).then(bannedUser =>
