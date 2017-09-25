@@ -19,11 +19,17 @@ const unbanHandler = async ({ message, reply, telegram }) => {
 		return null;
 	}
 
-	if (!message.reply_to_message) {
-		return reply('ℹ️ <b>Reply to a message.</b>', replyOptions);
+	const userToUnban = message.reply_to_message
+		? message.reply_to_message.from
+		: message.commandMention
+			? message.commandMention
+			: null;
+
+	if (!userToUnban) {
+		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions);
 	}
 
-	const userToUnban = message.reply_to_message.from;
 
 	if (!await isBanned(userToUnban)) {
 		return reply('ℹ️ <b>User is not banned.</b>', replyOptions);

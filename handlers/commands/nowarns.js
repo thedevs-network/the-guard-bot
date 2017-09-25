@@ -15,12 +15,18 @@ const nowarnsHandler = async ({ message, reply }) => {
 	if (!await admins.isAdmin(message.from)) {
 		return null;
 	}
-	if (!message.reply_to_message) {
-		return reply('ℹ️ <b>Reply to a message.</b>', replyOptions);
+
+	const userToUnwarn = message.reply_to_message
+		? message.reply_to_message.from
+		: message.commandMention
+			? message.commandMention
+			: null;
+
+	if (!userToUnwarn) {
+		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions);
 	}
 
-	const messageToUnwarn = message.reply_to_message;
-	const userToUnwarn = messageToUnwarn.from;
 	const warns = await getWarns(userToUnwarn);
 
 	if (warns.length < 1) {

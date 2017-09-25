@@ -21,12 +21,18 @@ const warnHandler = async ({ message, chat, reply }) => {
 	if (!await isAdmin(message.from)) {
 		return null;
 	}
-	if (!message.reply_to_message) {
-		return reply('ℹ️ <b>Reply to a message.</b>', replyOptions);
+
+	const userToWarn = message.reply_to_message
+		? message.reply_to_message.from
+		: message.commandMention
+			? message.commandMention
+			: null;
+
+	if (!userToWarn) {
+		return reply('ℹ️ <b>Reply to a message or mentoin a user.</b>',
+			replyOptions);
 	}
 
-	const messageToWarn = message.reply_to_message;
-	const userToWarn = messageToWarn.from;
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
 
 	if (reason.length === 0) {
@@ -39,9 +45,14 @@ const warnHandler = async ({ message, chat, reply }) => {
 
 	const warnCount = await warn(userToWarn, reason);
 	const promises = [
-		bot.telegram.deleteMessage(chat.id, messageToWarn.message_id),
 		bot.telegram.deleteMessage(chat.id, message.message_id)
 	];
+
+	if (message.reply_to_message) {
+		promises.push(bot.telegram.deleteMessage(
+			chat.id,
+			message.reply_to_message.message_id));
+	}
 
 	if (warnCount < numberOfWarnsToBan) {
 		promises.push(reply(

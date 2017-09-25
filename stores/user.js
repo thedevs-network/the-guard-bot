@@ -22,7 +22,11 @@ const addUser = ({ id, first_name = '', last_name = '', username = '' }) =>
 const isUser = ({ id }) =>
 	User.findOne({ id });
 
+const getUser = (user) =>
+	User.findOne(user);
+
 module.exports = {
 	addUser,
+	getUser,
 	isUser
 };

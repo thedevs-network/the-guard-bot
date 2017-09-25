@@ -18,18 +18,27 @@ const banHandler = async ({ chat, message, reply, telegram }) => {
 		return null;
 	}
 
-	const userToBan = message.reply_to_message.from;
+	const userToBan = message.reply_to_message
+		? message.reply_to_message.from
+		: message.commandMention
+			? message.commandMention
+			: null;
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
+
+	if (!userToBan) {
+		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions);
+	}
 
 	if (reason.length === 0) {
 		return reply('ℹ️ <b>Need a reason to ban.</b>', replyOptions);
 	}
 
-	if (!message.reply_to_message) {
-		return reply('ℹ️ <b>Reply to a message.</b>', replyOptions);
+	if (message.reply_to_message) {
+		bot.telegram.deleteMessage(
+			chat.id,
+			message.reply_to_message.message_id);
 	}
-
-	bot.telegram.deleteMessage(chat.id, message.reply_to_message.message_id);
 
 	if (await isAdmin(userToBan)) {
 		return reply('ℹ️ <b>Can\'t ban other admins.</b>', replyOptions);

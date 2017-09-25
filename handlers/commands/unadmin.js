@@ -19,11 +19,16 @@ const unAdminHandler = async ({ message, reply }) => {
 		return null;
 	}
 
-	if (!message.reply_to_message) {
-		return reply('ℹ️ <b>Reply to a message.</b>', replyOptions);
-	}
+	const userToUnadmin = message.reply_to_message
+		? message.reply_to_message.from
+		: message.commandMention
+			? message.commandMention
+			: null;
 
-	const userToUnadmin = message.reply_to_message.from;
+	if (!userToUnadmin) {
+		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions);
+	}
 
 	if (!await isAdmin(userToUnadmin)) {
 		return reply(`ℹ️ ${link(userToUnadmin)} <b>is not admin.</b>`,

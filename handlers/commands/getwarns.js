@@ -14,11 +14,16 @@ const getWarnsHandler = async ({ message, reply }) => {
 	if (!await admins.isAdmin(message.from)) {
 		return null;
 	}
-	if (!message.reply_to_message) {
-		return reply('ℹ️ <b>Reply to a message.</b>', replyOptions);
+	const theUser = message.reply_to_message
+		? message.reply_to_message.from
+		: message.commandMention
+			? message.commandMention
+			: null;
+	if (!theUser) {
+		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions);
 	}
 	let i = 0;
-	const theUser = message.reply_to_message.from;
 	const warns = await getWarns(theUser);
 	if (warns.length < 1) {
 		return reply(`✅ <b>no warns for:</b> ${link(theUser)}`, replyOptions);

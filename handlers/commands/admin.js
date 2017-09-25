@@ -20,9 +20,12 @@ const adminHandler = async ({ message, reply }) => {
 	if (message.from.id !== masterID) {
 		return null;
 	}
+
 	const userToAdmin = message.reply_to_message
 		? message.reply_to_message.from
-		: message.from;
+		: message.commandMention
+			? message.commandMention
+			: message.from;
 
 	if (await isBanned(userToAdmin)) {
 		return reply('ℹ️ <b>Can\'t admin banned user.</b>', replyOptions);
