@@ -28,7 +28,7 @@
 - [x] Auto remove commands if they're not sent by admins.
 - [x] Auto remove joining messages.
 - [x] Use first name instead of username for link.
-- [ ] Commands work with username too.
+- [x] Commands work with username too.
 - [x] Commands should tell which admin sent the command.
 - [ ] Ban and remove Arabic/Russian/Indian text.
 - [x] `/report` and `@admin` to report a message to admins.
