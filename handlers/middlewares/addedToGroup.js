@@ -4,7 +4,7 @@
 const bot = require('../../bot');
 const { replyOptions } = require('../../bot/options');
 
-const { addGroup } = require('../../stores/group');
+const { addGroup, managesGroup } = require('../../stores/group');
 const { masterID } = require('../../config.json');
 
 const addedToGroupHandler = async (ctx, next) => {
@@ -13,9 +13,11 @@ const addedToGroupHandler = async (ctx, next) => {
 	const wasAdded = msg.new_chat_members.some(user =>
 		user.username === ctx.me);
 	if (wasAdded && ctx.from.id === masterID) {
-		const link = await bot.telegram.exportChatInviteLink(ctx.chat.id);
-		ctx.chat.link = link ? link : '';
-		addGroup(ctx.chat);
+		if (!await managesGroup(ctx.chat)) {
+			const link = await bot.telegram.exportChatInviteLink(ctx.chat.id);
+			ctx.chat.link = link ? link : '';
+			await addGroup(ctx.chat);
+		}
 		ctx.reply('🛠 <b>Ok, I\'ll help you manage this group from now.</b>',
 			replyOptions);
 	}
