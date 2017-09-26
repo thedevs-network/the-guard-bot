@@ -9,15 +9,7 @@ const { getAdmins } = require('../../stores/user');
 const staffHandler = async ctx => {
 	const admins = await getAdmins();
 
-	const links = admins
-		// this first .map wouldn't have to be here
-		// if we stored whole user as-is
-		// ie. if id was available as id, not user_id
-		.map(admin => ({
-			first_name: admin.first_name,
-			id: admin.user_id,
-		}))
-		.map(link);
+	const links = admins.map(link);
 
 	const list = links.map(s => `⭐ ${s}`).join('\n');
 
