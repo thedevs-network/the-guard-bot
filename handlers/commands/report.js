@@ -7,7 +7,7 @@ const { link } = require('../../utils/tg');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { allAdmins } = require('../../stores/admin');
+const { getAdmins } = require('../../stores/user');
 
 const reportHandler = async ctx => {
 	const msg = ctx.message;
@@ -15,7 +15,7 @@ const reportHandler = async ctx => {
 		return ctx.reply('ℹ️ <b>Reply to message you\'d like to report</b>',
 			replyOptions);
 	}
-	const admins = await allAdmins();
+	const admins = await getAdmins();
 	const adminObjects = admins.map(user => ({
 		first_name: '⭐️', // small hack to be able to use link function
 		id: user.user_id,

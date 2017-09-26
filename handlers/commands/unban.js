@@ -9,13 +9,13 @@ const { replyOptions } = require('../../bot/options');
 
 // DB
 const { listGroups } = require('../../stores/group');
-const { isBanned, unban } = require('../../stores/ban');
-const admins = require('../../stores/admin');
+const { isBanned, unban } = require('../../stores/user');
+const { isAdmin } = require('../../stores/user');
 
 const noop = Function.prototype;
 
 const unbanHandler = async ({ message, reply, telegram }) => {
-	if (!await admins.isAdmin(message.from)) {
+	if (!await isAdmin(message.from)) {
 		return null;
 	}
 

@@ -4,10 +4,10 @@
 const { link } = require('../../utils/tg');
 
 // DB
-const { allAdmins } = require('../../stores/admin');
+const { getAdmins } = require('../../stores/user');
 
 const staffHandler = async ctx => {
-	const admins = await allAdmins();
+	const admins = await getAdmins();
 
 	const links = admins
 		// this first .map wouldn't have to be here

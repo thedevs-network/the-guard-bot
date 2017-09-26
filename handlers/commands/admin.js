@@ -12,8 +12,8 @@ const { masterID } = loadJSON('config.json');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { isAdmin, admin } = require('../../stores/admin');
-const { isBanned } = require('../../stores/ban');
+const { isAdmin, admin } = require('../../stores/user');
+const { isBanned } = require('../../stores/user');
 const { getWarns, nowarns } = require('../../stores/warn');
 
 const adminHandler = async ({ message, reply }) => {

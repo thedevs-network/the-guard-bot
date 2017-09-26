@@ -8,10 +8,10 @@ const { replyOptions } = require('../../bot/options');
 
 // DB
 const { getWarns } = require('../../stores/warn');
-const admins = require('../../stores/admin');
+const { isAdmin } = require('../../stores/user');
 
 const getWarnsHandler = async ({ message, reply }) => {
-	if (!await admins.isAdmin(message.from)) {
+	if (!await isAdmin(message.from)) {
 		return null;
 	}
 	const theUser = message.reply_to_message

@@ -4,7 +4,7 @@
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { isAdmin } = require('../../stores/admin');
+const { isAdmin } = require('../../stores/user');
 
 const link = user => '@' + user.username;
 

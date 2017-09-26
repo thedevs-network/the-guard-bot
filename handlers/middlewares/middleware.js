@@ -10,7 +10,7 @@ const { replyOptions } = require('../../bot/options');
 
 // DB
 const { addUser, isUser } = require('../../stores/user');
-const { isBanned } = require('../../stores/ban');
+const { isBanned } = require('../../stores/user');
 
 const middlewareHandler = async ({ chat, from, message, reply }, next) => {
 	process.env.DEBUG === 'true' && message && print(message);

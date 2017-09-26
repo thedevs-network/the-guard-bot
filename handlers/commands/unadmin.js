@@ -12,7 +12,7 @@ const { masterID } = loadJSON('config.json');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { isAdmin, unadmin } = require('../../stores/admin');
+const { isAdmin, unadmin } = require('../../stores/user');
 
 const unAdminHandler = async ({ message, reply }) => {
 	if (message.from.id !== masterID) {
