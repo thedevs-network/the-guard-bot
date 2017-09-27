@@ -42,13 +42,13 @@ const unbanHandler = async ({ message, reply, telegram }) => {
 	try {
 		await Promise.all(unbans);
 	} catch (err) {
-		logError(process.env.DEBUG)(err);
+		logError(err);
 	}
 
 	try {
 		await unban(userToUnban);
 	} catch (err) {
-		logError(process.env.DEBUG)(err);
+		logError(err);
 	}
 
 	telegram.sendMessage(

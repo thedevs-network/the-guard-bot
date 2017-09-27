@@ -51,7 +51,7 @@ const banHandler = async ({ chat, message, reply, telegram }) => {
 	try {
 		await ban(userToBan, reason);
 	} catch (err) {
-		logError(process.env.DEBUG)(err);
+		logError(err);
 	}
 
 	const groups = await listGroups();
@@ -62,7 +62,7 @@ const banHandler = async ({ chat, message, reply, telegram }) => {
 	try {
 		await Promise.all(bans);
 	} catch (err) {
-		logError(process.env.DEBUG)(err);
+		logError(err);
 	}
 
 	return reply(`🚫 ${link(message.from)} <b>banned</b> ${link(userToBan)} ` +

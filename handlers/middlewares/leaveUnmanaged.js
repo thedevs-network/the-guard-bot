@@ -40,7 +40,7 @@ const leaveUnmanagedHandler = async (ctx, next) => {
 	try {
 		await ctx.replyWithVideo(randomChoice(gifs), { caption, reply_markup });
 	} catch (err) {
-		logError(process.env.DEBUG)(err);
+		logError(err);
 	}
 
 	return ctx.telegram.leaveChat(ctx.chat.id);

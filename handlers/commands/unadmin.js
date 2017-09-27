@@ -38,7 +38,7 @@ const unAdminHandler = async ({ message, reply }) => {
 	try {
 		await unadmin(userToUnadmin);
 	} catch (err) {
-		logError(process.env.DEBUG)(err);
+		logError(err);
 	}
 
 	return reply(`❗️ ${link(userToUnadmin)} <b>is no longer admin.</b>`,

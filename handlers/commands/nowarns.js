@@ -35,7 +35,7 @@ const nowarnsHandler = async ({ message, reply }) => {
 	try {
 		await nowarns(userToUnwarn);
 	} catch (err) {
-		logError(process.env.DEBUG)(err);
+		logError(err);
 	}
 
 	return reply(

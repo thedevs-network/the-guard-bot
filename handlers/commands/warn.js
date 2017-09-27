@@ -68,7 +68,7 @@ const warnHandler = async ({ message, chat, reply }) => {
 			replyOptions));
 	}
 
-	return Promise.all(promises).catch(logError(process.env.DEBUG));
+	return Promise.all(promises).catch(logError);
 };
 
 module.exports = warnHandler;

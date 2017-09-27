@@ -65,9 +65,9 @@ const removeLinks = async ({ message, chat, reply }, next) => {
 				replyOptions));
 		}
 		try {
-			await Promise.all(promises).catch(logError(process.env.DEBUG));
+			await Promise.all(promises);
 		} catch (err) {
-			logError(process.env.DEBUG)(err);
+			logError(err);
 		}
 		return next();
 	}

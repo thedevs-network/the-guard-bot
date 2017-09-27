@@ -44,14 +44,14 @@ const adminHandler = async ({ message, reply }) => {
 		try {
 			await nowarns(userToAdmin);
 		} catch (err) {
-			logError(process.env.DEBUG)(err);
+			logError(err);
 		}
 	}
 
 	try {
 		await admin(userToAdmin);
 	} catch (err) {
-		logError(process.env.DEBUG)(err);
+		logError(err);
 	}
 
 	return reply(`⭐️ ${link(userToAdmin)} <b>is now admin.</b>.`, replyOptions);

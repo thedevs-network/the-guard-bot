@@ -17,7 +17,7 @@ Group.ensureIndex({
 
 const addGroup = group =>
 	Group.insert(group)
-		.catch(logError(process.env.DEBUG));
+		.catch(logError);
 
 const listGroups = () =>
 	Group.find({});

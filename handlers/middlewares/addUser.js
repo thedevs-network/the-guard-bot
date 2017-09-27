@@ -23,7 +23,7 @@ const addUserHandler = async ({ message }, next) => {
 		try {
 			await addUser(user);
 		} catch (err) {
-			logError(process.env.DEBUG)(err);
+			logError(err);
 		}
 	});
 

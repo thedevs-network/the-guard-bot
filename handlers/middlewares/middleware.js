@@ -22,7 +22,7 @@ const middlewareHandler = async ({ chat, from, message, reply }, next) => {
 		try {
 			await bot.telegram.deleteMessage(chat.id, message.message_id);
 		} catch (err) {
-			logError(process.env.DEBUG)(err);
+			logError(err);
 		}
 	}
 	const banned = await isBanned(from);
@@ -32,7 +32,7 @@ const middlewareHandler = async ({ chat, from, message, reply }, next) => {
 				`🚫 ${link(from)} <b>is banned</b>!\n\n` +
 				`Reason: ${banned}`,
 				replyOptions))
-			.catch(logError(process.env.DEBUG))
+			.catch(logError)
 			.then(next);
 	}
 	return next();

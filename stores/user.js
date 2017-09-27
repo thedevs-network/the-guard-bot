@@ -24,7 +24,7 @@ const addUser = ({ id, first_name = '', last_name = '', username = '' }) =>
 		{ id },
 		{ first_name, id, last_name, status: 'member', username, warns: [] },
 		{ upsert: true })
-		.catch(logError(process.env.DEBUG));
+		.catch(logError);
 
 const isUser = ({ id }) =>
 	User.findOne({ id });
