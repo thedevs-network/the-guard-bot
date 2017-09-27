@@ -1,5 +1,4 @@
 'use strict';
-require('dotenv').config();
 
 // Utils
 const { deleteAfter } = require('./utils/tg');

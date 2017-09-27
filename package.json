@@ -26,7 +26,6 @@
   },
   "homepage": "https://github.com/TheDevs-Network/bot#readme",
   "dependencies": {
-    "dotenv": "^4.0.0",
     "nedb-promise": "^2.0.1",
     "telegraf": "^3.9.0"
   },
