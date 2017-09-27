@@ -12,9 +12,13 @@ const { masterID } = loadJSON('config.json');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { isAdmin, admin } = require('../../stores/user');
-const { isBanned } = require('../../stores/user');
-const { getWarns, nowarns } = require('../../stores/warn');
+const {
+	isAdmin,
+	admin,
+	isBanned,
+	getWarns,
+	nowarns
+} = require('../../stores/user');
 
 const adminHandler = async ({ message, reply }) => {
 	if (message.from.id !== masterID) {

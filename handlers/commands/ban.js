@@ -10,8 +10,7 @@ const { replyOptions } = require('../../bot/options');
 
 // DB
 const { listGroups } = require('../../stores/group');
-const { isBanned, ban } = require('../../stores/user');
-const { isAdmin } = require('../../stores/user');
+const { isAdmin, isBanned, ban } = require('../../stores/user');
 
 const banHandler = async ({ chat, message, reply, telegram }) => {
 	if (!await isAdmin(message.from)) {

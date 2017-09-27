@@ -13,9 +13,7 @@ const bot = require('../../bot');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { warn } = require('../../stores/warn');
-const { ban } = require('../../stores/user');
-const { isAdmin } = require('../../stores/user');
+const { isAdmin, ban, getWarns, warn } = require('../../stores/user');
 
 const warnHandler = async ({ message, chat, reply }) => {
 	if (!await isAdmin(message.from)) {
@@ -43,7 +41,8 @@ const warnHandler = async ({ message, chat, reply }) => {
 		return reply('ℹ️ <b>Can\'t warn other admins.</b>', replyOptions);
 	}
 
-	const warnCount = await warn(userToWarn, reason);
+	await warn(userToWarn, reason);
+	const warnCount = await getWarns(userToWarn);
 	const promises = [
 		bot.telegram.deleteMessage(chat.id, message.message_id)
 	];
@@ -54,10 +53,10 @@ const warnHandler = async ({ message, chat, reply }) => {
 			message.reply_to_message.message_id));
 	}
 
-	if (warnCount < numberOfWarnsToBan) {
+	if (warnCount.length < numberOfWarnsToBan) {
 		promises.push(reply(
 			`⚠️ ${link(message.from)} <b>warned</b> ${link(userToWarn)} ` +
-			`<b>for:</b>\n\n ${reason} (${warnCount}/3)`,
+			`<b>for:</b>\n\n ${reason} (${warnCount.length}/3)`,
 			replyOptions));
 	} else {
 		promises.push(bot.telegram.kickChatMember(chat.id, userToWarn.id));
@@ -65,7 +64,7 @@ const warnHandler = async ({ message, chat, reply }) => {
 		promises.push(reply(
 			`🚫 ${link(message.from)} <b>banned</b> ${link(userToWarn)} ` +
 			'<b>for:</b>\n\nReached max number of warnings ' +
-			`(${warnCount}/3)\n\n`,
+			`(${warnCount.length}/3)\n\n`,
 			replyOptions));
 	}
 

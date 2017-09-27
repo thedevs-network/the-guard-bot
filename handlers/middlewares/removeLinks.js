@@ -17,9 +17,7 @@ const bot = require('../../bot');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { warn } = require('../../stores/warn');
-const { ban } = require('../../stores/user');
-const { isAdmin } = require('../../stores/user');
+const { isAdmin, ban, warn } = require('../../stores/user');
 const { listGroups } = require('../../stores/group');
 
 const removeLinks = async ({ message, chat, reply }, next) => {

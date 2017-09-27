@@ -7,8 +7,7 @@ const { link } = require('../../utils/tg');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { getWarns } = require('../../stores/warn');
-const { isAdmin } = require('../../stores/user');
+const { isAdmin, getWarns } = require('../../stores/user');
 
 const getWarnsHandler = async ({ message, reply }) => {
 	if (!await isAdmin(message.from)) {
@@ -25,13 +24,13 @@ const getWarnsHandler = async ({ message, reply }) => {
 	}
 	let i = 0;
 	const warns = await getWarns(theUser);
-	if (warns.length < 1) {
+	if (!warns) {
 		return reply(`✅ <b>no warns for:</b> ${link(theUser)}`, replyOptions);
 	}
 	return reply(`⚠️ <b>Warns for</b> ${link(theUser)}:\n\n` +
 		warns
 			.map(warn => ++i + '. ' + warn)
-			.join('\n\n'), replyOptions);
+			.join('\n'), replyOptions);
 };
 
 module.exports = getWarnsHandler;

@@ -7,8 +7,7 @@ const { link } = require('../../utils/tg');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const Warn = require('../../stores/warn');
-const { isAdmin } = require('../../stores/user');
+const { isAdmin, getWarns, unwarn } = require('../../stores/user');
 
 const unwarnHandler = async ({ message, reply }) => {
 	if (!await isAdmin(message.from)) {
@@ -26,12 +25,19 @@ const unwarnHandler = async ({ message, reply }) => {
 			replyOptions);
 	}
 
-	const allWarns = await Warn.getWarns(userToUnwarn);
-	const warn = await Warn.unwarn(userToUnwarn);
+	const allWarns = await getWarns(userToUnwarn);
+
+	if (!allWarns) {
+		return reply(`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
+			replyOptions);
+	}
+
+	await unwarn(userToUnwarn);
 
 	return reply(
 		`❎ ${link(message.from)} <b>pardoned</b> ${link(userToUnwarn)} ` +
-		`<b>for:</b>\n\n${warn} (${allWarns.length}/3)`,
+		`<b>for:</b>\n\n${allWarns[allWarns.length - 1]}` +
+		`(${allWarns.length}/3)`,
 		replyOptions);
 };
 

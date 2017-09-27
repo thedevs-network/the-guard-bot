@@ -9,8 +9,7 @@ const { replyOptions } = require('../../bot/options');
 
 // DB
 const { listGroups } = require('../../stores/group');
-const { isBanned, unban } = require('../../stores/user');
-const { isAdmin } = require('../../stores/user');
+const { isAdmin, isBanned, unban } = require('../../stores/user');
 
 const noop = Function.prototype;
 

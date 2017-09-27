@@ -8,8 +8,7 @@ const { logError } = require('../../utils/log');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { getWarns, nowarns } = require('../../stores/warn');
-const { isAdmin } = require('../../stores/user');
+const { isAdmin, getWarns, nowarns } = require('../../stores/user');
 
 const nowarnsHandler = async ({ message, reply }) => {
 	if (!await isAdmin(message.from)) {
@@ -29,7 +28,7 @@ const nowarnsHandler = async ({ message, reply }) => {
 
 	const warns = await getWarns(userToUnwarn);
 
-	if (warns.length < 1) {
+	if (!warns) {
 		return reply(`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
 			replyOptions);
 	}

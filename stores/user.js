@@ -32,11 +32,10 @@ const isUser = ({ id }) =>
 const getUser = user =>
 	User.findOne(user);
 
-const admin = ({ id, first_name = '', last_name = '', username = '' }) =>
+const admin = ({ id }) =>
 	User.update(
 		{ id },
-		{ first_name, id, last_name, status: 'admin', username, warns: [] })
-		.catch(logError(process.env.DEBUG));
+		{ $set: { status: 'admin' } });
 
 const getAdmins = () =>
 	User.find({ status: 'admin' });
@@ -47,24 +46,30 @@ const unadmin = ({ id }) =>
 const isAdmin = ({ id }) =>
 	User.findOne({ id, status: 'admin' });
 
-const ban = (userToBan, banReason) => {
-	const { id, first_name = '', last_name = '', username = '' } = userToBan;
-	const userObj = { first_name, id, last_name, username, warns: [] };
-	return User.findOne({ id })
-		.then(user => user
-			? User.update({ id }, { $set: { banReason, status: 'banned' } })
-			: User.update(
-				{ id },
-				Object.assign({}, userObj, { banReason, status: 'banned' }),
-				{ upsert: true }));
-};
+const ban = ({ id }, ban_reason) =>
+	User.update({ id }, { $set: { ban_reason, status: 'banned', warns: [] } });
 
 const unban = ({ id }) =>
 	User.update({ id }, { $set: { banReason: '', status: 'member' } });
 
 const isBanned = ({ id }) =>
 	User.findOne({ id, status: 'banned' })
-		.then(user => user ? user.banReason : null);
+		.then(user => user ? user.ban_reason : null);
+
+const warn = ({ id }, reason) =>
+	User.update({ id }, { $push: { warns: reason } });
+
+const unwarn = ({ id }) =>
+	User.update({ id }, { $pop: { warns: 1 } });
+
+const nowarns = ({ id }) =>
+	User.update({ id }, { $set: { warns: [] } });
+
+const getWarns = ({ id }) =>
+	User.findOne({ id })
+		.then(user => user && user.warns.length > 0
+			? user.warns
+			: null);
 
 module.exports = {
 	addUser,
@@ -72,9 +77,13 @@ module.exports = {
 	ban,
 	getAdmins,
 	getUser,
+	getWarns,
 	isAdmin,
 	isBanned,
 	isUser,
+	nowarns,
 	unadmin,
-	unban
+	unban,
+	unwarn,
+	warn
 };
