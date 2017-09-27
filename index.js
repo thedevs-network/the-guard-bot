@@ -32,6 +32,7 @@ const unbanHandler = require('./handlers/commands/unban');
 const reportHandler = require('./handlers/commands/report');
 const staffHandler = require('./handlers/commands/staff');
 const groupsHandler = require('./handlers/commands/groups');
+const commandReferenceHandler = require('./handlers/commands/commands');
 
 bot.on('new_chat_members', addedToGroupHandler);
 bot.use(leaveUnmanagedHandler);
@@ -53,6 +54,7 @@ bot.command('report', reportHandler);
 bot.hears(/^@admins?$/i, reportHandler);
 bot.command('staff', staffHandler);
 bot.command('groups', groupsHandler);
+bot.command('commands', commandReferenceHandler);
 
 bot.catch(logError);
 
