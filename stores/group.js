@@ -16,8 +16,7 @@ Group.ensureIndex({
 });
 
 const addGroup = group =>
-	Group.insert(group)
-		.catch(logError);
+	Group.update(group.id, group, { upsert: true });
 
 const listGroups = () =>
 	Group.find({});
