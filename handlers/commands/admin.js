@@ -54,7 +54,7 @@ const adminHandler = async ({ message, reply }) => {
 		logError(err);
 	}
 
-	return reply(`⭐️ ${link(userToAdmin)} <b>is now admin.</b>.`, replyOptions);
+	return reply(`⭐️ ${link(userToAdmin)} <b>is now admin.</b>`, replyOptions);
 };
 
 module.exports = adminHandler;
