@@ -2,23 +2,21 @@
 
 const commandReference = `\
 <b>Master commands</b>:
-<code>/admin</code> - promote replied-to person to admin,
-<code>/unadmin</code> - demote admin,
+<code>/admin</code> - Makes the user admin.
+<code>/unadmin</code> - Demotes the user from admin list.
 
 <b>Admin commands</b>:
-<code>/warn &lt;reason&gt;</code> - \
-warn replied-to person and delete their message,
-<code>/unwarn</code> - remove last warn from replied-to person,
-<code>/nowarns</code> - remove all warn from replied-to person,
-<code>/getwarns</code> - get all warnings from replied-to person,
-<code>/ban &lt;reason&gt;</code> - \
-ban replied-to person and delete their message,
-<code>/unban</code> - unban replied-to person
+<code>/warn &lt;reason&gt;</code> - Warns the user.
+<code>/unwarn</code> - Removes the last warn from the user.
+<code>/nowarns</code> - Clears warns for the user.
+<code>/getwarns</code> - Shows a list of warns for the user.
+<code>/ban &lt;reason&gt;</code> - Bans the user from groups.
+<code>/unban</code> - Removes the user from ban list.
 
 <b>Commands for everyone</b>:
-<code>/staff</code> - list admins,
-<code>/groups</code> - list managed groups,
-<code>/report</code> - report replied-to message to admins.
+<code>/staff</code> - Shows a list of admins.
+<code>/groups</code> - Show a list of groups which the bot is admin in.
+<code>/report</code> - Reports the replied-to message to admins.
 `;
 
 const commandReferenceHandler = ({ chat, replyWithHTML }) => {
