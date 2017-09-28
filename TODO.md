@@ -24,7 +24,7 @@
   - [X] Ban all bots when they're added (unless added by admin).
   - [x] `/unban <id>` unban a user.
   - [x] Synchronize ban across the groups.
-- ~~[ ] All command be available with both `!` and `/`.~~
+- [x] ~~All command be available with both `!` and `/`.~~
 - [x] Auto remove commands if they're not sent by admins.
 - [x] Auto remove joining messages.
 - [x] Use first name instead of username for link.
@@ -32,10 +32,10 @@
 - [x] Commands should tell which admin sent the command.
 - [ ] Ban and remove Arabic/Russian/Indian text.
 - [x] `/report` and `@admin` to report a message to admins.
-- [ ] `/link` to show the link of current group.
+- [x] ~~`/link` to show the link of current group.~~
 - [x] `/groups` to show the list of groups' link.
 - [ ] custom commands -- seeing a defined command, bot should reply with static text, read from db. Can be used to implement `/channel` and `/rules`.
-- [ ] ~~`/channel` to show the channel link.~~
+- [x] ~~`/channel` to show the channel link.~~
 - [x] `/staff` to show the list of admins.
-- [ ] ~~`/rules` to show rules. Only admins can use this command.~~
-- [ ] `/start`, showing basic info about the bot, `/help` explaining all the commands (probably grouped by normie commands, admin commands and custom commands) (I think it's best to implement `/start` and `/help` after we're done with other stuff, so we don't have to revisit them).
+- [x] ~~`/rules` to show rules. Only admins can use this command.~~
+- [x] `/start`, showing basic info about the bot, `/help` explaining all the commands (probably grouped by normie commands, admin commands and custom commands) (I think it's best to implement `/start` and `/help` after we're done with other stuff, so we don't have to revisit them).
