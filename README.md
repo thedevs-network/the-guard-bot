@@ -36,6 +36,6 @@ Command  | Rule   | Description
 
 All commands and actions are synchronized across all of the groups managed by the owner and they work with both **replying** and **mentioning** a user.
 
-`/ban` and `/warn` will removes the message as well.
+If used by reply, `/ban` and `/warn` remove the replied-to message.
 
 The bot is still in alpha phase so feel free to open issues and ask for a _feature_.
