@@ -26,6 +26,7 @@ const groupsHandler = async ctx => {
 	const entries = groups.map(entry).join('\n');
 
 	return ctx.replyWithHTML(`🛠 <b>Groups I manage</b>:\n\n${entries}`, {
+		disable_web_page_preview: true,
 		reply_markup,
 	});
 

@@ -2,7 +2,7 @@
   <img src="http://imageupload.co.uk/images/2017/09/28/zzzzz.png" width="180" height="180">
   <h1 align="center">The Guard Bot</h1>
 </p>
-The Guard is a Telegram bot made to help admins manage their groups. 
+The Guard is a Telegram bot made to help admins manage their groups.
 
 Initially created to moderate [The Devs Network](https://thedevs.network).
 
@@ -24,6 +24,7 @@ Command  | Rule   | Description
 -------- | ------ | -----------
 `/admin` | _Master_ | Makes the user admin.
 `/unadmin` | _Master_ | Demotes the user from admin list.
+`/leave` | _Master_ | Makes the bot leave the group cleanly.
 `/warn <reason>` | _Admin_ | Warns the user.
 `/unwarn` | _Admin_ | Removes the last warn from the user.
 `/nowarns` | _Admin_ | Clears warns for the user.
