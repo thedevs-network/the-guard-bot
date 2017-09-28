@@ -10,24 +10,25 @@ const pkg = require('../../package.json');
 
 const caption = `\
 Sorry, you need to set up your own instance \
-to use me in your group or network of groups.
+to use me in your group or a network of groups.
 
-For managing single group, it'll be simpler for you \
+For managing a single group, it'll be simpler for you \
 to use @GroupButler_bot or @mattatabot instead.
 `;
 
 const inline_keyboard = [ [ {
-	text: 'Set up your own instance',
+	text: '🛠 Setup a New Bot',
 	url: pkg.homepage,
 } ] ];
 
 const reply_markup = JSON.stringify({ inline_keyboard });
 
 const gifs = [
-	'http://i.memeful.com/media/post/4wbkyXM_700wa_0.gif',
-	'https://media.giphy.com/media/vaAiMdHHBTqla/giphy.gif',
+	'https://media.giphy.com/media/xTk9ZBWrma4PIC9y4E/giphy.gif',
+	'https://media.giphy.com/media/l2Sqc3POpzkj5r8SQ/giphy.gif',
 	'https://media.giphy.com/media/StaMzjNkq5PqM/giphy.gif',
 	'https://media.giphy.com/media/fjYDN5flDJ756/giphy.gif',
+	'https://media.giphy.com/media/3XiQswSmbjBiU/giphy.gif',
 ];
 
 const randomChoice = arr => arr[Math.floor(Math.random() * arr.length)];
