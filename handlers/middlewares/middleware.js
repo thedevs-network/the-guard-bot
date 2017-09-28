@@ -17,7 +17,8 @@ const middlewareHandler = async ({ chat, from, message, reply }, next) => {
 		message &&
 		message.text &&
 		message.text[0] === '/' &&
-		message.text[1].match(/\w/)
+		message.text[1].match(/\w/) &&
+		chat.type !== 'private'
 	) {
 		try {
 			await bot.telegram.deleteMessage(chat.id, message.message_id);
