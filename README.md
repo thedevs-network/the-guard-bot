@@ -12,7 +12,7 @@ Initially created to moderate [The Devs Network](https://thedevs.network).
 You need [Node.js](https://nodejs.org/) (> 8.4) to run this bot.
 
 1. Create a bot via [@BotFather](https://t.me/BotFather) and grab a **token**.
-2. Clone this repository or [downlaod zip](https://github.com/TheDevs-Network/the-gaurd-bot/archive/master.zip).
+2. Clone this repository or [downlaod zip](https://github.com/TheDevs-Network/the-guard-bot/archive/master.zip).
 3. Install dependencies via `npm install`.
 4. Fill `config.example.json` properly and rename it `config.json`.
 5. Start the bot via `npm start`.
