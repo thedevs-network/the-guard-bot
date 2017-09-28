@@ -21,6 +21,11 @@ ban replied-to person and delete their message,
 <code>/report</code> - report replied-to message to admins.
 `;
 
-const commandReferenceHandler = ctx => ctx.replyWithHTML(commandReference);
+const commandReferenceHandler = ({ chat, replyWithHTML }) => {
+	if (chat.type !== 'private') {
+		return null;
+	}
+	return replyWithHTML(commandReference);
+};
 
 module.exports = commandReferenceHandler;
