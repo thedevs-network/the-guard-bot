@@ -6,11 +6,13 @@ const commandReference = `\
 <code>/unadmin</code> - demote admin,
 
 <b>Admin commands</b>:
-<code>/warn &lt;reason&gt;</code> - warn replied-to person and delete their message,
+<code>/warn &lt;reason&gt;</code> - \
+warn replied-to person and delete their message,
 <code>/unwarn</code> - remove last warn from replied-to person,
 <code>/nowarns</code> - remove all warn from replied-to person,
 <code>/getwarns</code> - get all warnings from replied-to person,
-<code>/ban &lt;reason&gt;</code> - ban replied-to person and delete their message,
+<code>/ban &lt;reason&gt;</code> - \
+ban replied-to person and delete their message,
 <code>/unban</code> - unban replied-to person
 
 <b>Commands for everyone</b>:

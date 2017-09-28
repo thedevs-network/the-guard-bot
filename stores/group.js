@@ -1,8 +1,5 @@
 'use strict';
 
-// Utils
-const { logError } = require('../utils/log');
-
 const Datastore = require('nedb-promise');
 
 const Group = new Datastore({
