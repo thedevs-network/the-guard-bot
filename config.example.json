@@ -1,0 +1,8 @@
+{
+	"masterID": 123456789, // enter the master admin ID here. It must be number.
+	"token": "", // enter the bot token here.
+	"numberOfWarnsToBan": 3, // Number of warns that will get someone banned.
+	"groupsInlineKeyboard": [], // [[inlineButton]] -> inline keyboard to be added to reply to /groups
+	"excludedChannels": [], // [String] -> list of channels usernames to be excluded from warnings
+	"excludedGroups": [] // [String] -> list of groups links to be excluded from warnings
+}

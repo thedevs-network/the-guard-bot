@@ -1,4 +1,4 @@
-node_modules/*
-package-lock.json
-config.json
+node_modules
 data/*
+config.json
+.env

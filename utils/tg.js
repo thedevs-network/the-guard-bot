@@ -1,9 +1,10 @@
 'use strict';
 
-const link = user =>
-	user.username
-		? `<a href="https://t.me/${user.username}">${user.username}</a>`
-		: `<code>${user.first_name}</code>`;
+const escapeHtml = s => s
+	.replace(/</g, '&lt;');
+
+const link = ({ id, first_name }) =>
+	`<a href="tg://user?id=${id}">${escapeHtml(first_name)}</a>`;
 
 const deleteAfter = ms => ctx =>
 	setTimeout(() =>
@@ -12,5 +13,6 @@ const deleteAfter = ms => ctx =>
 
 module.exports = {
 	deleteAfter,
+	escapeHtml,
 	link
 };

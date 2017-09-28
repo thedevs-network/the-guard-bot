@@ -1,9 +1,10 @@
 {
   "name": "thedevs_bot",
-  "version": "0.1.0",
-  "description": "Official Bot for TheDevs Network!",
+  "version": "0.2.0",
+  "description": "Official Bot for The Devs community.",
   "main": "index.js",
   "scripts": {
+    "start": "node index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -12,17 +13,25 @@
   },
   "keywords": [
     "bot",
-    "thedevs"
+    "thedevs",
+    "telegram"
   ],
   "author": "Thomas Rory Gummerson <thomas@gummerson.no> (https://trgwii.no)",
-  "license": "Beerware",
+  "contributors": [
+    "Pouria Ezzati <pouria@thedevs.network> (https://thedevs.network)",
+    "GingerPlusPlus <woj.pawlik@gmail.com>"
+  ],
+  "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/TheDevs-Network/bot/issues"
+    "url": "https://github.com/TheDevs-Network/the-guard-bot/issues"
   },
-  "homepage": "https://github.com/TheDevs-Network/bot#readme",
+  "homepage": "https://github.com/TheDevs-Network/the-guard-bot/",
   "dependencies": {
     "nedb-promise": "^2.0.1",
     "telegraf": "^3.9.0"
+  },
+  "engines": {
+    "node": ">=8.1.3"
   },
   "devDependencies": {
     "eslint": "^4.3.0"
