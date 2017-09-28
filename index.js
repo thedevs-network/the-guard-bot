@@ -23,6 +23,7 @@ const addedToGroupHandler = require('./handlers/middlewares/addedToGroup');
 // Commmands Handlers
 const adminHandler = require('./handlers/commands/admin');
 const unAdminHandler = require('./handlers/commands/unadmin');
+const leaveCommandHandler = require('./handlers/commands/leave');
 const warnHandler = require('./handlers/commands/warn');
 const unwarnHandler = require('./handlers/commands/unwarn');
 const nowarnsHandler = require('./handlers/commands/nowarns');
@@ -45,6 +46,7 @@ bot.on('new_chat_members', antibotHandler);
 bot.on([ 'new_chat_members', 'left_chat_member' ], deleteAfter(10 * 60 * 1000));
 bot.command('admin', adminHandler);
 bot.command('unadmin', unAdminHandler);
+bot.command('leave', leaveCommandHandler);
 bot.command('warn', warnHandler);
 bot.command('unwarn', unwarnHandler);
 bot.command('nowarns', nowarnsHandler);

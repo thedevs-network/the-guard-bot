@@ -4,6 +4,7 @@ const commandReference = `\
 <b>Master commands</b>:
 <code>/admin</code> - Makes the user admin.
 <code>/unadmin</code> - Demotes the user from admin list.
+<code>/leave</code> - Makes the bot leave the group cleanly.
 
 <b>Admin commands</b>:
 <code>/warn &lt;reason&gt;</code> - Warns the user.

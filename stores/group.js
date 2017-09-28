@@ -21,8 +21,12 @@ const listGroups = () =>
 const managesGroup = group =>
 	Group.findOne({ id: group.id });
 
+const removeGroup = ({ id }) =>
+	Group.remove({ id });
+
 module.exports = {
 	addGroup,
 	listGroups,
 	managesGroup,
+	removeGroup,
 };
