@@ -18,7 +18,7 @@ const reportHandler = async ctx => {
 	const admins = await getAdmins();
 	const adminObjects = admins.map(user => ({
 		first_name: '⭐️', // small hack to be able to use link function
-		id: user.user_id,
+		id: user.id,
 	}));
 	const stars = adminObjects.map(link).join('');
 	const s = `📋 ${link(ctx.from)} <b>reported the message to admins:</b> ` +
