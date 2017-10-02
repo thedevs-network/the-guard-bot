@@ -43,7 +43,7 @@ bot.on('message', addUserHandler);
 bot.on('message', removeLinksHandler);
 bot.on('message', checkUsernameHandler);
 bot.on('new_chat_members', antibotHandler);
-bot.on([ 'new_chat_members', 'left_chat_member' ], deleteAfter(10 * 60 * 1000));
+bot.on([ 'new_chat_members', 'left_chat_member' ], deleteAfter(2 * 60 * 1000));
 bot.command('admin', adminHandler);
 bot.command('unadmin', unAdminHandler);
 bot.command('leave', leaveCommandHandler);
