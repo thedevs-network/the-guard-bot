@@ -32,6 +32,7 @@ Command  | Rule   | Description
 `/ban <reason>` | _Admin_ | Bans the user from groups.
 `/unban` | _Admin_ | Removes the user from ban list.
 `/staff` | _All_ | Shows a list of admins.
+`/link` | _All_ | Show the current group's link.
 `/groups` | _All_ | Show a list of groups which the bot is admin in.
 `/report` | _All_ | Reports the replied-to message to admins.
 
