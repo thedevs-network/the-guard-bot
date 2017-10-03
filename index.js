@@ -13,7 +13,8 @@ bot.telegram.getMe().then((botInfo) => {
 
 // Middleware Handlers
 const leaveUnmanagedHandler = require('./handlers/middlewares/leaveUnmanaged');
-const middlewareHandler = require('./handlers/middlewares/middleware');
+const removeCommandsHandler = require('./handlers/middlewares/removeCommands');
+const kickBannedHandler = require('./handlers/middlewares/kickBanned');
 const addUserHandler = require('./handlers/middlewares/addUser');
 const removeLinksHandler = require('./handlers/middlewares/removeLinks');
 const checkUsernameHandler = require('./handlers/middlewares/checkUsername');
@@ -39,7 +40,8 @@ const helpHandler = require('./handlers/commands/help');
 
 bot.on('new_chat_members', addedToGroupHandler);
 bot.use(leaveUnmanagedHandler);
-bot.use(middlewareHandler);
+bot.use(removeCommandsHandler);
+bot.use(kickBannedHandler);
 bot.on('message', addUserHandler);
 bot.on('message', removeLinksHandler);
 bot.on('message', checkUsernameHandler);

@@ -14,7 +14,7 @@ const addedToGroupHandler = async (ctx, next) => {
 	const wasAdded = msg.new_chat_members.some(user =>
 		user.username === ctx.me);
 	if (wasAdded && ctx.from.id === masterID) {
-		admin(ctx.from);
+		await admin(ctx.from);
 		if (!await managesGroup(ctx.chat)) {
 			const link = await bot.telegram.exportChatInviteLink(ctx.chat.id);
 			ctx.chat.link = link ? link : '';
