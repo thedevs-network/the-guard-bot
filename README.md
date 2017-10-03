@@ -20,7 +20,7 @@ You need [Node.js](https://nodejs.org/) (> 8.1) to run this bot.
 Now you can add the bot as **administrator** to your groups.
 
 ## Commands
-Command  | Rule   | Description
+Command  | Role   | Description
 -------- | ------ | -----------
 `/admin` | _Master_ | Makes the user admin.
 `/unadmin` | _Master_ | Demotes the user from admin list.
