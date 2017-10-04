@@ -18,6 +18,8 @@ const kickBannedHandler = require('./handlers/middlewares/kickBanned');
 const addUserHandler = require('./handlers/middlewares/addUser');
 const removeLinksHandler = require('./handlers/middlewares/removeLinks');
 const checkUsernameHandler = require('./handlers/middlewares/checkUsername');
+const addCustomCmdHandler = require('./handlers/middlewares/addCustomCmd');
+const runCustomCmdHandler = require('./handlers/middlewares/runCustomCmd');
 const antibotHandler = require('./handlers/middlewares/antibot');
 const addedToGroupHandler = require('./handlers/middlewares/addedToGroup');
 
@@ -36,6 +38,8 @@ const staffHandler = require('./handlers/commands/staff');
 const linkHandler = require('./handlers/commands/link');
 const groupsHandler = require('./handlers/commands/groups');
 const commandReferenceHandler = require('./handlers/commands/commands');
+const addCommandHandler = require('./handlers/commands/addCommand');
+const removeCommandHandler = require('./handlers/commands/removeCommand');
 const helpHandler = require('./handlers/commands/help');
 
 bot.on('new_chat_members', addedToGroupHandler);
@@ -45,6 +49,8 @@ bot.use(kickBannedHandler);
 bot.on('message', addUserHandler);
 bot.on('message', removeLinksHandler);
 bot.on('message', checkUsernameHandler);
+bot.on('message', addCustomCmdHandler);
+bot.on('message', runCustomCmdHandler);
 bot.on('new_chat_members', antibotHandler);
 bot.on([ 'new_chat_members', 'left_chat_member' ], deleteAfter(2 * 60 * 1000));
 bot.command('admin', adminHandler);
@@ -62,6 +68,8 @@ bot.command('staff', staffHandler);
 bot.command('link', linkHandler);
 bot.command('groups', groupsHandler);
 bot.command('commands', commandReferenceHandler);
+bot.command('addcommand', addCommandHandler);
+bot.command('removecommand', removeCommandHandler);
 bot.command([ 'start', 'help' ], helpHandler);
 
 bot.catch(logError);
