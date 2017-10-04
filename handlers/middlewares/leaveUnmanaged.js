@@ -23,22 +23,28 @@ const inline_keyboard = [ [ {
 
 const reply_markup = JSON.stringify({ inline_keyboard });
 
-const gifIds = ['xTk9ZBWrma4PIC9y4E', 'l2Sqc3POpzkj5r8SQ', 'StaMzjNkq5PqM', 'fjYDN5flDJ756', '3XiQswSmbjBiU' ];
+const gifIds = [
+	'xTk9ZBWrma4PIC9y4E',
+	'l2Sqc3POpzkj5r8SQ',
+	'StaMzjNkq5PqM',
+	'fjYDN5flDJ756',
+	'3XiQswSmbjBiU'
+];
 
 const gifs = gifIds.map(x => `https://media.giphy.com/media/${x}/giphy.gif`);
 
 
 /**
- * @param {Array} [arr] An anonymous array
+ * @param {Array} arr An anonymous array
  * @returns {Number} A random number
  */
 const randomChoice = arr => arr[Math.floor(Math.random() * arr.length)];
 
 
 /**
- * @param {TelegrafContext} ctx
- * @param {Function} next
- * @returns {Promise.<*>}
+ * @param {TelegrafContext} ctx - Telegraf context object
+ * @param {Function} next - method for returning next object
+ * @returns {Promise.<*>} - returns next object
  */
 const leaveUnmanagedHandler = async (ctx, next) => {
 	if (ctx.chat.type === 'private' || await managesGroup(ctx.chat)) {
