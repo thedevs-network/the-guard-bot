@@ -41,3 +41,5 @@ All commands and actions are synchronized across all of the groups managed by th
 If used by reply, `/ban` and `/warn` remove the replied-to message.
 
 The bot is still in alpha phase so feel free to open issues and ask for a _feature_.
+
+[**Roadmap**](https://github.com/TheDevs-Network/the-guard-bot/projects/1)
