@@ -4,43 +4,66 @@
 const { deleteAfter } = require('./utils/tg');
 const { logError } = require('./utils/log');
 
-// Bot
+/**
+ * @type {Telegraf}
+ * Bot
+ */
 const bot = require('./bot');
 
 bot.telegram.getMe().then((botInfo) => {
 	bot.options.username = botInfo.username;
 });
 
-// Middleware Handlers
-const leaveUnmanagedHandler = require('./handlers/middlewares/leaveUnmanaged');
-const removeCommandsHandler = require('./handlers/middlewares/removeCommands');
-const kickBannedHandler = require('./handlers/middlewares/kickBanned');
-const addUserHandler = require('./handlers/middlewares/addUser');
-const removeLinksHandler = require('./handlers/middlewares/removeLinks');
-const checkUsernameHandler = require('./handlers/middlewares/checkUsername');
-const addCustomCmdHandler = require('./handlers/middlewares/addCustomCmd');
-const runCustomCmdHandler = require('./handlers/middlewares/runCustomCmd');
-const antibotHandler = require('./handlers/middlewares/antibot');
-const addedToGroupHandler = require('./handlers/middlewares/addedToGroup');
 
-// Commmands Handlers
-const adminHandler = require('./handlers/commands/admin');
-const unAdminHandler = require('./handlers/commands/unadmin');
-const leaveCommandHandler = require('./handlers/commands/leave');
-const warnHandler = require('./handlers/commands/warn');
-const unwarnHandler = require('./handlers/commands/unwarn');
-const nowarnsHandler = require('./handlers/commands/nowarns');
-const getWarnsHandler = require('./handlers/commands/getwarns');
-const banHandler = require('./handlers/commands/ban');
-const unbanHandler = require('./handlers/commands/unban');
-const reportHandler = require('./handlers/commands/report');
-const staffHandler = require('./handlers/commands/staff');
-const linkHandler = require('./handlers/commands/link');
-const groupsHandler = require('./handlers/commands/groups');
-const commandReferenceHandler = require('./handlers/commands/commands');
-const addCommandHandler = require('./handlers/commands/addCommand');
-const removeCommandHandler = require('./handlers/commands/removeCommand');
-const helpHandler = require('./handlers/commands/help');
+/**
+ * @type {number}
+ * Time in milliseconds after which join and leave messages should be deleted
+ */
+const delTimeout = 2 * 60 * 1000;
+
+/**
+ * @type {string}
+ * Path of middlewares and commands
+ */
+const middleware = './handlers/middlewares',
+      command = './handlers/commands';
+
+/**
+ * @type {function}
+ * Middleware Handlers
+ */
+const leaveUnmanagedHandler = require(`${middleware}/leaveUnmanaged`),
+	  removeCommandsHandler = require(`${middleware}/removeCommands`),
+	  kickBannedHandler = require(`${middleware}/kickBanned`),
+	  addUserHandler = require(`${middleware}/addUser`),
+	  removeLinksHandler = require(`${middleware}/removeLinks`),
+	  checkUsernameHandler = require(`${middleware}/checkUsername`),
+	  addCustomCmdHandler = require(`${middleware}/addCustomCmd`),
+	  runCustomCmdHandler = require(`${middleware}/runCustomCmd`),
+	  antibotHandler = require(`${middleware}/antibot`),
+	  addedToGroupHandler = require(`${middleware}/addedToGroup`);
+
+/**
+ * @type {function}
+ * Commmands Handlers
+ */
+const adminHandler = require(`${command}/admin`),
+	  unAdminHandler = require(`${command}/unadmin`),
+	  leaveCommandHandler = require(`${command}/leave`),
+	  warnHandler = require(`${command}/warn`),
+	  unwarnHandler = require(`${command}/unwarn`),
+	  nowarnsHandler = require(`${command}/nowarns`),
+	  getWarnsHandler = require(`${command}/getwarns`),
+	  banHandler = require(`${command}/ban`),
+	  unbanHandler = require(`${command}/unban`),
+	  reportHandler = require(`${command}/report`),
+	  staffHandler = require(`${command}/staff`),
+	  linkHandler = require(`${command}/link`),
+	  groupsHandler = require(`${command}/groups`),
+	  commandReferenceHandler = require(`${command}/commands`),
+	  addCommandHandler = require(`${command}/addCommand`),
+	  removeCommandHandler = require(`${command}/removeCommand`),
+	  helpHandler = require(`${command}/help`);
 
 bot.on('new_chat_members', addedToGroupHandler);
 bot.use(leaveUnmanagedHandler);
@@ -52,7 +75,7 @@ bot.on('message', checkUsernameHandler);
 bot.on('message', addCustomCmdHandler);
 bot.on('message', runCustomCmdHandler);
 bot.on('new_chat_members', antibotHandler);
-bot.on([ 'new_chat_members', 'left_chat_member' ], deleteAfter(2 * 60 * 1000));
+bot.on([ 'new_chat_members', 'left_chat_member' ], deleteAfter(delTimeout));
 bot.command('admin', adminHandler);
 bot.command('unadmin', unAdminHandler);
 bot.command('leave', leaveCommandHandler);
