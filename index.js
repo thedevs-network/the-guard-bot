@@ -25,55 +25,57 @@ const delTimeout = 2 * 60 * 1000;
  * @type {string}
  * Path of middlewares and commands
  */
-const middleware = './handlers/middlewares',
-      command = './handlers/commands';
+const middleware = './handlers/middlewares';
+const command = './handlers/commands';
 
 /**
  * @type {function}
  * Middleware Handlers
  */
-const leaveUnmanagedHandler = require(`${middleware}/leaveUnmanaged`),
-	  removeCommandsHandler = require(`${middleware}/removeCommands`),
-	  kickBannedHandler = require(`${middleware}/kickBanned`),
-	  addUserHandler = require(`${middleware}/addUser`),
-	  removeLinksHandler = require(`${middleware}/removeLinks`),
-	  checkUsernameHandler = require(`${middleware}/checkUsername`),
-	  addCustomCmdHandler = require(`${middleware}/addCustomCmd`),
-	  runCustomCmdHandler = require(`${middleware}/runCustomCmd`),
-	  antibotHandler = require(`${middleware}/antibot`),
-	  addedToGroupHandler = require(`${middleware}/addedToGroup`);
+const leaveUnmanagedHandler = require(`${middleware}/leaveUnmanaged`);
+const removeCommandsHandler = require(`${middleware}/removeCommands`);
+const kickBannedHandler = require(`${middleware}/kickBanned`);
+const addUserHandler = require(`${middleware}/addUser`);
+const removeLinksHandler = require(`${middleware}/removeLinks`);
+const checkUsernameHandler = require(`${middleware}/checkUsername`);
+const addCustomCmdHandler = require(`${middleware}/addCustomCmd`);
+const runCustomCmdHandler = require(`${middleware}/runCustomCmd`);
+const antibotHandler = require(`${middleware}/antibot`);
+const addedToGroupHandler = require(`${middleware}/addedToGroup`);
 
 /**
  * @type {function}
  * Commmands Handlers
  */
-const adminHandler = require(`${command}/admin`),
-	  unAdminHandler = require(`${command}/unadmin`),
-	  leaveCommandHandler = require(`${command}/leave`),
-	  warnHandler = require(`${command}/warn`),
-	  unwarnHandler = require(`${command}/unwarn`),
-	  nowarnsHandler = require(`${command}/nowarns`),
-	  getWarnsHandler = require(`${command}/getwarns`),
-	  banHandler = require(`${command}/ban`),
-	  unbanHandler = require(`${command}/unban`),
-	  reportHandler = require(`${command}/report`),
-	  staffHandler = require(`${command}/staff`),
-	  linkHandler = require(`${command}/link`),
-	  groupsHandler = require(`${command}/groups`),
-	  commandReferenceHandler = require(`${command}/commands`),
-	  addCommandHandler = require(`${command}/addCommand`),
-	  removeCommandHandler = require(`${command}/removeCommand`),
-	  helpHandler = require(`${command}/help`);
+const adminHandler = require(`${command}/admin`);
+const unAdminHandler = require(`${command}/unadmin`);
+const leaveCommandHandler = require(`${command}/leave`);
+const warnHandler = require(`${command}/warn`);
+const unwarnHandler = require(`${command}/unwarn`);
+const nowarnsHandler = require(`${command}/nowarns`);
+const getWarnsHandler = require(`${command}/getwarns`);
+const banHandler = require(`${command}/ban`);
+const unbanHandler = require(`${command}/unban`);
+const reportHandler = require(`${command}/report`);
+const staffHandler = require(`${command}/staff`);
+const linkHandler = require(`${command}/link`);
+const groupsHandler = require(`${command}/groups`);
+const commandReferenceHandler = require(`${command}/commands`);
+const addCommandHandler = require(`${command}/addCommand`);
+const removeCommandHandler = require(`${command}/removeCommand`);
+const helpHandler = require(`${command}/help`);
 
 bot.on('new_chat_members', addedToGroupHandler);
 bot.use(leaveUnmanagedHandler);
 bot.use(removeCommandsHandler);
 bot.use(kickBannedHandler);
-bot.on('message', addUserHandler);
-bot.on('message', removeLinksHandler);
-bot.on('message', checkUsernameHandler);
-bot.on('message', addCustomCmdHandler);
-bot.on('message', runCustomCmdHandler);
+bot.on('message',
+	addUserHandler,
+	removeLinksHandler,
+	checkUsernameHandler,
+	addCustomCmdHandler,
+	runCustomCmdHandler
+);
 bot.on('new_chat_members', antibotHandler);
 bot.on([ 'new_chat_members', 'left_chat_member' ], deleteAfter(delTimeout));
 bot.command('admin', adminHandler);
