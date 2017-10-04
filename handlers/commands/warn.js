@@ -15,7 +15,7 @@ const { replyOptions } = require('../../bot/options');
 // DB
 const { isAdmin, ban, getWarns, warn } = require('../../stores/user');
 
-const warnHandler = async ({ message, chat, reply }) => {
+const warnHandler = async ({ message, chat, reply, me }) => {
 	if (!await isAdmin(message.from)) {
 		return null;
 	}
@@ -29,6 +29,10 @@ const warnHandler = async ({ message, chat, reply }) => {
 	if (!userToWarn) {
 		return reply('ℹ️ <b>Reply to a message or mentoin a user.</b>',
 			replyOptions);
+	}
+
+	if (message.chat.type === 'private' || userToWarn.username === me) {
+		return null;
 	}
 
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
