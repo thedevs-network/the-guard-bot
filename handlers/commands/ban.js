@@ -12,7 +12,7 @@ const { replyOptions } = require('../../bot/options');
 const { listGroups } = require('../../stores/group');
 const { isAdmin, isBanned, ban } = require('../../stores/user');
 
-const banHandler = async ({ chat, message, reply, telegram }) => {
+const banHandler = async ({ chat, message, reply, telegram, me }) => {
 	if (!await isAdmin(message.from)) {
 		return null;
 	}
@@ -27,6 +27,10 @@ const banHandler = async ({ chat, message, reply, telegram }) => {
 	if (!userToBan) {
 		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
 			replyOptions);
+	}
+
+	if (message.chat.type === 'private' || userToBan.username === me) {
+		return null;
 	}
 
 	if (reason.length === 0) {

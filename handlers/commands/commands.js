@@ -1,5 +1,8 @@
 'use strict';
 
+// DB
+const { listCommands } = require('../../stores/command');
+
 const commandReference = `\
 <b>Master commands</b>:
 <code>/admin</code> - Makes the user admin.
@@ -16,15 +19,30 @@ const commandReference = `\
 
 <b>Commands for everyone</b>:
 <code>/staff</code> - Shows a list of admins.
+<code>/link</code> - Show the current group's link.
 <code>/groups</code> - Show a list of groups which the bot is admin in.
 <code>/report</code> - Reports the replied-to message to admins.
 `;
 
-const commandReferenceHandler = ({ chat, replyWithHTML }) => {
+const actions = `\n
+/addcommand - to create custom commands.
+/removecommand <code>&lt;name&gt;</code> - to remove a custom command.`;
+
+const commandReferenceHandler = async ({ chat, replyWithHTML }) => {
 	if (chat.type !== 'private') {
 		return null;
 	}
-	return replyWithHTML(commandReference);
+	const customCommands = await listCommands();
+	const customCommandsText = customCommands.length
+		? '\n<b>Custom commands:</b>\n' +
+		customCommands
+			.filter(command => command.isActive)
+			.sort((a, b) => a.role < b.role)
+			.map(command => `[${command.role}] <code>/${command.name}</code>`)
+			.join('\n')
+		: '';
+
+	return replyWithHTML(commandReference + customCommandsText + actions);
 };
 
 module.exports = commandReferenceHandler;

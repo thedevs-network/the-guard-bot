@@ -32,6 +32,7 @@ Command  | Role   | Description
 `/ban <reason>` | _Admin_ | Bans the user from groups.
 `/unban` | _Admin_ | Removes the user from ban list.
 `/staff` | _All_ | Shows a list of admins.
+`/link` | _All_ | Show the current group's link.
 `/groups` | _All_ | Show a list of groups which the bot is admin in.
 `/report` | _All_ | Reports the replied-to message to admins.
 
@@ -40,6 +41,8 @@ All commands and actions are synchronized across all of the groups managed by th
 If used by reply, `/ban` and `/warn` remove the replied-to message.
 
 The bot is still in alpha phase so feel free to open issues and ask for a _feature_.
+
+[**Roadmap**](https://github.com/TheDevs-Network/the-guard-bot/projects/1)
 
 ---
 

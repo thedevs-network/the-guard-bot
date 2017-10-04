@@ -23,16 +23,23 @@ const inline_keyboard = [ [ {
 
 const reply_markup = JSON.stringify({ inline_keyboard });
 
-const gifs = [
-	'https://media.giphy.com/media/xTk9ZBWrma4PIC9y4E/giphy.gif',
-	'https://media.giphy.com/media/l2Sqc3POpzkj5r8SQ/giphy.gif',
-	'https://media.giphy.com/media/StaMzjNkq5PqM/giphy.gif',
-	'https://media.giphy.com/media/fjYDN5flDJ756/giphy.gif',
-	'https://media.giphy.com/media/3XiQswSmbjBiU/giphy.gif',
-];
+const gifIds = ['xTk9ZBWrma4PIC9y4E', 'l2Sqc3POpzkj5r8SQ', 'StaMzjNkq5PqM', 'fjYDN5flDJ756', '3XiQswSmbjBiU' ];
 
+const gifs = gifIds.map(x => `https://media.giphy.com/media/${x}/giphy.gif`);
+
+
+/**
+ * @param {Array} [arr] An anonymous array
+ * @returns {Number} A random number
+ */
 const randomChoice = arr => arr[Math.floor(Math.random() * arr.length)];
 
+
+/**
+ * @param {TelegrafContext} ctx
+ * @param {Function} next
+ * @returns {Promise.<*>}
+ */
 const leaveUnmanagedHandler = async (ctx, next) => {
 	if (ctx.chat.type === 'private' || await managesGroup(ctx.chat)) {
 		return next();
@@ -43,8 +50,8 @@ const leaveUnmanagedHandler = async (ctx, next) => {
 	} catch (err) {
 		logError(err);
 	}
-
-	return ctx.telegram.leaveChat(ctx.chat.id);
+	await ctx.telegram.leaveChat(ctx.chat.id);
+	return next();
 };
 
 module.exports = leaveUnmanagedHandler;
