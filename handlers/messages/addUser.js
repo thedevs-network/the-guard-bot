@@ -18,7 +18,7 @@ const addUserHandler = async (ctx, next) => {
 
 	ctx.state = {
 		isAdmin: user && user.status === 'admin',
-		isMaster: user.id === masterID,
+		isMaster: user && user.id === masterID,
 		user: newUser,
 	};
 

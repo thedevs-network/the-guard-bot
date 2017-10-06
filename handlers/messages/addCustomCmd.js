@@ -16,7 +16,7 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 	const { text, photo, document, video, audio } = message;
 	const { isAdmin, user } = state;
 	const { id } = user;
-	console.log(state);
+
 	if (text && /^\/\w+/.test(text)) {
 		await removeCommand({ id, isActive: false });
 		return next();
