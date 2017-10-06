@@ -1,12 +1,8 @@
 'use strict';
 
 // Utils
-const { loadJSON } = require('../../utils/json');
 const { link } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
-
-// Config
-const { masterID } = loadJSON('config.json');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
@@ -20,8 +16,9 @@ const {
 	nowarns
 } = require('../../stores/user');
 
-const adminHandler = async ({ message, reply }) => {
-	if (message.from.id !== masterID) {
+const adminHandler = async ({ message, reply, state }) => {
+	const { isMaster, user } = state;
+	if (!isMaster) {
 		return null;
 	}
 
@@ -29,7 +26,7 @@ const adminHandler = async ({ message, reply }) => {
 		? message.reply_to_message.from
 		: message.commandMention
 			? message.commandMention
-			: message.from;
+			: user;
 
 	if (await isBanned(userToAdmin)) {
 		return reply('ℹ️ <b>Can\'t admin banned user.</b>', replyOptions);

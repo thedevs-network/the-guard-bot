@@ -12,8 +12,8 @@ const { replyOptions } = require('../../bot/options');
 const { listGroups } = require('../../stores/group');
 const { isAdmin, isBanned, ban } = require('../../stores/user');
 
-const banHandler = async ({ chat, message, reply, telegram, me }) => {
-	if (!await isAdmin(message.from)) {
+const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
+	if (!state.isAdmin) {
 		return null;
 	}
 
@@ -69,7 +69,7 @@ const banHandler = async ({ chat, message, reply, telegram, me }) => {
 		logError(err);
 	}
 
-	return reply(`🚫 ${link(message.from)} <b>banned</b> ${link(userToBan)} ` +
+	return reply(`🚫 ${link(state.user)} <b>banned</b> ${link(userToBan)} ` +
 		`<b>for:</b>\n\n${reason}`, replyOptions);
 };
 

@@ -1,12 +1,8 @@
 'use strict';
 
 // Utils
-const { loadJSON } = require('../../utils/json');
 const { link } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
-
-// Config
-const { masterID } = loadJSON('config.json');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
@@ -14,8 +10,9 @@ const { replyOptions } = require('../../bot/options');
 // DB
 const { isAdmin, unadmin } = require('../../stores/user');
 
-const unAdminHandler = async ({ message, reply }) => {
-	if (message.from.id !== masterID) {
+const unAdminHandler = async ({ message, reply, state }) => {
+	const { isMaster } = state;
+	if (!isMaster) {
 		return null;
 	}
 

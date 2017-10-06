@@ -1,18 +1,11 @@
 'use strict';
 
-// Utils
-const { loadJSON } = require('../../utils/json');
-
-// Config
-const { masterID } = loadJSON('config.json');
-
 // DB
 const { getCommand } = require('../../stores/command');
-const { isAdmin } = require('../../stores/user');
 
 const runCustomCmdHandler = async (ctx, next) => {
-	const { message } = ctx;
-	const user = message.from;
+	const { message, state } = ctx;
+	const { isAdmin, isMaster } = state;
 	const isCommand = message.entities &&
 		message.entities.filter(entity => entity.type === 'bot_command');
 	if (!isCommand || !isCommand.length) {
@@ -33,9 +26,9 @@ const runCustomCmdHandler = async (ctx, next) => {
 	const options = Object.assign(replyTo, caption ? { caption } : {});
 	if (
 		role === 'Master' &&
-		user.id !== masterID ||
+		!isMaster ||
 		role === 'Admins' &&
-		!await isAdmin(user)
+		!isAdmin
 	) {
 		return next();
 	}

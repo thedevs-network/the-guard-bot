@@ -6,17 +6,17 @@ const { Markup } = require('telegraf');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { isAdmin } = require('../../stores/user');
 const {
 	getCommand,
 	removeCommand,
 	updateCommand
 } = require('../../stores/command');
 
-const addCustomCmdHandler = async ({ chat, message, reply }, next) => {
+const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 	const { text, photo, document, video, audio } = message;
-	const { id } = message.from;
-
+	const { isAdmin, user } = state;
+	const { id } = user;
+	console.log(state);
 	if (text && /^\/\w+/.test(text)) {
 		await removeCommand({ id, isActive: false });
 		return next();
@@ -24,14 +24,13 @@ const addCustomCmdHandler = async ({ chat, message, reply }, next) => {
 
 	const command = await getCommand({ id, isActive: false });
 	if (chat.type !== 'private' ||
-		!await isAdmin(message.from) ||
+		!isAdmin ||
 		!command ||
 		!command.state) {
 		return next();
 	}
 
-	const { state } = command;
-	if (state === 'add') {
+	if (command.state === 'add') {
 		if (!/^(?=\D)\w+$/.test(text)) {
 			reply('Please send a valid command.');
 			return next();
@@ -56,7 +55,7 @@ const addCustomCmdHandler = async ({ chat, message, reply }, next) => {
 		return next();
 	}
 
-	if (state === 'role') {
+	if (command.state === 'role') {
 		if (text !== 'Master' && text !== 'Admins' && text !== 'Everyone') {
 			reply('Please send a valid role.', Markup.keyboard([
 				[ 'Master', 'Admins', 'Everyone' ]
@@ -75,7 +74,7 @@ const addCustomCmdHandler = async ({ chat, message, reply }, next) => {
 		return next();
 	}
 
-	if (state === 'content') {
+	if (command.state === 'content') {
 		let newCommand;
 		if (text) {
 			newCommand = { content: text, type: 'text' };

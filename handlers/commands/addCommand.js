@@ -1,18 +1,17 @@
 'use strict';
 
 // DB
-const { isAdmin } = require('../../stores/user');
 const { addCommand } = require('../../stores/command');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
 
-const addCommandHandler = async ({ chat, message, reply }) => {
-	const user = message.from;
+const addCommandHandler = async ({ chat, reply, state }) => {
+	const { isAdmin, user } = state;
 	if (chat.type !== 'private') {
 		return null;
 	}
-	if (!await isAdmin(user)) {
+	if (!isAdmin) {
 		return reply('ℹ️ <b>Sorry, only admins access this command.</b>',
 			replyOptions);
 	}

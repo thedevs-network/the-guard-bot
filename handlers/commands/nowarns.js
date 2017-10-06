@@ -8,10 +8,11 @@ const { logError } = require('../../utils/log');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { isAdmin, getWarns, nowarns } = require('../../stores/user');
+const { getWarns, nowarns } = require('../../stores/user');
 
-const nowarnsHandler = async ({ message, reply }) => {
-	if (!await isAdmin(message.from)) {
+const nowarnsHandler = async ({ message, reply, state }) => {
+	const { isAdmin, user } = state;
+	if (!isAdmin) {
 		return null;
 	}
 
@@ -39,7 +40,7 @@ const nowarnsHandler = async ({ message, reply }) => {
 	}
 
 	return reply(
-		`♻️ ${link(message.from)} <b>pardoned</b> ${link(userToUnwarn)} ` +
+		`♻️ ${link(user)} <b>pardoned</b> ${link(userToUnwarn)} ` +
 		'<b>for all of their warnings.</b>',
 		replyOptions);
 };
