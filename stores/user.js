@@ -47,10 +47,12 @@ const isAdmin = ({ id }) =>
 	User.findOne({ id, status: 'admin' });
 
 const ban = ({ id }, ban_reason) =>
-	User.update({ id }, { $set: { ban_reason, status: 'banned', warns: [] } });
+	User.update({ id }, { $set: { ban_reason, status: 'banned' } });
 
 const unban = ({ id }) =>
-	User.update({ id }, { $set: { banReason: '', status: 'member' } });
+	User.update(
+		{ id },
+		{ $set: { ban_reason: null, status: 'member', warns: [] } });
 
 const isBanned = ({ id }) =>
 	User.findOne({ id, status: 'banned' })
