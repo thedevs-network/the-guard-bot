@@ -12,6 +12,10 @@ const {
 	updateCommand
 } = require('../../stores/command');
 
+const preserved = [ 'admin', 'unadmin', 'leave', 'warn', 'unwarn', 'nowarns',
+	'getwarns', 'ban', 'unban', 'report', 'staff', 'link', 'groups', 'commands',
+	'addcommand', 'removecommand' ];
+
 const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 	const { text, photo, document, video, audio } = message;
 	const { isAdmin, user } = state;
@@ -35,6 +39,12 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 			reply('Please send a valid command.');
 			return next();
 		}
+		if (preserved.includes(text.toLowerCase())) {
+			reply('❗️Sorry you can\'t use this name, it\'s preserved.\n\n' +
+			'Try another one.');
+			return next();
+		}
+
 		if (await getCommand({ isActive: true, name: text })) {
 			reply(
 				'ℹ️ <b>This command already exists.</b>\n\n' +

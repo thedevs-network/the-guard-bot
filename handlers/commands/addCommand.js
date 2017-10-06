@@ -15,8 +15,9 @@ const addCommandHandler = async ({ chat, reply, state }) => {
 			replyOptions);
 	}
 	await addCommand({ id: user.id });
-	return reply('Enter a name for the command.\n\nFor example: <b>rules</b>',
-		replyOptions);
+	return reply('Enter a name for the command without forward slash "/".' +
+		'\n\nFor example: <b>rules</b>',
+	replyOptions);
 };
 
 module.exports = addCommandHandler;
