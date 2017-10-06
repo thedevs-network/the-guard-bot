@@ -1,10 +1,7 @@
 'use strict';
 
-// Utils
-const { loadJSON } = require('../../utils/json');
-
 // Config
-const { masterID } = loadJSON('config.json');
+const { masterID } = require('../../config.json');
 
 // DB
 const { addUser, isUser } = require('../../stores/user');

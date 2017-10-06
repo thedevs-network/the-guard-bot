@@ -1,12 +1,11 @@
 'use strict';
 
 // Utils
-const { loadJSON } = require('../../utils/json');
 const { link } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 
 // Config
-const { numberOfWarnsToBan } = loadJSON('config.json');
+const { numberOfWarnsToBan } = require('../../config.json');
 
 // Bot
 const bot = require('../../bot');
