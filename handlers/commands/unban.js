@@ -15,9 +15,7 @@ const noop = Function.prototype;
 
 const unbanHandler = async ({ message, reply, telegram, state }) => {
 	const { isAdmin, user } = state;
-	if (!isAdmin) {
-		return null;
-	}
+	if (!isAdmin) return null;
 
 	const userToUnban = message.reply_to_message
 		? message.reply_to_message.from

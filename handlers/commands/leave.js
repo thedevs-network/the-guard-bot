@@ -4,9 +4,8 @@ const { removeGroup } = require('../../stores/group');
 
 const leaveCommandHandler = async ({ chat, telegram, state }) => {
 	const { isMaster } = state;
-	if (!isMaster) {
-		return null;
-	}
+	if (!isMaster) return null;
+
 	await removeGroup(chat);
 	return telegram.leaveChat(chat.id);
 };

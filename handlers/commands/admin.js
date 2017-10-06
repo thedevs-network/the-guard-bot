@@ -18,9 +18,7 @@ const {
 
 const adminHandler = async ({ message, reply, state }) => {
 	const { isMaster, user } = state;
-	if (!isMaster) {
-		return null;
-	}
+	if (!isMaster) return null;
 
 	const userToAdmin = message.reply_to_message
 		? message.reply_to_message.from

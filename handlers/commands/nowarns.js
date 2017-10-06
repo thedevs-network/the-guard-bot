@@ -12,9 +12,7 @@ const { getWarns, nowarns } = require('../../stores/user');
 
 const nowarnsHandler = async ({ message, reply, state }) => {
 	const { isAdmin, user } = state;
-	if (!isAdmin) {
-		return null;
-	}
+	if (!isAdmin) return null;
 
 	const userToUnwarn = message.reply_to_message
 		? message.reply_to_message.from

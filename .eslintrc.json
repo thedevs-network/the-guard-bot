@@ -39,7 +39,7 @@
 		"consistent-return": "error",
 		"curly": [
 			"error",
-			"all"
+			"multi-line"
 		],
 		"default-case": "error",
 		"dot-location": [

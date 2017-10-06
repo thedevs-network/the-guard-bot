@@ -9,9 +9,8 @@ const { replyOptions } = require('../../bot/options');
 const removeCommandHandler = async ({ chat, message, reply, state }) => {
 	const { isAdmin, isMaster } = state;
 	const { text } = message;
-	if (chat.type !== 'private') {
-		return null;
-	}
+	if (chat.type !== 'private') return null;
+
 	if (!isAdmin) {
 		return reply('ℹ️ <b>Sorry, only admins access this command.</b>',
 			replyOptions);

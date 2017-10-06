@@ -12,9 +12,7 @@ const { isAdmin, unadmin } = require('../../stores/user');
 
 const unAdminHandler = async ({ message, reply, state }) => {
 	const { isMaster } = state;
-	if (!isMaster) {
-		return null;
-	}
+	if (!isMaster) return null;
 
 	const userToUnadmin = message.reply_to_message
 		? message.reply_to_message.from

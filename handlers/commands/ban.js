@@ -13,9 +13,7 @@ const { listGroups } = require('../../stores/group');
 const { isAdmin, isBanned, ban } = require('../../stores/user');
 
 const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
-	if (!state.isAdmin) {
-		return null;
-	}
+	if (!state.isAdmin) return null;
 
 	const userToBan = message.reply_to_message
 		? message.reply_to_message.from

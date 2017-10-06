@@ -29,9 +29,8 @@ const actions = `\n
 /removecommand <code>&lt;name&gt;</code> - to remove a custom command.`;
 
 const commandReferenceHandler = async ({ chat, replyWithHTML }) => {
-	if (chat.type !== 'private') {
-		return null;
-	}
+	if (chat.type !== 'private') return null;
+
 	const customCommands = await listCommands();
 	const customCommandsText = customCommands.length
 		? '\n<b>Custom commands:</b>\n' +

@@ -17,9 +17,7 @@ const { isAdmin, ban, getWarns, warn } = require('../../stores/user');
 
 const warnHandler = async ({ message, chat, reply, me, state }) => {
 	const { user } = state;
-	if (!state.isAdmin) {
-		return null;
-	}
+	if (!state.isAdmin) return null;
 
 	const userToWarn = message.reply_to_message
 		? message.reply_to_message.from
