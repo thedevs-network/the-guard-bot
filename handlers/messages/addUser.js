@@ -8,9 +8,18 @@ const { addUser, isUser } = require('../../stores/user');
 
 const addUserHandler = async (ctx, next) => {
 	const { message } = ctx;
+	const { new_chat_members } = message;
 	const newUser = message.from;
 	const user = newUser && await isUser(message.from);
 	const usersToAdd = [];
+
+	if (new_chat_members) {
+		new_chat_members.forEach(async member => {
+			if (!await isUser(member)) {
+				usersToAdd.push(addUser(member));
+			}
+		});
+	}
 
 	if (!user && newUser) {
 		usersToAdd.push(addUser(newUser));

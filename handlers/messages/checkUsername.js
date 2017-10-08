@@ -47,7 +47,6 @@ const checkUsernameHandler = async ({ message }, next) => {
 	if (hasId) {
 		const [ , id ] = messageArr;
 		const user = await getUser({ id: Number(id) });
-		console.log(id, user);
 		if (user) {
 			message.text = message.text.replace(` ${id}`, '');
 			message.commandMention = user;
