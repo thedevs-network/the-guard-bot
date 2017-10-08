@@ -21,7 +21,7 @@
     "Pouria Ezzati <pouria@thedevs.network> (https://thedevs.network)",
     "GingerPlusPlus <woj.pawlik@gmail.com>"
   ],
-  "license": "GPL-3.0",
+  "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/TheDevs-Network/the-guard-bot/issues"
   },
