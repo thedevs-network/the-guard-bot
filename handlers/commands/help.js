@@ -19,9 +19,8 @@ and @mattatabot might be better choices for you.
 `;
 
 const helpHandler = ({ chat, replyWithHTML }) => {
-	if (chat.type !== 'private') {
-		return null;
-	}
+	if (chat.type !== 'private') return null;
+
 	return replyWithHTML(
 		message,
 		Markup.inlineKeyboard(

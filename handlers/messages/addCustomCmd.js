@@ -6,16 +6,20 @@ const { Markup } = require('telegraf');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { isAdmin } = require('../../stores/user');
 const {
 	getCommand,
 	removeCommand,
 	updateCommand
 } = require('../../stores/command');
 
-const addCustomCmdHandler = async ({ chat, message, reply }, next) => {
+const preserved = [ 'admin', 'unadmin', 'leave', 'warn', 'unwarn', 'nowarns',
+	'getwarns', 'ban', 'unban', 'report', 'staff', 'link', 'groups', 'commands',
+	'addcommand', 'removecommand' ];
+
+const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 	const { text, photo, document, video, audio } = message;
-	const { id } = message.from;
+	const { isAdmin, user } = state;
+	const { id } = user;
 
 	if (text && /^\/\w+/.test(text)) {
 		await removeCommand({ id, isActive: false });
@@ -24,18 +28,23 @@ const addCustomCmdHandler = async ({ chat, message, reply }, next) => {
 
 	const command = await getCommand({ id, isActive: false });
 	if (chat.type !== 'private' ||
-		!await isAdmin(message.from) ||
+		!isAdmin ||
 		!command ||
 		!command.state) {
 		return next();
 	}
 
-	const { state } = command;
-	if (state === 'add') {
+	if (command.state === 'add') {
 		if (!/^(?=\D)\w+$/.test(text)) {
 			reply('Please send a valid command.');
 			return next();
 		}
+		if (preserved.includes(text.toLowerCase())) {
+			reply('❗️Sorry you can\'t use this name, it\'s preserved.\n\n' +
+			'Try another one.');
+			return next();
+		}
+
 		if (await getCommand({ isActive: true, name: text })) {
 			reply(
 				'ℹ️ <b>This command already exists.</b>\n\n' +
@@ -56,7 +65,7 @@ const addCustomCmdHandler = async ({ chat, message, reply }, next) => {
 		return next();
 	}
 
-	if (state === 'role') {
+	if (command.state === 'role') {
 		if (text !== 'Master' && text !== 'Admins' && text !== 'Everyone') {
 			reply('Please send a valid role.', Markup.keyboard([
 				[ 'Master', 'Admins', 'Everyone' ]
@@ -75,7 +84,7 @@ const addCustomCmdHandler = async ({ chat, message, reply }, next) => {
 		return next();
 	}
 
-	if (state === 'content') {
+	if (command.state === 'content') {
 		let newCommand;
 		if (text) {
 			newCommand = { content: text, type: 'text' };
@@ -106,7 +115,8 @@ const addCustomCmdHandler = async ({ chat, message, reply }, next) => {
 		]);
 		reply(
 			'✅ <b>New command has been created successfully.</b>\n\n' +
-			'This command can be used in groups now. ' +
+			'Custom commands work with ! instead of /.\n\n' +
+			'For example: <code>!rules</code>\n\n' +
 			'Custom commands can reply other messages too.\n\n' +
 			'/commands - to see the list of commands.\n' +
 			'/addcommand - to add a new command.\n' +

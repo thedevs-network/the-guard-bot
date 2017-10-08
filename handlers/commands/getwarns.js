@@ -7,12 +7,12 @@ const { link } = require('../../utils/tg');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { isAdmin, getWarns } = require('../../stores/user');
+const { getWarns } = require('../../stores/user');
 
-const getWarnsHandler = async ({ message, reply }) => {
-	if (!await isAdmin(message.from)) {
-		return null;
-	}
+const getWarnsHandler = async ({ message, reply, state }) => {
+	const { isAdmin } = state;
+	if (!isAdmin) return null;
+
 	const theUser = message.reply_to_message
 		? message.reply_to_message.from
 		: message.commandMention

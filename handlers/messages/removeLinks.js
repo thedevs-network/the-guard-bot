@@ -1,7 +1,6 @@
 'use strict';
 
 // Utils
-const { loadJSON } = require('../../utils/json');
 const { link } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 
@@ -10,17 +9,18 @@ const {
 	excludedChannels,
 	excludedGroups,
 	numberOfWarnsToBan
-} = loadJSON('config.json');
+} = require('../../config.json');
 
 // Bot
 const bot = require('../../bot');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { isAdmin, ban, warn } = require('../../stores/user');
+const { ban, warn } = require('../../stores/user');
 const { listGroups } = require('../../stores/group');
 
-const removeLinks = async ({ message, chat, reply }, next) => {
+const removeLinks = async ({ message, chat, reply, state }, next) => {
+	const { isAdmin, user } = state;
 	const groups = await listGroups();
 	const groupLinks = [
 		...groups.map(group => group.link
@@ -41,26 +41,25 @@ const removeLinks = async ({ message, chat, reply }, next) => {
 		!(excludedChannels.includes(message.text) ||
 			groupLinks.includes(message.text.split('/joinchat/')[1]))
 	) {
-		const userToWarn = message.from;
-		if (await isAdmin(userToWarn)) {
+		if (isAdmin) {
 			return next();
 		}
 		const reason = 'Channel forward/link';
-		const warnCount = await warn(userToWarn, reason);
+		const warnCount = await warn(user, reason);
 		const promises = [
 			bot.telegram.deleteMessage(chat.id, message.message_id)
 		];
 		if (warnCount < numberOfWarnsToBan) {
 			promises.push(reply(
-				`⚠️ ${link(userToWarn)} <b>got warned!</b> (${warnCount}/3)` +
+				`⚠️ ${link(user)} <b>got warned!</b> (${warnCount}/3)` +
 				`\n\nReason: ${reason}`,
 				replyOptions));
 		} else {
-			promises.push(bot.telegram.kickChatMember(chat.id, userToWarn.id));
-			promises.push(ban(userToWarn,
+			promises.push(bot.telegram.kickChatMember(chat.id, user.id));
+			promises.push(ban(user,
 				'Reached max number of warnings'));
 			promises.push(reply(
-				`🚫 ${link(userToWarn)} <b>got banned</b>! (${warnCount}/3)` +
+				`🚫 ${link(user)} <b>got banned</b>! (${warnCount}/3)` +
 				'\n\nReason: Reached max number of warnings',
 				replyOptions));
 		}

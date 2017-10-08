@@ -17,12 +17,12 @@ const reportHandler = async ctx => {
 	}
 	const admins = await getAdmins();
 	const adminObjects = admins.map(user => ({
-		first_name: '⭐️', // small hack to be able to use link function
+		first_name: '​', // small hack to be able to use link function
 		id: user.id,
 	}));
-	const stars = adminObjects.map(link).join('');
-	const s = `📋 ${link(ctx.from)} <b>reported the message to admins:</b> ` +
-		`${stars}`;
+	const adminsMention = adminObjects.map(link).join('');
+	const s = `❗️${link(ctx.from)} <b>reported the message to the admins.</b>` +
+		`${adminsMention}`;
 	return ctx.replyWithHTML(s, {
 		reply_to_message_id: msg.reply_to_message.message_id
 	});

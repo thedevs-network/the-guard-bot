@@ -19,7 +19,7 @@ const listGroups = () =>
 	Group.find({});
 
 const managesGroup = group =>
-	Group.findOne({ id: group.id });
+	Group.findOne(group);
 
 const removeGroup = ({ id }) =>
 	Group.remove({ id });

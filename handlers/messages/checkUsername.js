@@ -13,6 +13,7 @@ const checkUsernameHandler = async ({ message }, next) => {
 		entity.type === 'mention');
 	const hasTextMention = message.entities.some(entity =>
 		entity.type === 'text_mention');
+	const hasId = /^\d+/.test(messageArr[1]);
 
 	if (!isCommand) {
 		return next();
@@ -40,6 +41,16 @@ const checkUsernameHandler = async ({ message }, next) => {
 		}
 		message.text = message.text.replace(` ${name}`, '');
 		message.commandMention = user;
+		return next();
+	}
+
+	if (hasId) {
+		const [ , id ] = messageArr;
+		const user = await getUser({ id: Number(id) });
+		if (user) {
+			message.text = message.text.replace(` ${id}`, '');
+			message.commandMention = user;
+		}
 		return next();
 	}
 	return next();

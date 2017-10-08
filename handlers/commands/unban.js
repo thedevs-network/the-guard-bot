@@ -9,14 +9,13 @@ const { replyOptions } = require('../../bot/options');
 
 // DB
 const { listGroups } = require('../../stores/group');
-const { isAdmin, isBanned, unban } = require('../../stores/user');
+const { isBanned, unban } = require('../../stores/user');
 
 const noop = Function.prototype;
 
-const unbanHandler = async ({ message, reply, telegram }) => {
-	if (!await isAdmin(message.from)) {
-		return null;
-	}
+const unbanHandler = async ({ message, reply, telegram, state }) => {
+	const { isAdmin, user } = state;
+	if (!isAdmin) return null;
 
 	const userToUnban = message.reply_to_message
 		? message.reply_to_message.from
@@ -60,7 +59,7 @@ const unbanHandler = async ({ message, reply, telegram }) => {
 	// hance .catch(noop)
 	// (it's an expected, non-critical failure)
 
-	return reply(`♻️ ${link(message.from)} <b>unbanned</b> ` +
+	return reply(`♻️ ${link(user)} <b>unbanned</b> ` +
 		`${link(userToUnban)}.`, replyOptions);
 };
 

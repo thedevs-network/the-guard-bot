@@ -20,25 +20,29 @@ You need [Node.js](https://nodejs.org/) (> 8.1) to run this bot.
 Now you can add the bot as **administrator** to your groups.
 
 ## Commands
-Command  | Role   | Description
--------- | ------ | -----------
-`/admin` | _Master_ | Makes the user admin.
-`/unadmin` | _Master_ | Demotes the user from admin list.
-`/leave` | _Master_ | Makes the bot leave the group cleanly.
-`/warn <reason>` | _Admin_ | Warns the user.
-`/unwarn` | _Admin_ | Removes the last warn from the user.
-`/nowarns` | _Admin_ | Clears warns for the user.
-`/getwarns` | _Admin_ | Shows a list of warns for the user.
-`/ban <reason>` | _Admin_ | Bans the user from groups.
-`/unban` | _Admin_ | Removes the user from ban list.
-`/staff` | _All_ | Shows a list of admins.
-`/link` | _All_ | Show the current group's link.
-`/groups` | _All_ | Show a list of groups which the bot is admin in.
-`/report` | _All_ | Reports the replied-to message to admins.
+Command                 | Role       | Available at | Description
+----------------------- | ---------- | ------------ | -----------------
+`/admin`                | _Master_   | _Everywhere_ | Makes the user admin.
+`/unadmin`              | _Master_   | _Everywhere_ | Demotes the user from admin list.
+`/leave <name\|id>`     | _Master_   | _Everywhere_ | Make the bot to leave the group cleanly.
+`/warn <reason>`        | _Admin_    | _Groups_     | Warns the user.
+`/unwarn`               | _Admin_    | _Everywhere_ | Removes the last warn from the user.
+`/nowarns`              | _Admin_    | _Everywhere_ | Clears warns for the user.
+`/getwarns`             | _Admin_    | _Everywhere_ | Shows a list of warns for the user.
+`/ban <reason>`         | _Admin_    | _Groups_     | Bans the user from groups.
+`/unban`                | _Admin_    | _Everywhere_ | Removes the user from ban list.
+`/addcommand`           | _Admin_    | _In-Bot_     | Create a custom command.
+`/removecommand <name>` | _Admin_    | _In-Bot_     | Remove a custom command.
+`/staff`                | _Everyone_ | _Everywhere_ | Shows a list of admins.
+`/link`                 | _Everyone_ | _Everywhere_ | Shows the current group's link.
+`/groups`               | _Everyone_ | _Everywhere_ | Shows a list of groups which the bot is admin in.
+`/report`               | _Everyone_ | _Everywhere_ | Reports the replied-to message to admins.
+`/commands`             | _Everyone_ | _In-Bot_     | Shows a list of available commands.
+`/help` \| `/start`     | _Everyone_ | _In-Bot_     | How to use the bot.
 
 All commands and actions are synchronized across all of the groups managed by the owner and they work with both **replying** and **mentioning** a user.
 
-If used by reply, `/ban` and `/warn` remove the replied-to message.
+If used by reply, `/ban` and `/warn` would remove the replied-to message.
 
 The bot is still in alpha phase so feel free to open issues and ask for a _feature_.
 

@@ -26,6 +26,7 @@ const delTimeout = 2 * 60 * 1000;
  * Path of middlewares and commands
  */
 const middleware = './handlers/middlewares';
+const message = './handlers/messages';
 const command = './handlers/commands';
 
 /**
@@ -35,13 +36,18 @@ const command = './handlers/commands';
 const leaveUnmanagedHandler = require(`${middleware}/leaveUnmanaged`);
 const removeCommandsHandler = require(`${middleware}/removeCommands`);
 const kickBannedHandler = require(`${middleware}/kickBanned`);
-const addUserHandler = require(`${middleware}/addUser`);
-const removeLinksHandler = require(`${middleware}/removeLinks`);
-const checkUsernameHandler = require(`${middleware}/checkUsername`);
-const addCustomCmdHandler = require(`${middleware}/addCustomCmd`);
-const runCustomCmdHandler = require(`${middleware}/runCustomCmd`);
 const antibotHandler = require(`${middleware}/antibot`);
 const addedToGroupHandler = require(`${middleware}/addedToGroup`);
+
+/**
+ * @type {function}
+ * Messages Handlers
+ */
+const addUserHandler = require(`${message}/addUser`);
+const removeLinksHandler = require(`${message}/removeLinks`);
+const checkUsernameHandler = require(`${message}/checkUsername`);
+const addCustomCmdHandler = require(`${message}/addCustomCmd`);
+const runCustomCmdHandler = require(`${message}/runCustomCmd`);
 
 /**
  * @type {function}
@@ -88,7 +94,7 @@ bot.command('getwarns', getWarnsHandler);
 bot.command('ban', banHandler);
 bot.command('unban', unbanHandler);
 bot.command('report', reportHandler);
-bot.hears(/^@admins?$/i, reportHandler);
+bot.hears(/^@admins?\s?/i, reportHandler);
 bot.command('staff', staffHandler);
 bot.command('link', linkHandler);
 bot.command('groups', groupsHandler);

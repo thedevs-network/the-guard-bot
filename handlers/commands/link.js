@@ -7,7 +7,7 @@ const bot = require('../../bot');
 const { managesGroup } = require('../../stores/group');
 
 const linkHandler = async ({ chat, replyWithHTML }) => {
-	const group = await managesGroup(chat);
+	const group = await managesGroup({ id: chat.id });
 
 	const { message_id } = await replyWithHTML(
 		'ℹ️ <b>Group\'s link:</b>\n\n' +

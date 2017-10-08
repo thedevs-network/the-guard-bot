@@ -1,25 +1,17 @@
 'use strict';
 
-// Utils
-const { loadJSON } = require('../../utils/json');
-
-// Config
-const { masterID } = loadJSON('config.json');
-
 // DB
-const { isAdmin } = require('../../stores/user');
 const { getCommand, removeCommand } = require('../../stores/command');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
 
-const removeCommandHandler = async ({ chat, message, reply }) => {
-	const user = message.from;
+const removeCommandHandler = async ({ chat, message, reply, state }) => {
+	const { isAdmin, isMaster } = state;
 	const { text } = message;
-	if (chat.type !== 'private') {
-		return null;
-	}
-	if (!await isAdmin(user)) {
+	if (chat.type !== 'private') return null;
+
+	if (!isAdmin) {
 		return reply('ℹ️ <b>Sorry, only admins access this command.</b>',
 			replyOptions);
 	}
@@ -37,7 +29,7 @@ const removeCommandHandler = async ({ chat, message, reply }) => {
 			replyOptions);
 	}
 
-	if (command.role === 'Master' && user.id !== masterID) {
+	if (command.role === 'Master' && !isMaster) {
 		return reply('ℹ️ <b>Sorry, only master can remove this command.</b>',
 			replyOptions);
 	}
