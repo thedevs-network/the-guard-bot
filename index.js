@@ -94,7 +94,7 @@ bot.command('getwarns', getWarnsHandler);
 bot.command('ban', banHandler);
 bot.command('unban', unbanHandler);
 bot.command('report', reportHandler);
-bot.hears(/^@admins?$/i, reportHandler);
+bot.hears(/^@admins?\s?/i, reportHandler);
 bot.command('staff', staffHandler);
 bot.command('link', linkHandler);
 bot.command('groups', groupsHandler);
