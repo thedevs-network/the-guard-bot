@@ -37,7 +37,7 @@ const commandReferenceHandler = async ({ chat, replyWithHTML }) => {
 		customCommands
 			.filter(command => command.isActive)
 			.sort((a, b) => a.role < b.role)
-			.map(command => `[${command.role}] <code>/${command.name}</code>`)
+			.map(command => `[${command.role}] <code>!${command.name}</code>`)
 			.join('\n')
 		: '';
 

@@ -115,7 +115,8 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 		]);
 		reply(
 			'✅ <b>New command has been created successfully.</b>\n\n' +
-			'This command can be used in groups now. ' +
+			'Custom commands work with ! instead of /.\n\n' +
+			'For example: <code>!rules</code>\n\n' +
 			'Custom commands can reply other messages too.\n\n' +
 			'/commands - to see the list of commands.\n' +
 			'/addcommand - to add a new command.\n' +
