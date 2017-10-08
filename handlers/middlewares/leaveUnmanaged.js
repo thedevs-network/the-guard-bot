@@ -47,7 +47,7 @@ const randomChoice = arr => arr[Math.floor(Math.random() * arr.length)];
  * @returns {Promise.<*>} - returns next object
  */
 const leaveUnmanagedHandler = async (ctx, next) => {
-	if (ctx.chat.type === 'private' || await managesGroup(ctx.chat)) {
+	if (ctx.chat.type === 'private' || await managesGroup({ id: ctx.chat.id })) {
 		return next();
 	}
 
