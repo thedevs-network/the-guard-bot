@@ -50,4 +50,6 @@ The bot is still in alpha phase so feel free to open issues and ask for a _featu
 
 ---
 
-The Guard icon from [Entypo+](http://entypo.com/) by Daniel Bruce.
+> Important Note: Under the AGPL-3.0 license, if you're running your own instance, you should add a link to the source [(this repository)](https://github.com/TheDevs-Network/the-guard-bot) in your bot's bio. If you're modifying this source and making your own bot, you should link to the source of your own version of the bot according to the AGPL-3.0 license. Check [LICENSE](LICENSE) for more info.
+
+`The Guard` icon is from [Entypo+](http://entypo.com/) by Daniel Bruce.
