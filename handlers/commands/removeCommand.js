@@ -29,7 +29,8 @@ const removeCommandHandler = async ({ chat, message, reply, state }) => {
 			replyOptions);
 	}
 
-	if (command.role === 'Master' && !isMaster) {
+	const role = command.role.toLowerCase();
+	if (role === 'master' && !isMaster) {
 		return reply('ℹ️ <b>Sorry, only master can remove this command.</b>',
 			replyOptions);
 	}
