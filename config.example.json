@@ -1,5 +1,5 @@
 {
-	"masterID": 123456789, // master admin ID as a number or username as astring.
+	"master": 123456789, // master admin ID as a number or username as astring.
 	"token": "", // bot token.
 	"numberOfWarnsToBan": 3, // Number of warns that will get someone banned.
 	"groupsInlineKeyboard": [], // [[inlineButton]] -> inline keyboard to be added to reply to /groups
