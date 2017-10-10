@@ -22,7 +22,6 @@ const { listGroups } = require('../../stores/group');
 const removeLinks = async ({ message, chat, reply, state }, next) => {
 	const { isAdmin, user } = state;
 	const groups = await listGroups();
-	console.log();
 	const groupLinks = excludedGroups !== '*' &&
 		[
 			...groups.map(group => group.link
