@@ -1,7 +1,7 @@
 'use strict';
 
 // Config
-const { masterID } = require('../../config.json');
+const { master } = require('../../config.json');
 
 // DB
 const { addUser, isUser } = require('../../stores/user');
@@ -27,7 +27,10 @@ const addUserHandler = async (ctx, next) => {
 
 	ctx.state = {
 		isAdmin: user && user.status === 'admin',
-		isMaster: user && user.id === masterID,
+		isMaster: user &&
+			user.id === Number(master) ||
+			user.username.toLowerCase() ===
+				String(master).replace('@', '').toLowerCase(),
 		user: newUser,
 	};
 
