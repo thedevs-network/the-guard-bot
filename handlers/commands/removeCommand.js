@@ -36,7 +36,7 @@ const removeCommandHandler = async ({ chat, message, reply, state }) => {
 
 	await removeCommand({ name: commandName });
 	return reply(
-		`✅ <code>/${commandName}</code> ` +
+		`✅ <code>!${commandName}</code> ` +
 		'<b>has been removed successfully.</b>',
 		replyOptions);
 };
