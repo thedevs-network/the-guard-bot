@@ -22,22 +22,26 @@ const { listGroups } = require('../../stores/group');
 const removeLinks = async ({ message, chat, reply, state }, next) => {
 	const { isAdmin, user } = state;
 	const groups = await listGroups();
-	const groupLinks = [
-		...groups.map(group => group.link
-			? group.link.split('/joinchat/')[1]
-			: ''),
-		...excludedGroups.map(group =>
-			group.includes('/joinchat/')
-				? group.split('/joinchat/')[1]
-				: group)
-	];
+	console.log();
+	const groupLinks = excludedGroups !== '*' &&
+		[
+			...groups.map(group => group.link
+				? group.link.split('/joinchat/')[1]
+				: ''),
+			...excludedGroups.map(group =>
+				group.includes('/joinchat/')
+					? group.split('/joinchat/')[1]
+					: group)
+		];
 	if (
 		message.forward_from_chat &&
 		message.forward_from_chat.type !== 'private' &&
+		excludedChannels !== '*' &&
 		!excludedChannels.includes(message.forward_from_chat.username) ||
 		message.text &&
 		(message.text.includes('t.me') ||
 			message.text.includes('telegram.me')) &&
+		excludedGroups !== '*' &&
 		!(excludedChannels.includes(message.text) ||
 			groupLinks.includes(message.text.split('/joinchat/')[1]))
 	) {
