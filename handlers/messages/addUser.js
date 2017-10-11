@@ -29,6 +29,7 @@ const addUserHandler = async (ctx, next) => {
 		isAdmin: user && user.status === 'admin',
 		isMaster: user &&
 			user.id === Number(master) ||
+			user.username &&
 			user.username.toLowerCase() ===
 				String(master).replace('@', '').toLowerCase(),
 		user: newUser,

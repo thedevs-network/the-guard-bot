@@ -11,6 +11,7 @@ const addedToGroupHandler = async (ctx, next) => {
 	const msg = ctx.message;
 	const { telegram } = ctx;
 	const isMaster = ctx.from.id === Number(master) ||
+		ctx.from.username &&
 		ctx.from.username.toLowerCase() ===
 		String(master).replace('@', '').toLowerCase();
 
