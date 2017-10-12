@@ -31,6 +31,10 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 		return null;
 	}
 
+	if (await isAdmin(userToBan)) {
+		return reply('ℹ️ <b>Can\'t ban other admins.</b>', replyOptions);
+	}
+
 	if (reason.length === 0) {
 		return reply('ℹ️ <b>Need a reason to ban.</b>', replyOptions);
 	}
@@ -39,10 +43,6 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 		bot.telegram.deleteMessage(
 			chat.id,
 			message.reply_to_message.message_id);
-	}
-
-	if (await isAdmin(userToBan)) {
-		return reply('ℹ️ <b>Can\'t ban other admins.</b>', replyOptions);
 	}
 
 	if (await isBanned(userToBan)) {

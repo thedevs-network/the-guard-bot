@@ -35,12 +35,12 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
 
-	if (reason.length === 0) {
-		return reply('ℹ️ <b>Need a reason to warn.</b>', replyOptions);
-	}
-
 	if (await isAdmin(userToWarn)) {
 		return reply('ℹ️ <b>Can\'t warn other admins.</b>', replyOptions);
+	}
+
+	if (reason.length === 0) {
+		return reply('ℹ️ <b>Need a reason to warn.</b>', replyOptions);
 	}
 
 	await warn(userToWarn, reason);

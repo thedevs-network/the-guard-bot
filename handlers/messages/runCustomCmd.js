@@ -18,15 +18,16 @@ const runCustomCmdHandler = async (ctx, next) => {
 		return next();
 	}
 
-	const { caption, content, role, type } = command;
+	const { caption, content, type } = command;
+	const role = command.role.toLowerCase();
 	const replyTo = message.reply_to_message
 		? { reply_to_message_id: message.reply_to_message.message_id }
 		: {};
 	const options = Object.assign(replyTo, caption ? { caption } : {});
 	if (
-		role === 'Master' &&
+		role === 'master' &&
 		!isMaster ||
-		role === 'Admins' &&
+		role === 'admins' &&
 		!isAdmin
 	) {
 		return next();

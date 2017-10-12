@@ -13,7 +13,6 @@ const leaveCommandHandler = async ctx => {
 		const group = /^-?\d+/.test(groupName)
 			? { id: Number(groupName) }
 			:	{ title: groupName };
-		console.log(group);
 		const isGroup = await managesGroup(group);
 		if (!isGroup) {
 			return replyWithHTML(

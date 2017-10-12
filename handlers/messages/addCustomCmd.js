@@ -66,7 +66,8 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 	}
 
 	if (command.state === 'role') {
-		if (text !== 'Master' && text !== 'Admins' && text !== 'Everyone') {
+		const role = text.toLowerCase();
+		if (role !== 'master' && role !== 'admins' && role !== 'everyone') {
 			reply('Please send a valid role.', Markup.keyboard([
 				[ 'Master', 'Admins', 'Everyone' ]
 			])
@@ -75,7 +76,7 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 				.extra());
 			return next();
 		}
-		await updateCommand({ id, role: text, state: 'content' });
+		await updateCommand({ id, role, state: 'content' });
 		reply(
 			'Send the content you wish to be shown when the command is used.' +
 			'.\n\nSupported contents:\n- <b>Text (HTML)</b>\n- <b>Photo</b>' +

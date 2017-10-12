@@ -5,15 +5,19 @@ const { replyOptions } = require('../../bot/options');
 
 const { admin } = require('../../stores/user');
 const { addGroup, managesGroup } = require('../../stores/group');
-const { masterID } = require('../../config.json');
+const { master } = require('../../config.json');
 
 const addedToGroupHandler = async (ctx, next) => {
 	const msg = ctx.message;
 	const { telegram } = ctx;
+	const isMaster = ctx.from.id === Number(master) ||
+		ctx.from.username &&
+		ctx.from.username.toLowerCase() ===
+		String(master).replace('@', '').toLowerCase();
 
 	const wasAdded = msg.new_chat_members.some(user =>
 		user.username === ctx.me);
-	if (wasAdded && ctx.from.id === masterID) {
+	if (wasAdded && isMaster) {
 		await admin(ctx.from);
 		if (!await managesGroup({ id: ctx.chat.id })) {
 			try {
