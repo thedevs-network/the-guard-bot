@@ -12,7 +12,6 @@ const middlewareHandler = async ({ chat, message }, next) => {
 	if (
 		message &&
 		message.text &&
-		message.entities[0].type !== 'code' &&
 		/^\/\w+/.test(message.text) &&
 		chat.type !== 'private'
 	) {
