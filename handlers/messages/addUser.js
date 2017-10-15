@@ -28,10 +28,10 @@ const addUserHandler = async (ctx, next) => {
 	ctx.state = {
 		isAdmin: user && user.status === 'admin',
 		isMaster: user &&
-			(user.id === Number(master) ||
+		(user.id === Number(master) ||
 			user.username &&
 			user.username.toLowerCase() ===
-				String(master).replace('@', '').toLowerCase()),
+			String(master).replace('@', '').toLowerCase()),
 		user: newUser,
 	};
 
@@ -41,6 +41,13 @@ const addUserHandler = async (ctx, next) => {
 		!await isUser(message.reply_to_message.from)
 	) {
 		usersToAdd.push(addUser(message.reply_to_message.from));
+	}
+
+	if (
+		message.forward_from &&
+		!await isUser(message.forward_from)
+	) {
+		usersToAdd.push(addUser(message.forward_from));
 	}
 
 	await Promise.all(usersToAdd);
