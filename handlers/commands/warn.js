@@ -25,7 +25,7 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 			: null;
 
 	if (!userToWarn) {
-		return reply('ℹ️ <b>Reply to a message or mentoin a user.</b>',
+		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
 			replyOptions);
 	}
 
