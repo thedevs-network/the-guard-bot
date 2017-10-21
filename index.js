@@ -36,6 +36,7 @@ const command = './handlers/commands';
 const leaveUnmanagedHandler = require(`${middleware}/leaveUnmanaged`);
 const removeCommandsHandler = require(`${middleware}/removeCommands`);
 const kickBannedHandler = require(`${middleware}/kickBanned`);
+const syncStatusHandler = require(`${middleware}/syncStatus`);
 const antibotHandler = require(`${middleware}/antibot`);
 const addedToGroupHandler = require(`${middleware}/addedToGroup`);
 
@@ -82,6 +83,7 @@ bot.on('message',
 	addCustomCmdHandler,
 	runCustomCmdHandler
 );
+bot.on('new_chat_members', syncStatusHandler);
 bot.on('new_chat_members', antibotHandler);
 bot.on([ 'new_chat_members', 'left_chat_member' ], deleteAfter(delTimeout));
 bot.command('admin', adminHandler);
