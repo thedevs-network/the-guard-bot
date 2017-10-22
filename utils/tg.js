@@ -6,6 +6,11 @@ const escapeHtml = s => s
 const link = ({ id, first_name }) =>
 	`<a href="tg://user?id=${id}">${escapeHtml(first_name)}</a>`;
 
+const quietLink = (user) =>
+	user.username
+		? `<a href="t.me/${user.username}">${escapeHtml(user.first_name)}</a>`
+		: link(user);
+
 /**
  * @param {number} ms
  * Deletes messages after (ms) milliseconds
@@ -19,5 +24,6 @@ const deleteAfter = ms => ctx =>
 module.exports = {
 	deleteAfter,
 	escapeHtml,
-	link
+	link,
+	quietLink,
 };
