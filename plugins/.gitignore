@@ -1,0 +1,5 @@
+# Ignore everything...
+*
+# except this file and index
+!.gitignore
+!index.js

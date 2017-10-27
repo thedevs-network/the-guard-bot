@@ -16,6 +16,7 @@ bot.telegram.getMe().then((botInfo) => {
 bot.use(
 	require('./handlers/middlewares'),
 	require('./handlers/messages'),
+	require('./plugins'),
 	require('./handlers/commands'),
 );
 
