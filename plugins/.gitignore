@@ -1,5 +1,6 @@
 # Ignore everything...
 *
-# except this file and index
+# except these
 !.gitignore
 !index.js
+!README.md
