@@ -62,7 +62,7 @@ const warn = ({ id }, reason) =>
 	User.update({ id }, { $push: { warns: reason } });
 
 const unwarn = ({ id }) =>
-	User.update({ id }, { $pop: { warns: 1 } });
+	User.update({ id }, { $pop: { warns: 1 }, $set: { status: 'member' } });
 
 const nowarns = ({ id }) =>
 	User.update({ id }, { $set: { warns: [] } });

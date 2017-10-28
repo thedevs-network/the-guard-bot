@@ -7,9 +7,10 @@ const { link } = require('../../utils/tg');
 const { replyOptions } = require('../../bot/options');
 
 // DB
+const { listGroups } = require('../../stores/group');
 const { getWarns, unwarn } = require('../../stores/user');
 
-const unwarnHandler = async ({ message, reply, state }) => {
+const unwarnHandler = async ({ message, reply, state, telegram }) => {
 	const { isAdmin, user } = state;
 	if (!isAdmin) return null;
 
@@ -30,6 +31,11 @@ const unwarnHandler = async ({ message, reply, state }) => {
 		return reply(`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
 			replyOptions);
 	}
+
+	const groups = await listGroups();
+
+	groups.forEach(group =>
+		telegram.unbanChatMember(group.id, userToUnwarn.id));
 
 	await unwarn(userToUnwarn);
 
