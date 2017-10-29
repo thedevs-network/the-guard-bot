@@ -2,15 +2,16 @@
 
 // Utils
 const { link, scheduleDeletion } = require('../../utils/tg');
-const { logError } = require('../../utils/log');
 
 // Bot
 const bot = require('../../bot');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { listGroups } = require('../../stores/group');
-const { isAdmin, isBanned, ban } = require('../../stores/user');
+const { isAdmin, isBanned } = require('../../stores/user');
+
+// Actions
+const ban = require('../../actions/ban');
 
 const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 	const userToBan = message.reply_to_message
@@ -61,22 +62,7 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 		);
 	}
 
-	try {
-		await ban(userToBan, reason);
-	} catch (err) {
-		logError(err);
-	}
-
-	const groups = await listGroups();
-
-	const bans = groups.map(group =>
-		telegram.kickChatMember(group.id, userToBan.id));
-
-	try {
-		await Promise.all(bans);
-	} catch (err) {
-		logError(err);
-	}
+	await ban(userToBan, reason);
 
 	if (userToBan.first_name === '') {
 		return reply(`🚫 ${link(state.user)} <b>banned an user with id</b> ` +
