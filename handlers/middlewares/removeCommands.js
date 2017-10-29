@@ -1,27 +1,20 @@
 'use strict';
 
-// Utils
-const { print, logError } = require('../../utils/log');
+const noop = Function.prototype;
 
-// Bot
-const bot = require('../../bot');
-
-// DB
-const middlewareHandler = async ({ chat, message }, next) => {
-	process.env.NODE_ENV === 'development' && message && print(message);
+const removeCommandsHandler = ({ chat, message, telegram }, next) => {
 	if (
 		message &&
 		message.text &&
-		/^\/\w+/.test(message.text) &&
+		message.entities &&
+		message.entities[0] &&
+		message.entities[0].offset === 0 &&
+		message.entities[0].type === 'bot_command' &&
 		chat.type !== 'private'
 	) {
-		try {
-			await bot.telegram.deleteMessage(chat.id, message.message_id);
-		} catch (err) {
-			logError(err);
-		}
+		telegram.deleteMessage(chat.id, message.message_id).catch(noop);
 	}
 	return next();
 };
 
-module.exports = middlewareHandler;
+module.exports = removeCommandsHandler;
