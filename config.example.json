@@ -2,6 +2,8 @@
 	"master": 123456789, // master admin ID as a number or username as astring.
 	"token": "", // bot token.
 	"plugins": [], // list of plugin names to be loaded
+	"deleteCommands": "own", // which messages with commands should be deleted?
+		// valid options: "all", "own" (leave commands meant for other bots, this is the default), "none".
 	"numberOfWarnsToBan": 3, // Number of warns that will get someone banned.
 	"groupsInlineKeyboard": [], // [[inlineButton]] -> inline keyboard to be added to reply to /groups
 	"excludedChannels": [], // [String] -> list of channels usernames to be excluded from warnings, use "*" to disable this feature.

@@ -22,23 +22,39 @@ const addCommandHandler = require('./addCommand');
 const removeCommandHandler = require('./removeCommand');
 const helpHandler = require('./help');
 
-composer.command('admin', adminHandler);
-composer.command('unadmin', unAdminHandler);
-composer.command('leave', leaveCommandHandler);
-composer.command('warn', warnHandler);
-composer.command('unwarn', unwarnHandler);
-composer.command('nowarns', nowarnsHandler);
-composer.command('getwarns', getWarnsHandler);
-composer.command('ban', banHandler);
-composer.command('unban', unbanHandler);
-composer.command('report', reportHandler);
-composer.hears(/^@admins?\s?/i, reportHandler);
-composer.command('staff', staffHandler);
-composer.command('link', linkHandler);
-composer.command('groups', groupsHandler);
-composer.command('commands', commandReferenceHandler);
-composer.command('addcommand', addCommandHandler);
-composer.command('removecommand', removeCommandHandler);
-composer.command([ 'start', 'help' ], helpHandler);
+let { deleteCommands } = require('../../config.json');
+
+if (typeof deleteCommands === 'undefined') {
+	deleteCommands = 'own';
+} else if (![ 'all', 'own', 'none' ].includes(deleteCommands)) {
+	throw new Error('Invalid value for `deleteCommands` in `config.json`: ' +
+		deleteCommands);
+}
+
+const deleteMessage = ({ chat, message, telegram }, next) => {
+	if (deleteCommands === 'own' && chat.type !== 'private') {
+		telegram.deleteMessage(chat.id, message.message_id);
+	}
+	return next();
+};
+
+composer.command('admin', deleteMessage, adminHandler);
+composer.command('unadmin', deleteMessage, unAdminHandler);
+composer.command('leave', deleteMessage, leaveCommandHandler);
+composer.command('warn', deleteMessage, warnHandler);
+composer.command('unwarn', deleteMessage, unwarnHandler);
+composer.command('nowarns', deleteMessage, nowarnsHandler);
+composer.command('getwarns', deleteMessage, getWarnsHandler);
+composer.command('ban', deleteMessage, banHandler);
+composer.command('unban', deleteMessage, unbanHandler);
+composer.command('report', deleteMessage, reportHandler);
+composer.hears(/^@admins?\s?/i, deleteMessage, reportHandler);
+composer.command('staff', deleteMessage, staffHandler);
+composer.command('link', deleteMessage, linkHandler);
+composer.command('groups', deleteMessage, groupsHandler);
+composer.command('commands', deleteMessage, commandReferenceHandler);
+composer.command('addcommand', deleteMessage, addCommandHandler);
+composer.command('removecommand', deleteMessage, removeCommandHandler);
+composer.command([ 'start', 'help' ], deleteMessage, helpHandler);
 
 module.exports = composer;

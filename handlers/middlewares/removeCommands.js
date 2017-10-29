@@ -1,9 +1,12 @@
 'use strict';
 
+const { deleteCommands } = require('../../config.json');
+
 const noop = Function.prototype;
 
 const removeCommandsHandler = ({ chat, message, telegram }, next) => {
 	if (
+		deleteCommands === 'all' &&
 		message &&
 		message.text &&
 		message.entities &&
