@@ -41,7 +41,7 @@ const removeLinks = async ({ message, chat, reply, state }, next) => {
 		(message.text.includes('t.me') ||
 			message.text.includes('telegram.me')) &&
 		excludedGroups !== '*' &&
-		!(excludedChannels.includes(message.text) ||
+		!(excludedChannels.some(channel => message.text.includes(channel)) ||
 			groupLinks.includes(message.text.split('/joinchat/')[1]))
 	) {
 		if (isAdmin) {
