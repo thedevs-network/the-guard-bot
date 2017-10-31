@@ -1,7 +1,7 @@
 'use strict';
 
 // Utils
-const { quietLink } = require('../../utils/tg');
+const { quietLink, scheduleDeletion } = require('../../utils/tg');
 
 // DB
 const { getAdmins } = require('../../stores/user');
@@ -16,7 +16,7 @@ const staffHandler = async ctx => {
 	return ctx.replyWithHTML(`<b>Admins in the network:</b>\n\n${list}`, {
 		disable_notification: true,
 		disable_web_page_preview: true,
-	});
+	}).then(scheduleDeletion);
 };
 
 module.exports = staffHandler;

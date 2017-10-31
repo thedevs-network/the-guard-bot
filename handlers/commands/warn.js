@@ -1,7 +1,7 @@
 'use strict';
 
 // Utils
-const { link } = require('../../utils/tg');
+const { link, scheduleDeletion } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 
 // Config
@@ -26,7 +26,7 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 
 	if (!userToWarn) {
 		return reply('ℹ️ <b>Reply to a message or mentoin a user.</b>',
-			replyOptions);
+			replyOptions).then(scheduleDeletion);
 	}
 
 	if (message.chat.type === 'private' || userToWarn.username === me) {
@@ -40,7 +40,8 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 	}
 
 	if (reason.length === 0) {
-		return reply('ℹ️ <b>Need a reason to warn.</b>', replyOptions);
+		return reply('ℹ️ <b>Need a reason to warn.</b>', replyOptions)
+			.then(scheduleDeletion);
 	}
 
 	await warn(userToWarn, reason);

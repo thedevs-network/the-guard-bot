@@ -1,7 +1,7 @@
 'use strict';
 
 // Utils
-const { link } = require('../../utils/tg');
+const { link, scheduleDeletion } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 
 // Bot
@@ -24,7 +24,7 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 
 	if (!userToBan) {
 		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
-			replyOptions);
+			replyOptions).then(scheduleDeletion);
 	}
 
 	if (message.chat.type === 'private' || userToBan.username === me) {
@@ -36,7 +36,8 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 	}
 
 	if (reason.length === 0) {
-		return reply('ℹ️ <b>Need a reason to ban.</b>', replyOptions);
+		return reply('ℹ️ <b>Need a reason to ban.</b>', replyOptions)
+			.then(scheduleDeletion);
 	}
 
 	if (message.reply_to_message) {

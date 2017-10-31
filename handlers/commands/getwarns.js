@@ -1,7 +1,7 @@
 'use strict';
 
 // Utils
-const { link } = require('../../utils/tg');
+const { link, scheduleDeletion } = require('../../utils/tg');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
@@ -20,7 +20,7 @@ const getWarnsHandler = async ({ message, reply, state }) => {
 			: null;
 	if (!theUser) {
 		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
-			replyOptions);
+			replyOptions).then(scheduleDeletion);
 	}
 	let i = 0;
 	const warns = await getWarns(theUser);

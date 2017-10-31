@@ -1,7 +1,7 @@
 'use strict';
 
 // Utils
-const { link } = require('../../utils/tg');
+const { link, scheduleDeletion } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 
 // Bot
@@ -22,7 +22,7 @@ const nowarnsHandler = async ({ message, reply, state }) => {
 
 	if (!userToUnwarn) {
 		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
-			replyOptions);
+			replyOptions).then(scheduleDeletion);
 	}
 
 	const warns = await getWarns(userToUnwarn);
