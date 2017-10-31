@@ -24,8 +24,10 @@ const unbanHandler = async ({ message, reply, telegram, state }) => {
 			: null;
 
 	if (!userToUnban) {
-		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
-			replyOptions).then(scheduleDeletion);
+		return reply(
+			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions
+		).then(scheduleDeletion);
 	}
 
 

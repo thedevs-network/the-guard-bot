@@ -19,8 +19,10 @@ const getWarnsHandler = async ({ message, reply, state }) => {
 			? message.commandMention
 			: null;
 	if (!theUser) {
-		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
-			replyOptions).then(scheduleDeletion);
+		return reply(
+			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions
+		).then(scheduleDeletion);
 	}
 	let i = 0;
 	const warns = await getWarns(theUser);

@@ -153,6 +153,7 @@
 				"allowArrowFunctions": true
 			}
 		],
+		"function-paren-newline": ["error", "multiline"],
 		"key-spacing": "error",
 		"keyword-spacing": "error",
 		"lines-around-comment": "error",

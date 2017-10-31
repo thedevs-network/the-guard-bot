@@ -22,6 +22,7 @@ composer.on('new_chat_members', syncStatusHandler);
 composer.on('new_chat_members', antibotHandler);
 composer.on(
 	[ 'new_chat_members', 'left_chat_member' ],
-	deleteAfter(delTimeout));
+	deleteAfter(delTimeout)
+);
 
 module.exports = composer;

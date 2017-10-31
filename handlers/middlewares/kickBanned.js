@@ -18,7 +18,8 @@ const kickbanned = async ({ chat, from, reply }, next) => {
 			.then(() => reply(
 				`🚫 ${link(from)} <b>is banned</b>!\n\n` +
 				`Reason: ${banned}`,
-				replyOptions))
+				replyOptions
+			))
 			.catch(logError)
 			.then(next);
 	}

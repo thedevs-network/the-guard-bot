@@ -31,8 +31,10 @@ const adminHandler = async ({ message, reply, state }) => {
 	}
 
 	if (await isAdmin(userToAdmin)) {
-		return reply(`⭐️ ${link(userToAdmin)} <b>is already admin.</b>`,
-			replyOptions);
+		return reply(
+			`⭐️ ${link(userToAdmin)} <b>is already admin.</b>`,
+			replyOptions
+		);
 	}
 
 	if (await getWarns(userToAdmin)) {

@@ -21,15 +21,19 @@ const nowarnsHandler = async ({ message, reply, state }) => {
 			: null;
 
 	if (!userToUnwarn) {
-		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
-			replyOptions).then(scheduleDeletion);
+		return reply(
+			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions
+		).then(scheduleDeletion);
 	}
 
 	const warns = await getWarns(userToUnwarn);
 
 	if (!warns) {
-		return reply(`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
-			replyOptions);
+		return reply(
+			`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
+			replyOptions
+		);
 	}
 	try {
 		await nowarns(userToUnwarn);
@@ -40,7 +44,8 @@ const nowarnsHandler = async ({ message, reply, state }) => {
 	return reply(
 		`♻️ ${link(user)} <b>pardoned</b> ${link(userToUnwarn)} ` +
 		'<b>for all of their warnings.</b>',
-		replyOptions);
+		replyOptions
+	);
 };
 
 

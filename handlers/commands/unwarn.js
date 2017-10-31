@@ -21,15 +21,19 @@ const unwarnHandler = async ({ message, reply, state, telegram }) => {
 			: null;
 
 	if (!userToUnwarn) {
-		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
-			replyOptions).then(scheduleDeletion);
+		return reply(
+			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions
+		).then(scheduleDeletion);
 	}
 
 	const allWarns = await getWarns(userToUnwarn);
 
 	if (!allWarns) {
-		return reply(`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
-			replyOptions);
+		return reply(
+			`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
+			replyOptions
+		);
 	}
 
 	const groups = await listGroups();
@@ -43,7 +47,8 @@ const unwarnHandler = async ({ message, reply, state, telegram }) => {
 		`❎ ${link(user)} <b>pardoned</b> ${link(userToUnwarn)} ` +
 		`<b>for:</b>\n\n${allWarns[allWarns.length - 1]}` +
 		` (${allWarns.length - 1}/3)`,
-		replyOptions);
+		replyOptions
+	);
 };
 
 

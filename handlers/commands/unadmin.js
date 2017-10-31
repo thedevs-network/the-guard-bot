@@ -21,13 +21,17 @@ const unAdminHandler = async ({ message, reply, state }) => {
 			: null;
 
 	if (!userToUnadmin) {
-		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
-			replyOptions).then(scheduleDeletion);
+		return reply(
+			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions
+		).then(scheduleDeletion);
 	}
 
 	if (!await isAdmin(userToUnadmin)) {
-		return reply(`ℹ️ ${link(userToUnadmin)} <b>is not admin.</b>`,
-			replyOptions);
+		return reply(
+			`ℹ️ ${link(userToUnadmin)} <b>is not admin.</b>`,
+			replyOptions
+		);
 	}
 
 	try {
@@ -36,8 +40,10 @@ const unAdminHandler = async ({ message, reply, state }) => {
 		logError(err);
 	}
 
-	return reply(`❗️ ${link(userToUnadmin)} <b>is no longer admin.</b>`,
-		replyOptions);
+	return reply(
+		`❗️ ${link(userToUnadmin)} <b>is no longer admin.</b>`,
+		replyOptions
+	);
 };
 
 module.exports = unAdminHandler;

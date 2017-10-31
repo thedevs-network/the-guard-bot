@@ -25,8 +25,10 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 			: null;
 
 	if (!userToWarn) {
-		return reply('ℹ️ <b>Reply to a message or mentoin a user.</b>',
-			replyOptions).then(scheduleDeletion);
+		return reply(
+			'ℹ️ <b>Reply to a message or mentoin a user.</b>',
+			replyOptions
+		).then(scheduleDeletion);
 	}
 
 	if (message.chat.type === 'private' || userToWarn.username === me) {
@@ -53,14 +55,16 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 	if (message.reply_to_message) {
 		promises.push(bot.telegram.deleteMessage(
 			chat.id,
-			message.reply_to_message.message_id));
+			message.reply_to_message.message_id
+		));
 	}
 
 	try {
 		await reply(
 			`⚠️ ${link(user)} <b>warned</b> ${link(userToWarn)} <b>for:</b>` +
 			`\n\n${reason} (${warnCount.length}/${numberOfWarnsToBan})`,
-			replyOptions);
+			replyOptions
+		);
 	} catch (e) {
 		// we don't expect an error
 		// but we do wish to continue if one happens
@@ -75,7 +79,8 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 			`🚫 ${link(user)} <b>banned</b> ${link(userToWarn)} ` +
 			'<b>for:</b>\n\nReached max number of warnings ' +
 			`(${warnCount.length}/${numberOfWarnsToBan})`,
-			replyOptions));
+			replyOptions
+		));
 	}
 
 	return Promise.all(promises).catch(logError);

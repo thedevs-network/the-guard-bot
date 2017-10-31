@@ -25,11 +25,10 @@ const groupsHandler = async ({ replyWithHTML }) => {
 
 	const entries = groups.map(entry).join('\n');
 
-	return replyWithHTML(
-		`🛠 <b>Groups I manage</b>:\n\n${entries}`, {
-			disable_web_page_preview: true,
-			reply_markup,
-		}).then(scheduleDeletion);
+	return replyWithHTML(`🛠 <b>Groups I manage</b>:\n\n${entries}`, {
+		disable_web_page_preview: true,
+		reply_markup,
+	}).then(scheduleDeletion);
 };
 
 module.exports = groupsHandler;

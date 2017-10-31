@@ -11,13 +11,17 @@ const addCommandHandler = async ({ chat, reply, state }) => {
 	if (chat.type !== 'private') return null;
 
 	if (!isAdmin) {
-		return reply('ℹ️ <b>Sorry, only admins access this command.</b>',
-			replyOptions);
+		return reply(
+			'ℹ️ <b>Sorry, only admins access this command.</b>',
+			replyOptions
+		);
 	}
 	await addCommand({ id: user.id });
-	return reply('Enter a name for the command without forward slash "/".' +
+	return reply(
+		'Enter a name for the command without forward slash "/".' +
 		'\n\nFor example: <b>rules</b>',
-	replyOptions);
+		replyOptions
+	);
 };
 
 module.exports = addCommandHandler;

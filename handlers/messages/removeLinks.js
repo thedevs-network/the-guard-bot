@@ -57,15 +57,19 @@ const removeLinks = async ({ message, chat, reply, state }, next) => {
 			promises.push(reply(
 				`⚠️ ${link(user)} <b>got warned!</b> (${warnCount.length}/3)` +
 				`\n\nReason: ${reason}`,
-				replyOptions));
+				replyOptions
+			));
 		} else {
 			promises.push(bot.telegram.kickChatMember(chat.id, user.id));
-			promises.push(ban(user,
-				'Reached max number of warnings'));
+			promises.push(ban(
+				user,
+				'Reached max number of warnings'
+			));
 			promises.push(reply(
 				`🚫 ${link(user)} <b>got banned</b>! (${warnCount.length}/3)` +
 				'\n\nReason: Reached max number of warnings',
-				replyOptions));
+				replyOptions
+			));
 		}
 		try {
 			await Promise.all(promises);

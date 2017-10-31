@@ -52,7 +52,8 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 				'/addcommand - to add a command.\n' +
 				'/removecommand <code>&lt;name&gt;</code>' +
 				' - to remove a command.',
-				replyOptions);
+				replyOptions
+			);
 			return next();
 		}
 		await updateCommand({ id, name: text, state: 'role' });
@@ -81,7 +82,8 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 			'Send the content you wish to be shown when the command is used.' +
 			'.\n\nSupported contents:\n- <b>Text (HTML)</b>\n- <b>Photo</b>' +
 			'\n- <b>Video</b>\n- <b>Document</b>\n- <b>Audio</b>',
-			replyOptions);
+			replyOptions
+		);
 		return next();
 	}
 
@@ -112,7 +114,8 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 			updateCommand(Object.assign(
 				{},
 				newCommand,
-				{ id, isActive: true, state: null })),
+				{ id, isActive: true, state: null }
+			)),
 		]);
 		reply(
 			'✅ <b>New command has been created successfully.</b>\n\n' +
@@ -122,7 +125,8 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 			'/commands - to see the list of commands.\n' +
 			'/addcommand - to add a new command.\n' +
 			'/removecomand <code>&lt;name&gt;</code> - to remove a command.',
-			replyOptions);
+			replyOptions
+		);
 		return next();
 	}
 	return next();

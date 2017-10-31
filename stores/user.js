@@ -23,7 +23,8 @@ const addUser = ({ id, first_name = '', last_name = '', username = '' }) =>
 	User.update(
 		{ id },
 		{ first_name, id, last_name, status: 'member', username, warns: [] },
-		{ upsert: true })
+		{ upsert: true }
+	)
 		.catch(logError);
 
 const isUser = ({ id }) =>
@@ -35,7 +36,8 @@ const getUser = user =>
 const admin = ({ id }) =>
 	User.update(
 		{ id },
-		{ $set: { status: 'admin' } });
+		{ $set: { status: 'admin' } }
+	);
 
 const getAdmins = () =>
 	User.find({ status: 'admin' });
@@ -52,7 +54,8 @@ const ban = ({ id }, ban_reason) =>
 const unban = ({ id }) =>
 	User.update(
 		{ id },
-		{ $set: { ban_reason: null, status: 'member', warns: [] } });
+		{ $set: { ban_reason: null, status: 'member', warns: [] } }
+	);
 
 const isBanned = ({ id }) =>
 	User.findOne({ id, status: 'banned' })

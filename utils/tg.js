@@ -23,9 +23,11 @@ const quietLink = (user) =>
  * @returns {undefined}
  */
 const deleteAfter = ms => ctx =>
-	setTimeout(() =>
-		ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id),
-	ms);
+	setTimeout(
+		() =>
+			ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id),
+		ms
+	);
 
 const scheduleDeletion = async ({ chat, message_id }) => {
 	if (chat.type === 'private') {

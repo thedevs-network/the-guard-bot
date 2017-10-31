@@ -23,8 +23,10 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
 
 	if (!userToBan) {
-		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
-			replyOptions).then(scheduleDeletion);
+		return reply(
+			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions
+		).then(scheduleDeletion);
 	}
 
 	if (message.chat.type === 'private' || userToBan.username === me) {
@@ -43,12 +45,15 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 	if (message.reply_to_message) {
 		bot.telegram.deleteMessage(
 			chat.id,
-			message.reply_to_message.message_id);
+			message.reply_to_message.message_id
+		);
 	}
 
 	if (await isBanned(userToBan)) {
-		return reply(`🚫 ${link(userToBan)} <b>is already banned.</b>`,
-			replyOptions);
+		return reply(
+			`🚫 ${link(userToBan)} <b>is already banned.</b>`,
+			replyOptions
+		);
 	}
 
 	try {

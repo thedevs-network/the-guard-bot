@@ -10,7 +10,8 @@ const checkUsernameHandler = require('./checkUsername');
 const addCustomCmdHandler = require('./addCustomCmd');
 const runCustomCmdHandler = require('./runCustomCmd');
 
-composer.on('message',
+composer.on(
+	'message',
 	addUserHandler,
 	removeLinksHandler,
 	checkUsernameHandler,

@@ -23,9 +23,10 @@ const helpHandler = ({ chat, replyWithHTML }) => {
 
 	return replyWithHTML(
 		message,
-		Markup.inlineKeyboard(
-			[ Markup.urlButton('🛠 Setup a New Bot', homepage) ])
-			.extra());
+		Markup.inlineKeyboard([
+			Markup.urlButton('🛠 Setup a New Bot', homepage)
+		]).extra()
+	);
 };
 
 module.exports = helpHandler;
