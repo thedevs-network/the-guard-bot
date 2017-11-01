@@ -48,9 +48,7 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 
 	await warn(userToWarn, reason);
 	const warnCount = await getWarns(userToWarn);
-	const promises = [
-		bot.telegram.deleteMessage(chat.id, message.message_id)
-	];
+	const promises = [];
 
 	if (message.reply_to_message) {
 		promises.push(bot.telegram.deleteMessage(
