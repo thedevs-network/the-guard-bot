@@ -2,10 +2,6 @@
 
 const { telegram } = require('../bot');
 
-const { promisify } = require('util');
-
-const delay = promisify(setTimeout);
-
 const escapeHtml = s => s
 	.replace(/</g, '&lt;');
 
@@ -29,12 +25,14 @@ const deleteAfter = ms => ctx =>
 		ms
 	);
 
-const scheduleDeletion = async ({ chat, message_id }) => {
+const scheduleDeletion = ({ chat, message_id }) => {
 	if (chat.type === 'private') {
 		return null;
 	}
-	await delay(5 * 60 * 1000);
-	return telegram.deleteMessage(chat.id, message_id);
+	return setTimeout(
+		() => telegram.deleteMessage(chat.id, message_id),
+		5 * 60 * 1000
+	);
 };
 
 module.exports = {
