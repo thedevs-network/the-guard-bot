@@ -51,50 +51,50 @@ const removeLinks = async ({ message, chat, reply, state }, next) => {
 			? text.match(regexp)
 			: [];
 
-	await Promise.all(usernames.map(username => new Promise(async (resolve) => {
-		// skip if already detected an ad
-		if (isChannelAd || isGroupAd) return resolve();
+	await Promise.all(usernames
+		? usernames.map(async username => {
+			// skip if already detected an ad
+			if (isChannelAd || isGroupAd) return;
 
-		// detect add if it's an invite link
-		if (
-			username.includes('/joinchat/') &&
-			!knownGroups.some(group => group.includes(username))
-		) {
-			isGroupAd = true;
-			return resolve();
-		}
-
-		// detect if usernames are channels or public groups
-		// and if they are ads
-		username = username.replace(/.*((t.me)|(telegram.me))\//gi, '@');
-		try {
-			const { type } = await bot.telegram.getChat(username);
-			if (!type) return resolve();
+			// detect add if it's an invite link
 			if (
-				type === 'channel' &&
-				shouldRemoveChannels &&
-				!excludedChannels
-					.some(channel =>
-						channel.includes(username.replace('@', '')))
-			) {
-				isChannelAd = true;
-				return resolve();
-			}
-			if (
-				type === 'supergroup' &&
-				shouldRemoveGroups &&
-				!knownGroups
-					.some(group =>
-						group.includes(username.replace('@', '')))
+				username.includes('/joinchat/') &&
+				!knownGroups.some(group => group.includes(username))
 			) {
 				isGroupAd = true;
-				return resolve();
+				return;
 			}
-		} catch (err) {
-			return resolve();
-		}
-		return resolve();
-	})));
+
+			// detect if usernames are channels or public groups
+			// and if they are ads
+			username = username.replace(/.*((t.me)|(telegram.me))\//gi, '@');
+			try {
+				const { type } = await bot.telegram.getChat(username);
+				if (!type) return;
+				if (
+					type === 'channel' &&
+					shouldRemoveChannels &&
+					!excludedChannels
+						.some(channel =>
+							channel.includes(username.replace('@', '')))
+				) {
+					isChannelAd = true;
+					return;
+				}
+				if (
+					type === 'supergroup' &&
+					shouldRemoveGroups &&
+					!knownGroups
+						.some(group =>
+							group.includes(username.replace('@', '')))
+				) {
+					isGroupAd = true;
+				}
+			} catch (err) {
+				console.assert(err);
+			}
+		})
+		: '');
 
 	if (
 		// check if is forwarded from channel
