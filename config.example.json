@@ -5,10 +5,11 @@
 
 	"deleteCommands": "own", // which messages with commands should be deleted?
 		// valid options: "all", "own" (leave commands meant for other bots, this is the default), "none".
-	
+
 	"numberOfWarnsToBan": 3, // Number of warns that will get someone banned.
 	"groupsInlineKeyboard": [], // [[inlineButton]] -> inline keyboard to be added to reply to /groups
-	
+	"warnInlineKeyboard": [], // [[inlineButton]] -> inline keyboard to be added to warn message
+
 	// [String] -> list of channels or groups links/usernames that you want to be excluded from warnings
 	//  use "*" to disable this feature.
 	"excludedChannels": [],

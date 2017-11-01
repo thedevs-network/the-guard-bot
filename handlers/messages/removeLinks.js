@@ -8,8 +8,11 @@ const { logError } = require('../../utils/log');
 const {
 	excludedChannels,
 	excludedGroups,
-	numberOfWarnsToBan
+	numberOfWarnsToBan,
+	warnsInlineKeyboard,
 } = require('../../config.json');
+const reply_markup = { inline_keyboard: warnsInlineKeyboard };
+
 
 // Bot
 const bot = require('../../bot');
@@ -120,7 +123,7 @@ const removeLinks = async ({ message, chat, reply, state }, next) => {
 			promises.push(reply(
 				`⚠️ ${link(user)} <b>got warned!</b> (${warnCount.length}/3)` +
 				`\n\nReason: ${reason}`,
-				replyOptions
+				{ parse_mode: 'HTML', reply_markup }
 			));
 		} else {
 			promises.push(bot.telegram.kickChatMember(chat.id, user.id));

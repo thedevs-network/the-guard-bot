@@ -5,7 +5,11 @@ const { link, scheduleDeletion } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 
 // Config
-const { numberOfWarnsToBan } = require('../../config.json');
+const {
+	numberOfWarnsToBan,
+	warnsInlineKeyboard,
+} = require('../../config.json');
+const reply_markup = { inline_keyboard: warnsInlineKeyboard };
 
 // Bot
 const bot = require('../../bot');
@@ -61,7 +65,7 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 		await reply(
 			`⚠️ ${link(user)} <b>warned</b> ${link(userToWarn)} <b>for:</b>` +
 			`\n\n${reason} (${warnCount.length}/${numberOfWarnsToBan})`,
-			replyOptions
+			{ parse_mode: 'HTML', reply_markup }
 		);
 	} catch (e) {
 		// we don't expect an error
