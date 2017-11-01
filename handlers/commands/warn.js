@@ -20,23 +20,27 @@ const { isAdmin, ban, getWarns, warn } = require('../../stores/user');
 
 const warnHandler = async ({ message, chat, reply, me, state }) => {
 	const { user } = state;
-	if (!state.isAdmin) return null;
-
 	const userToWarn = message.reply_to_message
 		? message.reply_to_message.from
 		: message.commandMention
 			? message.commandMention
 			: null;
 
+	if (!state.isAdmin || userToWarn.username === me) return null;
+
+	if (message.chat.type === 'private') {
+		return reply(
+			'ℹ️ <b>This command is only available in groups.</b>',
+			replyOptions
+		);
+	}
+
+
 	if (!userToWarn) {
 		return reply(
 			'ℹ️ <b>Reply to a message or mentoin a user.</b>',
 			replyOptions
 		).then(scheduleDeletion);
-	}
-
-	if (message.chat.type === 'private' || userToWarn.username === me) {
-		return null;
 	}
 
 	const reason = message.text.split(' ').slice(1).join(' ').trim();

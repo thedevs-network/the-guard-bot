@@ -13,8 +13,6 @@ const { listGroups } = require('../../stores/group');
 const { isAdmin, isBanned, ban } = require('../../stores/user');
 
 const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
-	if (!state.isAdmin) return null;
-
 	const userToBan = message.reply_to_message
 		? message.reply_to_message.from
 		: message.commandMention
@@ -22,15 +20,20 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 			: null;
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
 
+	if (!state.isAdmin || userToBan.username === me) return null;
+
+	if (message.chat.type === 'private') {
+		return reply(
+			'ℹ️ <b>This command is only available in groups.</b>',
+			replyOptions
+		);
+	}
+
 	if (!userToBan) {
 		return reply(
 			'ℹ️ <b>Reply to a message or mention a user.</b>',
 			replyOptions
 		).then(scheduleDeletion);
-	}
-
-	if (message.chat.type === 'private' || userToBan.username === me) {
-		return null;
 	}
 
 	if (await isAdmin(userToBan)) {
