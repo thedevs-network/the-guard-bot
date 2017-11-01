@@ -94,7 +94,7 @@ const removeLinks = async ({ message, chat, reply, state }, next) => {
 					isGroupAd = true;
 				}
 			} catch (err) {
-				console.assert(err);
+				logError(err);
 			}
 		})
 		: '');
