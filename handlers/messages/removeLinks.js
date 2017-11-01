@@ -21,33 +21,96 @@ const { listGroups } = require('../../stores/group');
 
 const removeLinks = async ({ message, chat, reply, state }, next) => {
 	const { isAdmin, user } = state;
-	const groups = await listGroups();
-	const groupLinks = excludedGroups !== '*' &&
-		[
-			...groups.map(group => group.link
-				? group.link.split('/joinchat/')[1]
-				: ''),
-			...excludedGroups.map(group =>
-				group.includes('/joinchat/')
-					? group.split('/joinchat/')[1]
-					: group)
-		];
+	const { entities, forward_from_chat, text } = message;
+	const managedGroups = await listGroups();
+	const shouldRemoveGroups = excludedGroups !== '*';
+	const shouldRemoveChannels = excludedChannels !== '*';
+
 	if (
-		message.forward_from_chat &&
-		message.forward_from_chat.type !== 'private' &&
-		excludedChannels !== '*' &&
-		!excludedChannels.includes(message.forward_from_chat.username) ||
-		message.text &&
-		(message.text.includes('t.me') ||
-			message.text.includes('telegram.me')) &&
-		excludedGroups !== '*' &&
-		!(excludedChannels.some(channel => message.text.includes(channel)) ||
-			groupLinks.includes(message.text.split('/joinchat/')[1]))
-	) {
-		if (isAdmin) {
-			return next();
+		message.chat.type === 'private' ||
+		isAdmin ||
+		!shouldRemoveGroups &&
+		!shouldRemoveChannels) {
+		return next();
+	}
+
+	// gather both managed groups and config excluded groups
+	const knownGroups = [
+		...managedGroups.map(group => group.link
+			? group.link
+			: ''),
+		...excludedGroups
+	];
+
+	// collect channels/supergroups usernames in the text
+	let isChannelAd = false;
+	let isGroupAd = false;
+	const regexp = /(@\w+)|(((t.me)|(telegram.me))\/\w+(\/[A-Za-z0-9_-]+)?)/g;
+	const usernames =
+		text
+			? text.match(regexp)
+			: [];
+
+	await Promise.all(usernames.map(username => new Promise(async (resolve) => {
+		// skip if already detected an ad
+		if (isChannelAd || isGroupAd) return resolve();
+
+		// detect add if it's an invite link
+		if (
+			username.includes('/joinchat/') &&
+			!knownGroups.some(group => group.includes(username))
+		) {
+			isGroupAd = true;
+			return resolve();
 		}
-		const reason = 'Channel forward/link';
+
+		// detect if usernames are channels or public groups
+		// and if they are ads
+		username = username.replace(/.*((t.me)|(telegram.me))\//gi, '@');
+		try {
+			const { type } = await bot.telegram.getChat(username);
+			if (!type) return resolve();
+			if (
+				type === 'channel' &&
+				shouldRemoveChannels &&
+				!excludedChannels
+					.some(channel =>
+						channel.includes(username.replace('@', '')))
+			) {
+				isChannelAd = true;
+				return resolve();
+			}
+			if (
+				type === 'supergroup' &&
+				shouldRemoveGroups &&
+				!knownGroups
+					.some(group =>
+						group.includes(username.replace('@', '')))
+			) {
+				isGroupAd = true;
+				return resolve();
+			}
+		} catch (err) {
+			return resolve();
+		}
+		return resolve();
+	})));
+
+	if (
+		// check if is forwarded from channel
+		forward_from_chat &&
+		forward_from_chat.type !== 'private' &&
+		shouldRemoveChannels &&
+		!excludedChannels.includes(forward_from_chat.username) ||
+
+		// check if text contains link/username of a channel or group
+		text &&
+		(text.includes('t.me') ||
+			text.includes('telegram.me') ||
+			entities && entities.some(entity => entity.type === 'mention')) &&
+		(isChannelAd || isGroupAd)
+	) {
+		const reason = 'Forwarded or linked channels/groups';
 		await warn(user, reason);
 		const warnCount = await getWarns(user);
 		const promises = [
