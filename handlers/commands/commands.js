@@ -13,9 +13,9 @@ const commandReference = `\
 <code>/warn &lt;reason&gt;</code> - Warns the user.
 <code>/unwarn</code> - Removes the last warn from the user.
 <code>/nowarns</code> - Clears warns for the user.
-<code>/getwarns</code> - Shows a list of warns for the user.
 <code>/ban &lt;reason&gt;</code> - Bans the user from groups.
 <code>/unban</code> - Removes the user from ban list.
+<code>/user</code> - Shows user's status and warns.
 
 <b>Commands for everyone</b>:
 <code>/staff</code> - Shows a list of admins.
@@ -25,8 +25,8 @@ const commandReference = `\
 `;
 
 const actions = `\n
-/addcommand - to create custom commands.
-/removecommand <code>&lt;name&gt;</code> - to remove a custom command.`;
+<code>/addcommand</code> - to create custom commands.
+<code>/removecommand &lt;name&gt;</code> - to remove a custom command.`;
 
 const commandReferenceHandler = async ({ chat, replyWithHTML }) => {
 	if (chat.type !== 'private') return null;
