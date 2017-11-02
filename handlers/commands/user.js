@@ -7,7 +7,7 @@ const { link, scheduleDeletion } = require('../../utils/tg');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { getUser, getWarns } = require('../../stores/user');
+const { getUser } = require('../../stores/user');
 
 const getWarnsHandler = async ({ message, reply, state }) => {
 	const { isAdmin } = state;
@@ -29,12 +29,11 @@ const getWarnsHandler = async ({ message, reply, state }) => {
 		).then(scheduleDeletion);
 	}
 
-	let i = 0;
-	const warns = await getWarns(theUser);
+	const { warns } = theUser;
 	const warnsMessage = warns
 		? '⚠️ <b>Warns:</b>\n' +
 		warns
-			.map(warn => ++i + '. ' + warn)
+			.map((warn, i) => `${i + 1}. ${warn}`)
 			.join('\n')
 		: '✅ <b>no warns</b>';
 
