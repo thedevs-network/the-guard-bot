@@ -11,19 +11,14 @@ const { getUser, getWarns } = require('../../stores/user');
 
 const getWarnsHandler = async ({ message, reply, state }) => {
 	const { isAdmin } = state;
-	if (!isAdmin) return null;
 
 	const mentionedUser = message.reply_to_message
 		? message.reply_to_message.from
 		: message.commandMention
 			? message.commandMention
-			: null;
-	if (!mentionedUser) {
-		return reply(
-			'ℹ️ <b>Reply to a message or mention a user.</b>',
-			replyOptions
-		).then(scheduleDeletion);
-	}
+			: state.user;
+
+	if (!isAdmin && mentionedUser.id !== state.user.id) return null;
 
 	const theUser = await getUser({ id: mentionedUser.id });
 
@@ -49,14 +44,14 @@ const getWarnsHandler = async ({ message, reply, state }) => {
 			`${theUser.banReason}\n\n` +
 			warnsMessage,
 			replyOptions
-		);
+		).then(scheduleDeletion);
 	}
 
 	return reply(
 		`ℹ️ ${link(theUser)} <b>is a member of network.</b>\n\n` +
 		warnsMessage,
 		replyOptions
-	);
+	).then(scheduleDeletion);
 };
 
 module.exports = getWarnsHandler;
