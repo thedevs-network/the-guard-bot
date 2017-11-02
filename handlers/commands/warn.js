@@ -38,7 +38,7 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 
 	if (!userToWarn) {
 		return reply(
-			'ℹ️ <b>Reply to a message or mentoin a user.</b>',
+			'ℹ️ <b>Reply to a message or mention a user.</b>',
 			replyOptions
 		).then(scheduleDeletion);
 	}
