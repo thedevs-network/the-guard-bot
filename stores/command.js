@@ -16,7 +16,8 @@ const addCommand = command =>
 	Command.update(
 		{ id: command.id, isActive: false },
 		{ id: command.id, isActive: false, state: 'add', },
-		{ upsert: true });
+		{ upsert: true }
+	);
 
 const updateCommand = (data) =>
 	Command.update({ id: data.id, isActive: false }, { $set: data });

@@ -1,7 +1,7 @@
 'use strict';
 
 // Utils
-const { link } = require('../../utils/tg');
+const { link, scheduleDeletion } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 
 // Bot
@@ -13,8 +13,6 @@ const { listGroups } = require('../../stores/group');
 const { isAdmin, isBanned, ban } = require('../../stores/user');
 
 const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
-	if (!state.isAdmin) return null;
-
 	const userToBan = message.reply_to_message
 		? message.reply_to_message.from
 		: message.commandMention
@@ -22,13 +20,20 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 			: null;
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
 
-	if (!userToBan) {
-		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
-			replyOptions);
+	if (!state.isAdmin || userToBan.username === me) return null;
+
+	if (message.chat.type === 'private') {
+		return reply(
+			'ℹ️ <b>This command is only available in groups.</b>',
+			replyOptions
+		);
 	}
 
-	if (message.chat.type === 'private' || userToBan.username === me) {
-		return null;
+	if (!userToBan) {
+		return reply(
+			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions
+		).then(scheduleDeletion);
 	}
 
 	if (await isAdmin(userToBan)) {
@@ -36,18 +41,22 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 	}
 
 	if (reason.length === 0) {
-		return reply('ℹ️ <b>Need a reason to ban.</b>', replyOptions);
+		return reply('ℹ️ <b>Need a reason to ban.</b>', replyOptions)
+			.then(scheduleDeletion);
 	}
 
 	if (message.reply_to_message) {
 		bot.telegram.deleteMessage(
 			chat.id,
-			message.reply_to_message.message_id);
+			message.reply_to_message.message_id
+		);
 	}
 
 	if (await isBanned(userToBan)) {
-		return reply(`🚫 ${link(userToBan)} <b>is already banned.</b>`,
-			replyOptions);
+		return reply(
+			`🚫 ${link(userToBan)} <b>is already banned.</b>`,
+			replyOptions
+		);
 	}
 
 	try {

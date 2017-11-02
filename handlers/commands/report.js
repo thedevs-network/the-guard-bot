@@ -1,7 +1,7 @@
 'use strict';
 
 // Utils
-const { link } = require('../../utils/tg');
+const { link, scheduleDeletion } = require('../../utils/tg');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
@@ -12,8 +12,10 @@ const { getAdmins } = require('../../stores/user');
 const reportHandler = async ctx => {
 	const msg = ctx.message;
 	if (!msg.reply_to_message) {
-		return ctx.reply('ℹ️ <b>Reply to message you\'d like to report</b>',
-			replyOptions);
+		return ctx.reply(
+			'ℹ️ <b>Reply to message you\'d like to report</b>',
+			replyOptions
+		).then(scheduleDeletion);
 	}
 	const admins = await getAdmins();
 	const adminObjects = admins.map(user => ({

@@ -12,34 +12,42 @@ const removeCommandHandler = async ({ chat, message, reply, state }) => {
 	if (chat.type !== 'private') return null;
 
 	if (!isAdmin) {
-		return reply('ℹ️ <b>Sorry, only admins access this command.</b>',
-			replyOptions);
+		return reply(
+			'ℹ️ <b>Sorry, only admins access this command.</b>',
+			replyOptions
+		);
 	}
 	const [ , commandName ] = text.split(' ');
 	if (!commandName) {
 		return reply(
 			'Enter a command name to remove.\n\n' +
 			'For example:\n/removecommand <b>rules</b>',
-			replyOptions);
+			replyOptions
+		);
 	}
 
 	const command = await getCommand({ name: commandName });
 	if (!command) {
-		return reply('ℹ️ <b>Command couldn\'t be found.</b>',
-			replyOptions);
+		return reply(
+			'ℹ️ <b>Command couldn\'t be found.</b>',
+			replyOptions
+		);
 	}
 
 	const role = command.role.toLowerCase();
 	if (role === 'master' && !isMaster) {
-		return reply('ℹ️ <b>Sorry, only master can remove this command.</b>',
-			replyOptions);
+		return reply(
+			'ℹ️ <b>Sorry, only master can remove this command.</b>',
+			replyOptions
+		);
 	}
 
 	await removeCommand({ name: commandName });
 	return reply(
 		`✅ <code>!${commandName}</code> ` +
 		'<b>has been removed successfully.</b>',
-		replyOptions);
+		replyOptions
+	);
 };
 
 module.exports = removeCommandHandler;

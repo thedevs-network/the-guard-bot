@@ -1,7 +1,7 @@
 {
-  "name": "thedevs_bot",
+  "name": "the_guard_bot",
   "version": "0.4.1",
-  "description": "Official Bot for The Devs community.",
+  "description": "Telegram guard bot to manage network of groups.",
   "main": "index.js",
   "scripts": {
     "start": "node index",
@@ -13,6 +13,7 @@
   },
   "keywords": [
     "bot",
+    "the guard",
     "thedevs",
     "telegram"
   ],

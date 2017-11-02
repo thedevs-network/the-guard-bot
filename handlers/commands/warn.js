@@ -1,11 +1,15 @@
 'use strict';
 
 // Utils
-const { link } = require('../../utils/tg');
+const { link, scheduleDeletion } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 
 // Config
-const { numberOfWarnsToBan } = require('../../config.json');
+const {
+	numberOfWarnsToBan,
+	warnsInlineKeyboard,
+} = require('../../config.json');
+const reply_markup = { inline_keyboard: warnsInlineKeyboard };
 
 // Bot
 const bot = require('../../bot');
@@ -16,21 +20,27 @@ const { isAdmin, ban, getWarns, warn } = require('../../stores/user');
 
 const warnHandler = async ({ message, chat, reply, me, state }) => {
 	const { user } = state;
-	if (!state.isAdmin) return null;
-
 	const userToWarn = message.reply_to_message
 		? message.reply_to_message.from
 		: message.commandMention
 			? message.commandMention
 			: null;
 
-	if (!userToWarn) {
-		return reply('ℹ️ <b>Reply to a message or mentoin a user.</b>',
-			replyOptions);
+	if (!state.isAdmin || userToWarn.username === me) return null;
+
+	if (message.chat.type === 'private') {
+		return reply(
+			'ℹ️ <b>This command is only available in groups.</b>',
+			replyOptions
+		);
 	}
 
-	if (message.chat.type === 'private' || userToWarn.username === me) {
-		return null;
+
+	if (!userToWarn) {
+		return reply(
+			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions
+		).then(scheduleDeletion);
 	}
 
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
@@ -40,34 +50,43 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 	}
 
 	if (reason.length === 0) {
-		return reply('ℹ️ <b>Need a reason to warn.</b>', replyOptions);
+		return reply('ℹ️ <b>Need a reason to warn.</b>', replyOptions)
+			.then(scheduleDeletion);
 	}
 
 	await warn(userToWarn, reason);
 	const warnCount = await getWarns(userToWarn);
-	const promises = [
-		bot.telegram.deleteMessage(chat.id, message.message_id)
-	];
+	const promises = [];
 
 	if (message.reply_to_message) {
 		promises.push(bot.telegram.deleteMessage(
 			chat.id,
-			message.reply_to_message.message_id));
+			message.reply_to_message.message_id
+		));
 	}
 
-	if (warnCount.length < numberOfWarnsToBan) {
-		promises.push(reply(
-			`⚠️ ${link(user)} <b>warned</b> ${link(userToWarn)} ` +
-			`<b>for:</b>\n\n ${reason} (${warnCount.length}/3)`,
-			replyOptions));
-	} else {
+	try {
+		await reply(
+			`⚠️ ${link(user)} <b>warned</b> ${link(userToWarn)} <b>for:</b>` +
+			`\n\n${reason} (${warnCount.length}/${numberOfWarnsToBan})`,
+			{ parse_mode: 'HTML', reply_markup }
+		);
+	} catch (e) {
+		// we don't expect an error
+		// but we do wish to continue if one happens
+		// to ban people who reach max number of warnings
+		logError(e);
+	}
+
+	if (warnCount.length >= numberOfWarnsToBan) {
 		promises.push(bot.telegram.kickChatMember(chat.id, userToWarn.id));
 		promises.push(ban(userToWarn, 'Reached max number of warnings'));
 		promises.push(reply(
 			`🚫 ${link(user)} <b>banned</b> ${link(userToWarn)} ` +
 			'<b>for:</b>\n\nReached max number of warnings ' +
-			`(${warnCount.length}/3)\n\n`,
-			replyOptions));
+			`(${warnCount.length}/${numberOfWarnsToBan})`,
+			replyOptions
+		));
 	}
 
 	return Promise.all(promises).catch(logError);

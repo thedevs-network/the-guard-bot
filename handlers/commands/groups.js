@@ -1,10 +1,7 @@
 'use strict';
 
 // Utils
-const { escapeHtml } = require('../../utils/tg');
-
-// Bot
-const bot = require('../../bot');
+const { escapeHtml, scheduleDeletion } = require('../../utils/tg');
 
 // DB
 const { listGroups } = require('../../stores/group');
@@ -19,7 +16,7 @@ const entry = group => group.username
 	? `- @${group.username}`
 	: `- <a href="${group.link}">${escapeHtml(group.title)}</a>`;
 
-const groupsHandler = async ({ chat, replyWithHTML }) => {
+const groupsHandler = async ({ replyWithHTML }) => {
 	if (config.groupsString) {
 		return replyWithHTML(config.groupsString);
 	}
@@ -28,15 +25,10 @@ const groupsHandler = async ({ chat, replyWithHTML }) => {
 
 	const entries = groups.map(entry).join('\n');
 
-	const { message_id } = await replyWithHTML(
-		`🛠 <b>Groups I manage</b>:\n\n${entries}`, {
-			disable_web_page_preview: true,
-			reply_markup,
-		});
-
-	return setTimeout(() =>
-		bot.telegram.deleteMessage(chat.id, message_id), 5 * 60 * 1000);
-
+	return replyWithHTML(`🛠 <b>Groups I manage</b>:\n\n${entries}`, {
+		disable_web_page_preview: true,
+		reply_markup,
+	}).then(scheduleDeletion);
 };
 
 module.exports = groupsHandler;

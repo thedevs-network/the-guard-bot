@@ -26,7 +26,7 @@
 			"error",
 			"always"
 		],
-		"no-console": "off",
+		"no-console": [ "error", { "allow": [ "assert" ] } ],
 		"for-direction": "error",
 		"no-await-in-loop": "error",
 		"no-extra-parens": "error",
@@ -153,6 +153,7 @@
 				"allowArrowFunctions": true
 			}
 		],
+		"function-paren-newline": ["error", "multiline"],
 		"key-spacing": "error",
 		"keyword-spacing": "error",
 		"lines-around-comment": "error",

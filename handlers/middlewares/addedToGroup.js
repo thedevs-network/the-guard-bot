@@ -24,16 +24,21 @@ const addedToGroupHandler = async (ctx, next) => {
 				const link = await telegram.exportChatInviteLink(ctx.chat.id);
 				ctx.chat.link = link ? link : '';
 			} catch (err) {
+				// eslint-disable-next-line function-paren-newline
 				await ctx.replyWithHTML(
 					'⚠️ <b>Please re-add me with admin permissions.</b>' +
 					'\n\n' +
-					`<code>${err}</code>`);
+					`<code>${err}</code>`
+				// eslint-disable-next-line function-paren-newline
+				);
 				return telegram.leaveChat(ctx.chat.id);
 			}
 			await addGroup(ctx.chat);
 		}
-		ctx.reply('🛠 <b>Ok, I\'ll help you manage this group from now.</b>',
-			replyOptions);
+		ctx.reply(
+			'🛠 <b>Ok, I\'ll help you manage this group from now.</b>',
+			replyOptions
+		);
 	}
 
 	return next();

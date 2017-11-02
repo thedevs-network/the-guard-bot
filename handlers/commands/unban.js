@@ -1,7 +1,7 @@
 'use strict';
 
 // Utils
-const { link } = require('../../utils/tg');
+const { link, scheduleDeletion } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 
 // Bot
@@ -24,8 +24,10 @@ const unbanHandler = async ({ message, reply, telegram, state }) => {
 			: null;
 
 	if (!userToUnban) {
-		return reply('ℹ️ <b>Reply to a message or mention a user.</b>',
-			replyOptions);
+		return reply(
+			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			replyOptions
+		).then(scheduleDeletion);
 	}
 
 
