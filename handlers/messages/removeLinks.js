@@ -121,7 +121,8 @@ const removeLinks = async ({ message, chat, reply, state }, next) => {
 		];
 		if (warnCount.length < numberOfWarnsToBan) {
 			promises.push(reply(
-				`⚠️ ${link(user)} <b>got warned!</b> (${warnCount.length}/3)` +
+				`⚠️ ${link(user)} <b>got warned!</b> ` +
+				`(${warnCount.length}/${numberOfWarnsToBan})` +
 				`\n\nReason: ${reason}`,
 				{ parse_mode: 'HTML', reply_markup }
 			));
@@ -132,7 +133,8 @@ const removeLinks = async ({ message, chat, reply, state }, next) => {
 				'Reached max number of warnings'
 			));
 			promises.push(reply(
-				`🚫 ${link(user)} <b>got banned</b>! (${warnCount.length}/3)` +
+				`🚫 ${link(user)} <b>got banned</b>! ` +
+				`(${warnCount.length}/${numberOfWarnsToBan})` +
 				'\n\nReason: Reached max number of warnings',
 				replyOptions
 			));
