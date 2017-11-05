@@ -10,7 +10,8 @@ const addUserHandler = async (ctx, next) => {
 	const { message } = ctx;
 	const { new_chat_members } = message;
 	const newUser = message.from;
-	const user = newUser && await isUser(message.from);
+	const storedUser = await isUser(newUser);
+	const user = newUser && storedUser;
 	const usersToAdd = [];
 
 	if (new_chat_members) {
@@ -21,19 +22,20 @@ const addUserHandler = async (ctx, next) => {
 		});
 	}
 
-	if (!user && newUser) {
+	if (
+		// if user does not exist in database
+		!user &&
+		newUser ||
+
+		// or
+		// if user's username has been changed
+		storedUser &&
+		newUser &&
+		storedUser.username !== newUser.username
+	) {
 		usersToAdd.push(addUser(newUser));
 	}
 
-	ctx.state = {
-		isAdmin: user && user.status === 'admin',
-		isMaster: user &&
-		(user.id === Number(master) ||
-			user.username &&
-			user.username.toLowerCase() ===
-			String(master).replace('@', '').toLowerCase()),
-		user: newUser,
-	};
 
 	if (
 		message.reply_to_message &&
@@ -51,6 +53,16 @@ const addUserHandler = async (ctx, next) => {
 	}
 
 	await Promise.all(usersToAdd);
+
+	ctx.state = {
+		isAdmin: user && user.status === 'admin',
+		isMaster: user &&
+		(user.id === Number(master) ||
+			user.username &&
+			user.username.toLowerCase() ===
+			String(master).replace('@', '').toLowerCase()),
+		user: newUser,
+	};
 
 	return next();
 };
