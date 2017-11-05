@@ -23,7 +23,7 @@ const syncStatusHandler = (ctx, next) => {
 				can_delete_messages: true,
 				can_invite_users: true,
 				can_pin_messages: true,
-				can_promote_members: true,
+				can_promote_members: false,
 				can_restrict_members: true,
 			});
 		case 'banned':
