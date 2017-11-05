@@ -21,36 +21,33 @@ const getWarnsHandler = async ({ message, reply, state }) => {
 	if (!isAdmin && mentionedUser.id !== state.user.id) return null;
 
 	const theUser = await getUser({ id: mentionedUser.id });
+	const { first_name, id, last_name, status, username, warns } = theUser;
 
-	if (theUser.status === 'admin') {
-		return reply(
-			`⭐️ ${link(theUser)} <b>is admin.</b>`,
-			replyOptions
-		).then(scheduleDeletion);
-	}
-
-	const { warns } = theUser;
-	const warnsMessage = warns
-		? '⚠️ <b>Warns:</b>\n' +
-		warns
+	const userName = `<b>Name:</b> <code>${first_name} ${last_name}</code>\n`;
+	const userId = `<b>ID:</b> <code>${id}</code>\n`;
+	const userStatus = `<b>Status:</b> <code>${status}</code>\n`;
+	const userUsername = username
+		? `<b>Username:</b> @${username}\n`
+		: '';
+	const banReason = theUser.ban_reason
+		? `\n🚫 <b>Ban reason:</b>\n<code>${theUser.ban_reason}</code>`
+		: '';
+	const userWarns = warns.length
+		? '\n<b>⚠️ Warns:</b>\n' + warns
 			.map((warn, i) => `${i + 1}. ${warn}`)
-			.join('\n')
-		: '✅ <b>no warns</b>';
-
-	if (theUser.status === 'banned') {
-		return reply(
-			`🚫 ${link(theUser)} <b>is banned for:</b>\n` +
-			`${theUser.banReason}\n\n` +
-			warnsMessage,
-			replyOptions
-		).then(scheduleDeletion);
-	}
+			.join('\n') + '\n'
+		: '';
 
 	return reply(
-		`ℹ️ ${link(theUser)} <b>is a member of network.</b>\n\n` +
-		warnsMessage,
+		userName +
+		userStatus +
+		userId +
+		userUsername +
+		userWarns +
+		banReason,
 		replyOptions
 	).then(scheduleDeletion);
 };
 
 module.exports = getWarnsHandler;
+
