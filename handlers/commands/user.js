@@ -1,7 +1,7 @@
 'use strict';
 
 // Utils
-const { link, scheduleDeletion } = require('../../utils/tg');
+const { scheduleDeletion } = require('../../utils/tg');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
