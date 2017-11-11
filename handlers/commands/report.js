@@ -6,9 +6,6 @@ const { link, scheduleDeletion } = require('../../utils/tg');
 // Bot
 const { replyOptions } = require('../../bot/options');
 
-// DB
-const { getAdmins } = require('../../stores/user');
-
 const reportHandler = async ctx => {
 	const msg = ctx.message;
 	if (!msg.reply_to_message) {
@@ -17,7 +14,13 @@ const reportHandler = async ctx => {
 			replyOptions
 		).then(scheduleDeletion);
 	}
-	const admins = await getAdmins();
+	const admins = (await ctx.getChatAdministrators())
+		.filter(member =>
+			member.status === 'creator' ||
+			member.can_delete_messages &&
+			member.can_restrict_members
+		// eslint-disable-next-line function-paren-newline
+		).map(member => member.user);
 	const adminObjects = admins.map(user => ({
 		first_name: '​', // small hack to be able to use link function
 		id: user.id,
