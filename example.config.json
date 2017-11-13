@@ -1,0 +1,11 @@
+{
+	"master": 123456789,
+	"token": "",
+	"plugins": [],
+	"deleteCommands": "own",
+	"numberOfWarnsToBan": 3,
+	"groupsInlineKeyboard": [],
+	"warnInlineKeyboard": [],
+	"excludedChannels": [],
+	"excludedGroups": []
+}
