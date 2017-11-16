@@ -23,7 +23,11 @@ const runCustomCmdHandler = async (ctx, next) => {
 	const replyTo = message.reply_to_message
 		? { reply_to_message_id: message.reply_to_message.message_id }
 		: {};
-	const options = Object.assign(replyTo, caption ? { caption } : {});
+	const options = Object.assign(
+		replyTo,
+		caption ? { caption } : {},
+		{ disable_web_page_preview: true },
+	);
 	if (
 		role === 'master' &&
 		!isMaster ||
