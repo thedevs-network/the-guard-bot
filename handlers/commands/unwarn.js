@@ -8,7 +8,7 @@ const { replyOptions } = require('../../bot/options');
 
 // DB
 const { listGroups } = require('../../stores/group');
-const { getWarns, unwarn } = require('../../stores/user');
+const { getUser, unwarn } = require('../../stores/user');
 
 const unwarnHandler = async ({ message, reply, state, telegram }) => {
 	const { isAdmin, user } = state;
@@ -27,19 +27,23 @@ const unwarnHandler = async ({ message, reply, state, telegram }) => {
 		).then(scheduleDeletion);
 	}
 
-	const allWarns = await getWarns(userToUnwarn);
+	const dbUser = await getUser({ id: userToUnwarn.id });
 
-	if (!allWarns) {
+	const allWarns = dbUser.warns;
+
+	if (allWarns.length === 0) {
 		return reply(
 			`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
 			replyOptions
 		);
 	}
 
-	const groups = await listGroups();
+	if (dbUser.status === 'banned') {
+		const groups = await listGroups();
 
-	groups.forEach(group =>
-		telegram.unbanChatMember(group.id, userToUnwarn.id));
+		groups.forEach(group =>
+			telegram.unbanChatMember(group.id, userToUnwarn.id));
+	}
 
 	await unwarn(userToUnwarn);
 
