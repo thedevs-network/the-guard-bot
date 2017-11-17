@@ -65,7 +65,10 @@ const warn = ({ id }, reason) =>
 	User.update({ id }, { $push: { warns: reason } });
 
 const unwarn = ({ id }) =>
-	User.update({ id }, { $pop: { warns: 1 }, $set: { status: 'member' } });
+	User.update(
+		{ id },
+		{ $pop: { warns: 1 }, $set: { ban_reason: null, status: 'member' } }
+	);
 
 const nowarns = unban;
 
