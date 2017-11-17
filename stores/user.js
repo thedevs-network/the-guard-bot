@@ -67,8 +67,7 @@ const warn = ({ id }, reason) =>
 const unwarn = ({ id }) =>
 	User.update({ id }, { $pop: { warns: 1 }, $set: { status: 'member' } });
 
-const nowarns = ({ id }) =>
-	User.update({ id }, { $set: { warns: [] } });
+const nowarns = unban;
 
 const getWarns = ({ id }) =>
 	User.findOne({ id })
