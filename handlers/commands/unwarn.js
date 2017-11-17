@@ -3,6 +3,9 @@
 // Utils
 const { link, scheduleDeletion } = require('../../utils/tg');
 
+// Config
+const { numberOfWarnsToBan } = require('../../config.json');
+
 // Bot
 const { replyOptions } = require('../../bot/options');
 
@@ -50,7 +53,7 @@ const unwarnHandler = async ({ message, reply, state, telegram }) => {
 	return reply(
 		`❎ ${link(user)} <b>pardoned</b> ${link(userToUnwarn)} ` +
 		`<b>for:</b>\n\n${allWarns[allWarns.length - 1]}` +
-		` (${allWarns.length - 1}/3)`,
+		` (${allWarns.length - 1}/${numberOfWarnsToBan})`,
 		replyOptions
 	);
 };
