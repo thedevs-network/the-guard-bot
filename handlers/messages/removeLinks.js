@@ -18,16 +18,23 @@ const bot = require('../../bot');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { ban, warn, getWarns } = require('../../stores/user');
+const { ban, warn, getWarns, getUser } = require('../../stores/user');
 const { listGroups } = require('../../stores/group');
 
-const removeLinks = async ({ message, chat, reply, state }, next) => {
-	const { isAdmin, user } = state;
-	const { entities, forward_from_chat, text } = message;
+const removeLinks = async ({ message, chat, reply, state, update }, next) => {
+	const { isAdmin: isStateAdmin, user: stateUser } = state;
+	const user = stateUser
+		? stateUser
+		: await getUser({ id: update.edited_message.from.id });
+	const isAdmin = isStateAdmin
+		? isStateAdmin
+		: user.status === 'admin';
+	const updateData = message ? message : update.edited_message;
+	const { entities, caption, forward_from_chat, text } = updateData;
 	const managedGroups = await listGroups();
 
 	if (
-		message.chat.type === 'private' ||
+		updateData.chat.type === 'private' ||
 		isAdmin ||
 		!excludeLinks) {
 		return next();
@@ -50,8 +57,8 @@ const removeLinks = async ({ message, chat, reply, state }, next) => {
 			: [];
 
 	// check for links in the caption
-	if (message.caption) {
-		const linksInCaption = message.caption.match(regexp);
+	if (caption) {
+		const linksInCaption = caption.match(regexp);
 		if (linksInCaption) {
 			usernames.push(...linksInCaption);
 		}
@@ -106,20 +113,20 @@ const removeLinks = async ({ message, chat, reply, state }, next) => {
 		!excludeLinks.includes(forward_from_chat.username) ||
 
 		// check if text contains link/username of a channel or group
-		(message.caption ||
-		text &&
-		(text.includes('t.me') ||
-			text.includes('telegram.me') ||
-			entities && entities.some(entity =>
-				entity.type === 'mention' ||
-				entity.url))) &&
+		(caption ||
+			text &&
+			(text.includes('t.me') ||
+				text.includes('telegram.me') ||
+				entities && entities.some(entity =>
+					entity.type === 'mention' ||
+					entity.url))) &&
 		isAd
 	) {
 		const reason = 'Forwarded or linked channels/groups';
 		await warn(user, reason);
 		const warnCount = await getWarns(user);
 		const promises = [
-			bot.telegram.deleteMessage(chat.id, message.message_id)
+			bot.telegram.deleteMessage(chat.id, updateData.message_id)
 		];
 		if (warnCount.length < numberOfWarnsToBan) {
 			promises.push(reply(

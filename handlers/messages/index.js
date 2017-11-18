@@ -13,10 +13,11 @@ const runCustomCmdHandler = require('./runCustomCmd');
 composer.on(
 	'message',
 	addUserHandler,
-	removeLinksHandler,
 	checkUsernameHandler,
 	addCustomCmdHandler,
 	runCustomCmdHandler
 );
+
+composer.on([ 'edited_message', 'message' ], removeLinksHandler);
 
 module.exports = composer;
