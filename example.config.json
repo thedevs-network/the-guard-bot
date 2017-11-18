@@ -6,6 +6,5 @@
 	"numberOfWarnsToBan": 3,
 	"groupsInlineKeyboard": [],
 	"warnInlineKeyboard": [],
-	"excludedChannels": [],
-	"excludedGroups": []
+	"excludeLinks": []
 }
