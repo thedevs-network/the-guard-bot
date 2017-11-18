@@ -46,8 +46,23 @@ const removeLinks = async ({ message, chat, reply, state }, next) => {
 	const regexp = /(@\w+)|(((t.me)|(telegram.me))\/\w+(\/[A-Za-z0-9_-]+)?)/g;
 	const usernames =
 		text
-			? text.match(regexp)
+			? text.match(regexp) || []
 			: [];
+
+	// check for links in the caption
+	if (message.caption) {
+		const linksInCaption = message.caption.match(regexp);
+		if (linksInCaption) {
+			usernames.push(...linksInCaption);
+		}
+	}
+
+	// checked for linked texts
+	if (entities && entities.some(entity => entity.url)) {
+		usernames.push(...entities
+			.filter(entity => entity.url)
+			.map(entity => entity.url));
+	}
 
 	await Promise.all(usernames
 		? usernames.map(async username => {
@@ -91,10 +106,13 @@ const removeLinks = async ({ message, chat, reply, state }, next) => {
 		!excludeLinks.includes(forward_from_chat.username) ||
 
 		// check if text contains link/username of a channel or group
+		(message.caption ||
 		text &&
 		(text.includes('t.me') ||
 			text.includes('telegram.me') ||
-			entities && entities.some(entity => entity.type === 'mention')) &&
+			entities && entities.some(entity =>
+				entity.type === 'mention' ||
+				entity.url))) &&
 		isAd
 	) {
 		const reason = 'Forwarded or linked channels/groups';
