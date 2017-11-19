@@ -11,6 +11,11 @@ const { replyOptions } = require('../../bot/options');
 const { getUser, nowarns } = require('../../stores/user');
 const { listGroups } = require('../../stores/group');
 
+const noop = Function.prototype;
+
+// This handler is very similiar to commands/unban.
+// When adding a feature here, please consider adding it there too.
+
 const nowarnsHandler = async ({ message, reply, state, telegram }) => {
 	const { isAdmin, user } = state;
 	if (!isAdmin) return null;
@@ -50,6 +55,17 @@ const nowarnsHandler = async ({ message, reply, state, telegram }) => {
 		await nowarns(userToUnwarn);
 	} catch (err) {
 		logError(err);
+	}
+
+	if (dbUser.status === 'banned') {
+		telegram.sendMessage(
+			userToUnwarn.id,
+			'♻️ You were unbanned from all of the /groups!'
+		).catch(noop);
+		// it's likely that the banned person haven't PMed the bot,
+		// which will cause the sendMessage to fail,
+		// hance .catch(noop)
+		// (it's an expected, non-critical failure)
 	}
 
 	return reply(

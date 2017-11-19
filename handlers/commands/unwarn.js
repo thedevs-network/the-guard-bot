@@ -13,6 +13,8 @@ const { replyOptions } = require('../../bot/options');
 const { listGroups } = require('../../stores/group');
 const { getUser, unwarn } = require('../../stores/user');
 
+const noop = Function.prototype;
+
 const unwarnHandler = async ({ message, reply, state, telegram }) => {
 	const { isAdmin, user } = state;
 	if (!isAdmin) return null;
@@ -49,6 +51,17 @@ const unwarnHandler = async ({ message, reply, state, telegram }) => {
 	}
 
 	await unwarn(userToUnwarn);
+
+	if (dbUser.status === 'banned') {
+		telegram.sendMessage(
+			userToUnwarn.id,
+			'♻️ You were unbanned from all of the /groups!'
+		).catch(noop);
+		// it's likely that the banned person haven't PMed the bot,
+		// which will cause the sendMessage to fail,
+		// hance .catch(noop)
+		// (it's an expected, non-critical failure)
+	}
 
 	return reply(
 		`❎ ${link(user)} <b>pardoned</b> ${link(userToUnwarn)} ` +
