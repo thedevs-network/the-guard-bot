@@ -1,13 +1,19 @@
 'use strict';
 
 // DB
-const { addCommand } = require('../../stores/command');
+const { addCommand, getCommand } = require('../../stores/command');
 
 // Bot
+const { Markup } = require('telegraf');
 const { replyOptions } = require('../../bot/options');
 
-const addCommandHandler = async ({ chat, reply, state }) => {
+const preserved = [ 'admin', 'unadmin', 'leave', 'warn', 'unwarn', 'nowarns',
+	'getwarns', 'ban', 'unban', 'report', 'staff', 'link', 'groups', 'commands',
+	'addcommand', 'removecommand' ];
+
+const addCommandHandler = async ({ chat, message, reply, state }, next) => {
 	const { isAdmin, user } = state;
+	const { id } = user;
 	if (chat.type !== 'private') return null;
 
 	if (!isAdmin) {
@@ -16,12 +22,43 @@ const addCommandHandler = async ({ chat, reply, state }) => {
 			replyOptions
 		);
 	}
-	await addCommand({ id: user.id });
-	return reply(
-		'Enter a name for the command without forward slash "/".' +
-		'\n\nFor example: <b>rules</b>',
-		replyOptions
-	);
+
+	const [ , commandName ] = message.text.split(' ');
+	const isValidName = commandName && commandName.match(/^(?:[!])?(\w+)$/);
+	if (!isValidName) {
+		reply(
+			'<b>Send a valid command.</b>\n\nExample:\n' +
+			'<code>/addcommand rules</code>',
+			replyOptions
+		);
+		return next();
+	}
+	const newCommand = isValidName[1].toLowerCase();
+	if (preserved.includes(newCommand)) {
+		reply('❗️ Sorry you can\'t use this name, it\'s preserved.\n\n' +
+			'Try another one.');
+		return next();
+	}
+
+	if (await getCommand({ isActive: true, name: newCommand })) {
+		reply(
+			'ℹ️ <b>This command already exists.</b>\n\n' +
+			'/commands - to see the list of commands.\n' +
+			'/addcommand - to add a command.\n' +
+			'/removecommand <code>&lt;name&gt;</code>' +
+			' - to remove a command.',
+			replyOptions
+		);
+		return next();
+	}
+	await addCommand({ id, name: newCommand, state: 'role' });
+	reply('Who can use this command?', Markup.keyboard([
+		[ 'Master', 'Admins', 'Everyone' ]
+	])
+		.oneTime()
+		.resize()
+		.extra());
+	return next();
 };
 
 module.exports = addCommandHandler;

@@ -20,8 +20,8 @@ const removeCommandHandler = async ({ chat, message, reply, state }) => {
 	const [ , commandName ] = text.split(' ');
 	if (!commandName) {
 		return reply(
-			'Enter a command name to remove.\n\n' +
-			'For example:\n/removecommand <b>rules</b>',
+			'<b>Send a valid command.</b>\n\nExample:\n' +
+			'<code>/removecommand rules</code>',
 			replyOptions
 		);
 	}

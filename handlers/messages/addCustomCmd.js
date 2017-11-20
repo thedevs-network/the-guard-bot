@@ -12,10 +12,6 @@ const {
 	updateCommand
 } = require('../../stores/command');
 
-const preserved = [ 'admin', 'unadmin', 'leave', 'warn', 'unwarn', 'nowarns',
-	'getwarns', 'ban', 'unban', 'report', 'staff', 'link', 'groups', 'commands',
-	'addcommand', 'removecommand' ];
-
 const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 	const { text, photo, document, video, audio } = message;
 	const { isAdmin, user } = state;
@@ -31,38 +27,6 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 		!isAdmin ||
 		!command ||
 		!command.state) {
-		return next();
-	}
-
-	if (command.state === 'add') {
-		if (!/^(?=\D)\w+$/.test(text)) {
-			reply('Please send a valid command.');
-			return next();
-		}
-		if (preserved.includes(text.toLowerCase())) {
-			reply('❗️Sorry you can\'t use this name, it\'s preserved.\n\n' +
-			'Try another one.');
-			return next();
-		}
-
-		if (await getCommand({ isActive: true, name: text.toLowerCase() })) {
-			reply(
-				'ℹ️ <b>This command already exists.</b>\n\n' +
-				'/commands - to see the list of commands.\n' +
-				'/addcommand - to add a command.\n' +
-				'/removecommand <code>&lt;name&gt;</code>' +
-				' - to remove a command.',
-				replyOptions
-			);
-			return next();
-		}
-		await updateCommand({ id, name: text.toLowerCase(), state: 'role' });
-		reply('Who can use this command?', Markup.keyboard([
-			[ 'Master', 'Admins', 'Everyone' ]
-		])
-			.oneTime()
-			.resize()
-			.extra());
 		return next();
 	}
 
