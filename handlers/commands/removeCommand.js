@@ -26,7 +26,7 @@ const removeCommandHandler = async ({ chat, message, reply, state }) => {
 		);
 	}
 
-	const command = await getCommand({ name: commandName });
+	const command = await getCommand({ name: commandName.toLowerCase() });
 	if (!command) {
 		return reply(
 			'ℹ️ <b>Command couldn\'t be found.</b>',
@@ -42,7 +42,7 @@ const removeCommandHandler = async ({ chat, message, reply, state }) => {
 		);
 	}
 
-	await removeCommand({ name: commandName });
+	await removeCommand({ name: commandName.toLowerCase() });
 	return reply(
 		`✅ <code>!${commandName}</code> ` +
 		'<b>has been removed successfully.</b>',

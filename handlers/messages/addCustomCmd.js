@@ -45,7 +45,7 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 			return next();
 		}
 
-		if (await getCommand({ isActive: true, name: text })) {
+		if (await getCommand({ isActive: true, name: text.toLowerCase() })) {
 			reply(
 				'ℹ️ <b>This command already exists.</b>\n\n' +
 				'/commands - to see the list of commands.\n' +
@@ -56,7 +56,7 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 			);
 			return next();
 		}
-		await updateCommand({ id, name: text, state: 'role' });
+		await updateCommand({ id, name: text.toLowerCase(), state: 'role' });
 		reply('Who can use this command?', Markup.keyboard([
 			[ 'Master', 'Admins', 'Everyone' ]
 		])

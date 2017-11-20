@@ -11,7 +11,10 @@ const runCustomCmdHandler = async (ctx, next) => {
 		return next();
 	}
 
-	const commandName = message.text.split(' ')[0].replace('!', '');
+	const commandName = message.text
+		.split(' ')[0]
+		.replace('!', '')
+		.toLowerCase();
 	const command = await getCommand({ isActive: true, name: commandName });
 
 	if (!command) {
