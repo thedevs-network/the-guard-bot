@@ -22,7 +22,14 @@ User.ensureIndex({
 const addUser = ({ id, first_name = '', last_name = '', username = '' }) =>
 	User.update(
 		{ id },
-		{ first_name, id, last_name, status: 'member', username, warns: [] },
+		{
+			first_name,
+			id,
+			last_name,
+			status: 'member',
+			username: username.toLowerCase(),
+			warns: []
+		},
 		{ upsert: true }
 	)
 		.catch(logError);

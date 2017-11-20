@@ -31,7 +31,7 @@ const addUserHandler = async (ctx, next) => {
 		// if user's username has been changed
 		storedUser &&
 		newUser &&
-		storedUser.username !== newUser.username
+		storedUser.username !== newUser.username.toLowerCase()
 	) {
 		usersToAdd.push(addUser(newUser));
 	}

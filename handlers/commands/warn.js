@@ -26,7 +26,7 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 			? message.commandMention
 			: null;
 
-	if (!state.isAdmin || userToWarn.username === me) return null;
+	if (!state.isAdmin || userToWarn.username === me.toLowerCase()) return null;
 
 	if (message.chat.type === 'private') {
 		return reply(

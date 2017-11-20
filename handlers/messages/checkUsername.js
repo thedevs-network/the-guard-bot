@@ -20,14 +20,15 @@ const checkUsernameHandler = async ({ message }, next) => {
 	}
 
 	if (hasMention) {
-		const [ , username ] = messageArr;
+		const username = messageArr[1].toLowerCase();
 		const isUsername = /^@\w+/.test(username);
 		if (!isUsername) {
 			return next();
 		}
 		const user = await getUser({ username: username.replace('@', '') });
 		if (user) {
-			message.text = message.text.replace(` ${username}`, '');
+			const regex = new RegExp(` ${username}`, 'i');
+			message.text = message.text.replace(regex, '');
 			message.commandMention = user;
 		}
 		return next();
