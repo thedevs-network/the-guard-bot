@@ -62,7 +62,7 @@ const unbanHandler = async ({ message, reply, telegram, state }) => {
 	// (it's an expected, non-critical failure)
 
 	if (userToUnban.first_name === '') {
-		return reply(`♻️ ${link(user)} <b>unbanned a user ` +
+		return reply(`♻️ ${link(user)} <b>unbanned an user ` +
 		`with id</b> <code>${userToUnban.id}</code>.`, replyOptions);
 	}
 

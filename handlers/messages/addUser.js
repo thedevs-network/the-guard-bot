@@ -29,7 +29,7 @@ const addUserHandler = async (ctx, next) => {
 		newUser ||
 
 		// or
-		// if user's data is incompleted or changed
+		// if user's data is incomplete or is changed
 		storedUser &&
 		newUser &&
 		(storedUser.username !== newUser.username.toLowerCase() ||
