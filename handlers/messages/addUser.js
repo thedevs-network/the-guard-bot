@@ -16,7 +16,8 @@ const addUserHandler = async (ctx, next) => {
 
 	if (new_chat_members) {
 		new_chat_members.forEach(async member => {
-			if (!await isUser(member)) {
+			const joinedUser = await isUser(member);
+			if (!joinedUser || !joinedUser.first_name) {
 				usersToAdd.push(addUser(member));
 			}
 		});
@@ -28,10 +29,11 @@ const addUserHandler = async (ctx, next) => {
 		newUser ||
 
 		// or
-		// if user's username has been changed
+		// if user's data is incompleted or changed
 		storedUser &&
 		newUser &&
-		storedUser.username !== newUser.username.toLowerCase()
+		(storedUser.username !== newUser.username.toLowerCase() ||
+		!storedUser.first_name)
 	) {
 		usersToAdd.push(addUser(newUser));
 	}

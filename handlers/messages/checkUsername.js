@@ -1,7 +1,7 @@
 'use strict';
 
 // DB
-const { getUser } = require('../../stores/user');
+const { addUser, getUser } = require('../../stores/user');
 
 const checkUsernameHandler = async ({ message }, next) => {
 	if (!message.entities) {
@@ -48,10 +48,13 @@ const checkUsernameHandler = async ({ message }, next) => {
 	if (hasId) {
 		const [ , id ] = messageArr;
 		const user = await getUser({ id: Number(id) });
-		if (user) {
-			message.text = message.text.replace(` ${id}`, '');
-			message.commandMention = user;
+		if (!user) {
+			await addUser({ id: Number(id) });
 		}
+		message.text = message.text.replace(` ${id}`, '');
+		message.commandMention = user
+			? user
+			: await getUser({ id: Number(id) });
 		return next();
 	}
 	return next();

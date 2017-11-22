@@ -76,6 +76,11 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 		logError(err);
 	}
 
+	if (userToBan.first_name === '') {
+		return reply(`🚫 ${link(state.user)} <b>banned a user with id</b> ` +
+		`<code>${userToBan.id}</code> <b>for:</b>\n\n${reason}`, replyOptions);
+	}
+
 	return reply(`🚫 ${link(state.user)} <b>banned</b> ${link(userToBan)} ` +
 		`<b>for:</b>\n\n${reason}`, replyOptions);
 };
