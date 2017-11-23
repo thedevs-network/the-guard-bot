@@ -22,7 +22,7 @@ const groupsHandler = async ({ replyWithHTML }) => {
 	}
 
 	const groups = await listGroups();
-	groups.sort((a, b) => a.title > b.title);
+	groups.sort((a, b) => a.title > b.title ? 1 : -1);
 
 	const entries = groups.map(entry).join('\n');
 

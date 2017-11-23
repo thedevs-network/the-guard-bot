@@ -8,7 +8,7 @@ const { getAdmins } = require('../../stores/user');
 
 const staffHandler = async ctx => {
 	const admins = await getAdmins();
-	admins.sort((a, b) => a.first_name > b.first_name);
+	admins.sort((a, b) => a.first_name > b.first_name ? 1 : -1);
 
 	const links = admins.map(quietLink);
 
