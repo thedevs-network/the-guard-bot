@@ -32,7 +32,7 @@ const addUserHandler = async (ctx, next) => {
 		// if user's data is incomplete or is changed
 		storedUser &&
 		newUser &&
-		(storedUser.username !== newUser.username ||
+		(storedUser.username !== newUser.username.toLowerCase() ||
 		!storedUser.first_name)
 	) {
 		usersToAdd.push(addUser(newUser));
