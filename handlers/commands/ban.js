@@ -20,7 +20,7 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 			: null;
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
 
-	if (!state.isAdmin || userToBan.username === me) return null;
+	if (!state.isAdmin) return null;
 
 	if (message.chat.type === 'private') {
 		return reply(
@@ -35,6 +35,8 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 			replyOptions
 		).then(scheduleDeletion);
 	}
+
+	if (userToBan.username === me.toLowerCase()) return null;
 
 	if (await isAdmin(userToBan)) {
 		return reply('ℹ️ <b>Can\'t ban other admins.</b>', replyOptions);
