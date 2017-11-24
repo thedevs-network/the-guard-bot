@@ -3,6 +3,7 @@
 	"token": "",
 	"plugins": [],
 	"deleteCommands": "own",
+	"deleteJoinsAfter": "2 minutes",
 	"numberOfWarnsToBan": 3,
 	"groupsInlineKeyboard": [],
 	"warnInlineKeyboard": [],

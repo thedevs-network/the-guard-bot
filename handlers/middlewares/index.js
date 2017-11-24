@@ -1,11 +1,12 @@
 'use strict';
 
+const millisecond = require('millisecond');
 const { Composer } = require('telegraf');
 
 const composer = new Composer();
 
 const { deleteAfter } = require('../../utils/tg');
-const delTimeout = 2 * 60 * 1000;
+const { deleteJoinsAfter = '2 minutes' } = require('../../config');
 
 const leaveUnmanagedHandler = require('./leaveUnmanaged');
 const removeCommandsHandler = require('./removeCommands');
@@ -22,7 +23,9 @@ composer.on('new_chat_members', syncStatusHandler);
 composer.on('new_chat_members', antibotHandler);
 composer.on(
 	[ 'new_chat_members', 'left_chat_member' ],
-	deleteAfter(delTimeout)
+	deleteJoinsAfter === false
+		? Composer.passThru
+		: deleteAfter(millisecond(deleteJoinsAfter))
 );
 
 module.exports = composer;
