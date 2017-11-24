@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/TheDevs-Network/the-guard-bot/",
   "dependencies": {
+    "millisecond": "^0.1.2",
     "nedb-promise": "^2.0.1",
     "telegraf": "^3.15.3"
   },
