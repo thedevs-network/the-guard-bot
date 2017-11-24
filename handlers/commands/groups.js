@@ -6,7 +6,7 @@ const { escapeHtml, scheduleDeletion } = require('../../utils/tg');
 // DB
 const { listGroups } = require('../../stores/group');
 
-const config = require('../../config.json');
+const config = require('../../config');
 
 const inline_keyboard = config.groupsInlineKeyboard;
 

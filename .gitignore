@@ -1,5 +1,6 @@
 node_modules
 data/
 config.json
+config.js
 .env
 .idea/

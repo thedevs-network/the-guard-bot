@@ -22,7 +22,7 @@ const addCommandHandler = require('./addCommand');
 const removeCommandHandler = require('./removeCommand');
 const helpHandler = require('./help');
 
-let { deleteCommands } = require('../../config.json');
+let { deleteCommands } = require('../../config');
 
 if (typeof deleteCommands === 'undefined') {
 	deleteCommands = 'own';

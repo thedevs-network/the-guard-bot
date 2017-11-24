@@ -4,7 +4,7 @@
 const { link, scheduleDeletion } = require('../../utils/tg');
 
 // Config
-const { numberOfWarnsToBan } = require('../../config.json');
+const { numberOfWarnsToBan } = require('../../config');
 
 // Bot
 const { replyOptions } = require('../../bot/options');

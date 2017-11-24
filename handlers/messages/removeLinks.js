@@ -9,7 +9,7 @@ const {
 	excludeLinks,
 	numberOfWarnsToBan,
 	warnInlineKeyboard,
-} = require('../../config.json');
+} = require('../../config');
 const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
 

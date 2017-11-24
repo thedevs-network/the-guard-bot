@@ -1,6 +1,6 @@
 'use strict';
 
-const { deleteCommands } = require('../../config.json');
+const { deleteCommands } = require('../../config');
 
 const noop = Function.prototype;
 

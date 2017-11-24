@@ -2,7 +2,7 @@
 
 const { compose } = require('telegraf');
 
-const config = require('../config.json');
+const config = require('../config');
 const names = config.plugins || [];
 
 const plugins = names.map(name => `./${name}`).map(require);

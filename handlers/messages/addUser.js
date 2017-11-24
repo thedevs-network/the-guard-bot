@@ -1,7 +1,7 @@
 'use strict';
 
 // Config
-const { master } = require('../../config.json');
+const { master } = require('../../config');
 
 // DB
 const { addUser, isUser } = require('../../stores/user');

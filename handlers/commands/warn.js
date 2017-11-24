@@ -8,7 +8,7 @@ const { logError } = require('../../utils/log');
 const {
 	numberOfWarnsToBan,
 	warnInlineKeyboard,
-} = require('../../config.json');
+} = require('../../config');
 const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
 // Bot
