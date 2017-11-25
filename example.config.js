@@ -42,6 +42,12 @@ module.exports = {
 	 */
 	deleteJoinsAfter: '2 minutes',
 
+	/**
+	 * @type {( string[] | false )}
+	 * List of whitelisted links and usernames,
+	 * For channels and groups to stop warning users for them.
+	 * Pass false to disable this feature
+	 */
 	excludeLinks: [],
 
 	/**
