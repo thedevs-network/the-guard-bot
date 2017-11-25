@@ -7,7 +7,7 @@ const commandReference = `\
 <b>Master commands</b>:
 <code>/admin</code> - Makes the user admin.
 <code>/unadmin</code> - Demotes the user from admin list.
-<code>/leave</code> - Makes the bot leave the group cleanly.
+<code>/leave &lt;name|id&gt;</code> - Makes the bot leave the group cleanly.
 
 <b>Admin commands</b>:
 <code>/warn &lt;reason&gt;</code> - Warns the user.
@@ -16,6 +16,8 @@ const commandReference = `\
 <code>/ban &lt;reason&gt;</code> - Bans the user from groups.
 <code>/unban</code> - Removes the user from ban list.
 <code>/user</code> - Shows user's status and warns.
+<code>/addcommand &lt;name&gt;</code> - to create a custom command.
+<code>/removecommand &lt;name&gt;</code> - to remove a custom command.
 
 <b>Commands for everyone</b>:
 <code>/staff</code> - Shows a list of admins.
@@ -23,10 +25,6 @@ const commandReference = `\
 <code>/groups</code> - Show a list of groups which the bot is admin in.
 <code>/report</code> - Reports the replied-to message to admins.
 `;
-
-const actions = `\n
-<code>/addcommand</code> - to create custom commands.
-<code>/removecommand &lt;name&gt;</code> - to remove a custom command.`;
 
 const commandReferenceHandler = async ({ chat, replyWithHTML }) => {
 	if (chat.type !== 'private') return null;
@@ -42,7 +40,7 @@ const commandReferenceHandler = async ({ chat, replyWithHTML }) => {
 				`<code>!${command.name}</code>`)
 			.join('\n')
 		: '';
-	return replyWithHTML(commandReference + customCommandsText + actions);
+	return replyWithHTML(commandReference + customCommandsText);
 };
 
 module.exports = commandReferenceHandler;

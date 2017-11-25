@@ -44,7 +44,7 @@ Command                 | Role       | Available at | Description
 `/ban <reason>`         | _Admin_    | _Groups_     | Bans the user from groups.
 `/unban`                | _Admin_    | _Everywhere_ | Removes the user from ban list.
 `/user`                 | _Admin_    | _Everywhere_ | Shows the status of the user.
-`/addcommand`           | _Admin_    | _In-Bot_     | Create a custom command.
+`/addcommand <name>`    | _Admin_    | _In-Bot_     | Create a custom command.
 `/removecommand <name>` | _Admin_    | _In-Bot_     | Remove a custom command.
 `/staff`                | _Everyone_ | _Everywhere_ | Shows a list of admins.
 `/link`                 | _Everyone_ | _Everywhere_ | Shows the current group's link.

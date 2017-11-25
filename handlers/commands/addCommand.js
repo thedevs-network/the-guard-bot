@@ -44,7 +44,7 @@ const addCommandHandler = async ({ chat, message, reply, state }, next) => {
 		reply(
 			'ℹ️ <b>This command already exists.</b>\n\n' +
 			'/commands - to see the list of commands.\n' +
-			'/addcommand - to add a command.\n' +
+			'/addcommand <code>&lt;name&gt;</code> - to add a command.\n' +
 			'/removecommand <code>&lt;name&gt;</code>' +
 			' - to remove a command.',
 			replyOptions
