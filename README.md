@@ -14,7 +14,7 @@ You need [Node.js](https://nodejs.org/) (> 8.1) to run this bot.
 1. Create a bot via [@BotFather](https://t.me/BotFather) and grab a **token**.
 2. Clone this repository or [download zip](https://github.com/TheDevs-Network/the-guard-bot/archive/master.zip).
 3. Install dependencies via `npm install`.
-4. Copy `config.example.json` to `config.json`, fill it properly and remove comments.
+4. Copy `example.config.js` to `config.js` and edit it.
 5. Start the bot via `npm start`.
 
 Now you can add the bot as **administrator** to your groups.
