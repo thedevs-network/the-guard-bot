@@ -14,7 +14,7 @@ Command.ensureIndex({
 
 const addCommand = command =>
 	Command.update(
-		{ id: command.id },
+		{ id: command.id, isActive: false },
 		Object.assign({}, command, { isActive: false }),
 		{ upsert: true }
 	);
