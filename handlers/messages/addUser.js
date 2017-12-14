@@ -9,7 +9,7 @@ const { addUser, isUser } = require('../../stores/user');
 const addUserHandler = async (ctx, next) => {
 	const { message } = ctx;
 	const { new_chat_members } = message;
-	const newUser = message.from;
+	const newUser = Object.assign({ username: '' }, message.from);
 	const storedUser = await isUser(newUser);
 	const user = newUser && storedUser;
 	const usersToAdd = [];
