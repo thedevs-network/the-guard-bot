@@ -21,9 +21,9 @@ const { isAdmin, ban, getWarns, warn } = require('../../stores/user');
 const warnHandler = async ({ message, chat, reply, me, state }) => {
 	const { user } = state;
 	const userToWarn = message.reply_to_message
-		? message.reply_to_message.from
+		? Object.assign({ username: '' }, message.reply_to_message.from)
 		: message.commandMention
-			? message.commandMention
+			? Object.assign({ username: '' }, message.commandMention)
 			: null;
 
 	if (!state.isAdmin) return null;
@@ -43,7 +43,7 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 		).then(scheduleDeletion);
 	}
 
-	if (userToWarn.username === me.toLowerCase()) return null;
+	if (userToWarn.username.toLowerCase() === me.toLowerCase()) return null;
 
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
 

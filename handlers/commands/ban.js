@@ -14,9 +14,9 @@ const { isAdmin, isBanned, ban } = require('../../stores/user');
 
 const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 	const userToBan = message.reply_to_message
-		? message.reply_to_message.from
+		? Object.assign({ username: '' }, message.reply_to_message.from)
 		: message.commandMention
-			? message.commandMention
+			? Object.assign({ username: '' }, message.commandMention)
 			: null;
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
 
@@ -36,7 +36,7 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 		).then(scheduleDeletion);
 	}
 
-	if (userToBan.username === me.toLowerCase()) return null;
+	if (userToBan.username.toLowerCase() === me.toLowerCase()) return null;
 
 	if (await isAdmin(userToBan)) {
 		return reply('ℹ️ <b>Can\'t ban other admins.</b>', replyOptions);
