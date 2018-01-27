@@ -8,17 +8,18 @@ const composer = new Composer();
 const { deleteAfter } = require('../../utils/tg');
 const { deleteJoinsAfter = '2 minutes' } = require('../../config');
 
+const addedToGroupHandler = require('./addedToGroup');
+const antibotHandler = require('./antibot');
+const kickBannedHandler = require('./kickBanned');
 const leaveUnmanagedHandler = require('./leaveUnmanaged');
 const removeCommandsHandler = require('./removeCommands');
-const kickBannedHandler = require('./kickBanned');
 const syncStatusHandler = require('./syncStatus');
-const antibotHandler = require('./antibot');
-const addedToGroupHandler = require('./addedToGroup');
+const updateUserDataHandler = require('./updateUserData');
 
 composer.on('new_chat_members', addedToGroupHandler);
 composer.use(leaveUnmanagedHandler);
+composer.on('message', updateUserDataHandler, kickBannedHandler);
 composer.use(removeCommandsHandler);
-composer.use(kickBannedHandler);
 composer.on('new_chat_members', syncStatusHandler);
 composer.on('new_chat_members', antibotHandler);
 composer.on(
