@@ -4,6 +4,7 @@
 const { logError } = require('../utils/log');
 
 const Datastore = require('nedb-promise');
+const R = require('ramda');
 
 const User = new Datastore({
 	autoload: true,
@@ -18,6 +19,14 @@ User.ensureIndex({
 User.ensureIndex({
 	fieldName: 'status',
 });
+
+const normalizeTgUser = R.pipe(
+	R.pick([ 'first_name', 'id', 'last_name', 'username' ]),
+	R.evolve({ username: R.toLower }),
+	R.merge({ first_name: '', last_name: '', username: '' }),
+);
+
+const getUpdatedDocument = R.prop(1);
 
 const addUser = ({ id, first_name = '', last_name = '', username = '' }) =>
 	User.update(
@@ -39,6 +48,34 @@ const isUser = ({ id }) =>
 
 const getUser = user =>
 	User.findOne(user);
+
+const updateUser = async (rawTgUser) => {
+	const tgUser = normalizeTgUser(rawTgUser);
+
+	const { id } = tgUser;
+
+	const rawDbUser = await getUser({ id });
+
+	if (rawDbUser === null) {
+		return User.update(
+			{ id },
+			{ status: 'member', warns: [], ...tgUser },
+			{ returnUpdatedDocs: true, upsert: true }
+		).then(getUpdatedDocument);
+	}
+
+	const dbUser = rawDbUser;
+
+	if (!R.whereEq(tgUser, dbUser)) {
+		return User.update(
+			{ id },
+			{ $set: tgUser },
+			{ returnUpdatedDocs: true }
+		).then(getUpdatedDocument);
+	}
+
+	return dbUser;
+};
 
 const admin = ({ id }) =>
 	User.update(
@@ -99,5 +136,6 @@ module.exports = {
 	unadmin,
 	unban,
 	unwarn,
+	updateUser,
 	warn
 };
