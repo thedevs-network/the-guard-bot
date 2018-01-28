@@ -11,12 +11,14 @@ const { deleteJoinsAfter = '2 minutes' } = require('../../config');
 const addedToGroupHandler = require('./addedToGroup');
 const antibotHandler = require('./antibot');
 const kickBannedHandler = require('./kickBanned');
+const kickedFromGroupHandler = require('./kickedFromGroup');
 const leaveUnmanagedHandler = require('./leaveUnmanaged');
 const removeCommandsHandler = require('./removeCommands');
 const syncStatusHandler = require('./syncStatus');
 const updateUserDataHandler = require('./updateUserData');
 
 composer.on('new_chat_members', addedToGroupHandler);
+composer.on('left_chat_member', kickedFromGroupHandler);
 composer.use(leaveUnmanagedHandler);
 composer.on('message', updateUserDataHandler, kickBannedHandler);
 composer.use(removeCommandsHandler);
