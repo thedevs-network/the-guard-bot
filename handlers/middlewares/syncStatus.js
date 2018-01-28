@@ -12,13 +12,15 @@ const syncStatusHandler = (ctx, next) => {
 		}
 
 		const dbUser = await getUser({ id: newMember.id });
-		// this handler runs after messages/addUser
-		// so, it should always be able to obtain the user from db
-		console.assert(dbUser);
+
+		// if user is not in DB, he can't be banned.
+		if (dbUser === null) {
+			return null;
+		}
 
 		switch (dbUser.status) {
 		case 'admin':
-			return ctx.telegram.promoteChatMember(ctx.chat.id, dbUser.id, {
+			return ctx.promoteChatMember(dbUser.id, {
 				can_change_info: false,
 				can_delete_messages: true,
 				can_invite_users: true,
@@ -27,7 +29,7 @@ const syncStatusHandler = (ctx, next) => {
 				can_restrict_members: true,
 			});
 		case 'banned':
-			return ctx.telegram.kickChatMember(ctx.chat.id, dbUser.id);
+			return ctx.kickChatMember(dbUser.id);
 		case 'member':
 			// do nothing
 			return null;
