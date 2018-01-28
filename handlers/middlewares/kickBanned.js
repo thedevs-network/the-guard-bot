@@ -1,29 +1,28 @@
 'use strict';
 
+const dedent = require('dedent-js');
+
 // Utils
 const { link } = require('../../utils/tg');
-const { logError } = require('../../utils/log');
 
-// Bot
-const bot = require('../../bot');
 const { replyOptions } = require('../../bot/options');
 
-// DB
-const { isBanned } = require('../../stores/user');
+const kickBannedHandler = async (ctx, next) => {
+	if (ctx.chat.type === 'private') {
+		return next();
+	}
+	if (ctx.from.status === 'banned') {
+		ctx.deleteMessage();
+		await ctx.kickChatMember(ctx.from.id);
+		return ctx.replyWithHTML(
+			dedent(`
+			🚫 ${link(ctx.from)} <b>is banned</b>!
 
-const kickbanned = async ({ chat, from, reply }, next) => {
-	const banned = await isBanned(from);
-	if (banned) {
-		return bot.telegram.kickChatMember(chat.id, from.id)
-			.then(() => reply(
-				`🚫 ${link(from)} <b>is banned</b>!\n\n` +
-				`Reason: ${banned}`,
-				replyOptions
-			))
-			.catch(logError)
-			.then(next);
+			Reason: ${ctx.from.ban_reason}`),
+			replyOptions
+		);
 	}
 	return next();
 };
 
-module.exports = kickbanned;
+module.exports = kickBannedHandler;
