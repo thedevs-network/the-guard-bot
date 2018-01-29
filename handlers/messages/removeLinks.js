@@ -50,7 +50,10 @@ const removeLinks = async ({ message, chat, reply, state, update }, next) => {
 
 	// collect channels/supergroups usernames in the text
 	let isAd = false;
-	const regexp = /(@\w+)|(((t.me)|(telegram.me))\/\w+(\/[A-Za-z0-9_-]+)?)/g;
+
+	const regexp =
+		/(@\w+)|(\?start=)|(((t.me)|(telegram.(me|dog)))\/\w+(\/[A-Za-z0-9_-]+)?)/g; // eslint-disable-line max-len
+
 	const usernames =
 		text
 			? text.match(regexp) || []
@@ -76,6 +79,12 @@ const removeLinks = async ({ message, chat, reply, state, update }, next) => {
 			// skip if already detected an ad
 			if (isAd) return;
 
+			// if is a bot with start link
+			if (username.includes('?start=')) {
+				isAd = true;
+				return;
+			}
+
 			// detect add if it's an invite link
 			if (
 				username.includes('/joinchat/') &&
@@ -87,7 +96,10 @@ const removeLinks = async ({ message, chat, reply, state, update }, next) => {
 
 			// detect if usernames are channels or public groups
 			// and if they are ads
-			username = username.replace(/.*((t.me)|(telegram.me))\//gi, '@');
+			username = username
+				.replace(/.*((t.me)|(telegram.(me|dog)))\//gi, '@')
+				.replace(/\/\d+/gi, '');
+
 			try {
 				const { type } = await bot.telegram.getChat(username);
 				if (!type) return;
@@ -117,6 +129,7 @@ const removeLinks = async ({ message, chat, reply, state, update }, next) => {
 			text &&
 			(text.includes('t.me') ||
 				text.includes('telegram.me') ||
+				text.includes('telegram.dog') ||
 				entities && entities.some(entity =>
 					entity.type === 'mention' ||
 					entity.url))) &&
