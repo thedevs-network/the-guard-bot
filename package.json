@@ -32,7 +32,8 @@
     "millisecond": "^0.1.2",
     "nedb-promise": "^2.0.1",
     "ramda": "^0.25.0",
-    "telegraf": "^3.15.3"
+    "telegraf": "^3.15.3",
+    "xregexp": "^4.0.0"
   },
   "engines": {
     "node": ">=8.1.3"

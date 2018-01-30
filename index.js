@@ -11,6 +11,7 @@ const bot = require('./bot');
 
 bot.telegram.getMe().then((botInfo) => {
 	bot.options.username = botInfo.username;
+	bot.context.botInfo = botInfo;
 });
 
 bot.use(
@@ -18,6 +19,8 @@ bot.use(
 	require('./handlers/messages'),
 	require('./plugins'),
 	require('./handlers/commands'),
+	require('./handlers/regex'),
+	require('./handlers/unmatched'),
 );
 
 
