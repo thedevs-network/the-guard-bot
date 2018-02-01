@@ -98,7 +98,8 @@ const removeLinks = async ({ message, chat, reply, state, update }, next) => {
 			// and if they are ads
 			username = username
 				.replace(/.*((t.me)|(telegram.(me|dog)))\//gi, '@')
-				.replace(/\/\d+/gi, '');
+				.replace(/\/\d+/gi, '')
+				.toLowerCase();
 
 			try {
 				const { type } = await bot.telegram.getChat(username);
@@ -106,7 +107,9 @@ const removeLinks = async ({ message, chat, reply, state, update }, next) => {
 				if (
 					!excludeLinks
 						.some(knownLink =>
-							knownLink.includes(username.replace('@', '')))
+							knownLink
+								.toLowerCase()
+								.includes(username.replace('@', '')))
 				) {
 					isAd = true;
 					return;
