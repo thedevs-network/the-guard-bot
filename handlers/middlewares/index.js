@@ -20,10 +20,10 @@ const updateUserDataHandler = require('./updateUserData');
 composer.on('new_chat_members', addedToGroupHandler);
 composer.on('left_chat_member', kickedFromGroupHandler);
 composer.use(leaveUnmanagedHandler);
-composer.on('message', updateUserDataHandler, kickBannedHandler);
-composer.use(removeCommandsHandler);
-composer.on('new_chat_members', syncStatusHandler);
-composer.on('new_chat_members', antibotHandler);
+composer.on('message', updateUserDataHandler);
+composer.on('new_chat_members', syncStatusHandler, antibotHandler);
+composer.on('message', kickBannedHandler);
+composer.on('text', removeCommandsHandler);
 composer.on(
 	[ 'new_chat_members', 'left_chat_member' ],
 	deleteJoinsAfter === false
