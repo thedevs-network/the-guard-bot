@@ -4,7 +4,6 @@
 const { link, scheduleDeletion } = require('../../utils/tg');
 
 // Bot
-const bot = require('../../bot');
 const { replyOptions } = require('../../bot/options');
 
 // DB
@@ -13,7 +12,9 @@ const { isAdmin, isBanned } = require('../../stores/user');
 // Actions
 const ban = require('../../actions/ban');
 
-const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
+const banHandler = async (ctx) => {
+	const { message, reply, me } = ctx;
+
 	const userToBan = message.reply_to_message
 		? Object.assign({ username: '' }, message.reply_to_message.from)
 		: message.commandMention
@@ -21,7 +22,7 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 			: null;
 	const reason = message.text.split(' ').slice(1).join(' ').trim();
 
-	if (!state.isAdmin) return null;
+	if (ctx.from.status !== 'admin') return null;
 
 	if (message.chat.type === 'private') {
 		return reply(
@@ -49,10 +50,7 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 	}
 
 	if (message.reply_to_message) {
-		bot.telegram.deleteMessage(
-			chat.id,
-			message.reply_to_message.message_id
-		);
+		ctx.deleteMessage(message.reply_to_message.message_id);
 	}
 
 	if (await isBanned(userToBan)) {
@@ -62,15 +60,7 @@ const banHandler = async ({ chat, message, reply, telegram, me, state }) => {
 		);
 	}
 
-	await ban(userToBan, reason);
-
-	if (userToBan.first_name === '') {
-		return reply(`🚫 ${link(state.user)} <b>banned an user with id</b> ` +
-		`<code>${userToBan.id}</code> <b>for:</b>\n\n${reason}`, replyOptions);
-	}
-
-	return reply(`🚫 ${link(state.user)} <b>banned</b> ${link(userToBan)} ` +
-		`<b>for:</b>\n\n${reason}`, replyOptions);
+	return ban(ctx.from, userToBan, reason).then(ctx.replyWithHTML);
 };
 
 module.exports = banHandler;
