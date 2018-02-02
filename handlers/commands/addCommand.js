@@ -11,27 +11,26 @@ const preserved = [ 'admin', 'unadmin', 'leave', 'warn', 'unwarn', 'nowarns',
 	'getwarns', 'ban', 'unban', 'report', 'staff', 'link', 'groups', 'commands',
 	'addcommand', 'removecommand' ];
 
-const addCommandHandler = async ({ chat, message, reply, state }, next) => {
-	const { isAdmin, user } = state;
-	const { id } = user;
+const addCommandHandler = async (ctx, next) => {
+	const { chat, message, reply } = ctx;
+	const { id } = ctx.from;
 	if (chat.type !== 'private') return null;
 
-	if (!isAdmin) {
+	if (ctx.from.status !== 'admin') {
 		return reply(
 			'ℹ️ <b>Sorry, only admins access this command.</b>',
 			replyOptions
 		);
 	}
 
-	const [ , commandName ] = message.text.split(' ');
+	const [ slashCommand, commandName ] = message.text.split(' ');
 	const isValidName = commandName && commandName.match(/^(?:[!])?(\w+)$/);
 	if (!isValidName) {
-		reply(
+		return reply(
 			'<b>Send a valid command.</b>\n\nExample:\n' +
 			'<code>/addcommand rules</code>',
 			replyOptions
 		);
-		return next();
 	}
 	const newCommand = isValidName[1].toLowerCase();
 	if (preserved.includes(newCommand)) {
@@ -40,25 +39,30 @@ const addCommandHandler = async ({ chat, message, reply, state }, next) => {
 		return next();
 	}
 
-	if (await getCommand({ isActive: true, name: newCommand })) {
-		reply(
+	const replaceCmd = slashCommand.toLowerCase() === '/replacecommand';
+
+	const cmdExists = await getCommand({ isActive: true, name: newCommand });
+
+	if (!replaceCmd && cmdExists) {
+		return ctx.replyWithHTML(
 			'ℹ️ <b>This command already exists.</b>\n\n' +
 			'/commands - to see the list of commands.\n' +
 			'/addcommand <code>&lt;name&gt;</code> - to add a command.\n' +
 			'/removecommand <code>&lt;name&gt;</code>' +
 			' - to remove a command.',
-			replyOptions
+			Markup.keyboard([ [ `/replaceCommand ${newCommand}` ] ])
+				.oneTime()
+				.resize()
+				.extra()
 		);
-		return next();
 	}
 	await addCommand({ id, name: newCommand, state: 'role' });
-	reply('Who can use this command?', Markup.keyboard([
+	return reply('Who can use this command?', Markup.keyboard([
 		[ 'Master', 'Admins', 'Everyone' ]
 	])
 		.oneTime()
 		.resize()
 		.extra());
-	return next();
 };
 
 module.exports = addCommandHandler;

@@ -12,10 +12,10 @@ const {
 	updateCommand
 } = require('../../stores/command');
 
-const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
+const addCustomCmdHandler = async ({ chat, message, reply, from }, next) => {
 	const { text, photo, document, video, audio } = message;
-	const { isAdmin, user } = state;
-	const { id } = user;
+	const { id } = from;
+	const isAdmin = from.status === 'admin';
 
 	if (text && /^\/\w+/.test(text)) {
 		await removeCommand({ id, isActive: false });
@@ -42,13 +42,12 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 			return next();
 		}
 		await updateCommand({ id, role, state: 'content' });
-		reply(
+		return reply(
 			'Send the content you wish to be shown when the command is used.' +
 			'.\n\nSupported contents:\n- <b>Text (HTML)</b>\n- <b>Photo</b>' +
 			'\n- <b>Video</b>\n- <b>Document</b>\n- <b>Audio</b>',
 			replyOptions
 		);
-		return next();
 	}
 
 	if (command.state === 'content') {
@@ -74,14 +73,8 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 		if (message.caption) {
 			newCommand.caption = message.caption;
 		}
-		await Promise.all([
-			updateCommand(Object.assign(
-				{},
-				newCommand,
-				{ id, isActive: true, state: null }
-			)),
-		]);
-		reply(
+		await updateCommand({ ...newCommand, id, isActive: true, state: null });
+		return reply(
 			'✅ <b>New command has been created successfully.</b>\n\n' +
 			'Custom commands work with ! instead of /.\n\n' +
 			'For example: <code>!rules</code>\n\n' +
@@ -91,7 +84,6 @@ const addCustomCmdHandler = async ({ chat, message, reply, state }, next) => {
 			'/removecomand <code>&lt;name&gt;</code> - to remove a command.',
 			replyOptions
 		);
-		return next();
 	}
 	return next();
 };

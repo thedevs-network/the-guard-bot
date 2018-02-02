@@ -53,7 +53,11 @@ composer.command('staff', deleteMessage, staffHandler);
 composer.command('link', deleteMessage, linkHandler);
 composer.command('groups', deleteMessage, groupsHandler);
 composer.command('commands', deleteMessage, commandReferenceHandler);
-composer.command('addcommand', deleteMessage, addCommandHandler);
+composer.command(
+	[ 'addcommand', 'replaceCommand' ],
+	deleteMessage,
+	addCommandHandler
+);
 composer.command('removecommand', deleteMessage, removeCommandHandler);
 composer.command([ 'start', 'help' ], deleteMessage, helpHandler);
 

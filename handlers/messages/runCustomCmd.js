@@ -1,20 +1,25 @@
 'use strict';
 
+const { hears } = require('telegraf');
+const R = require('ramda');
+
 // DB
 const { getCommand } = require('../../stores/command');
+
+const capitalize = R.replace(/^./, R.toUpper);
+
+const getRepliedToId = R.path([ 'reply_to_message', 'message_id' ]);
+
+const typeToMethod = type =>
+	type === 'text'
+		? 'replyWithHTML'
+		: `replyWith${capitalize(type)}`;
 
 const runCustomCmdHandler = async (ctx, next) => {
 	const { message, state } = ctx;
 	const { isAdmin, isMaster } = state;
-	const isCommand = /^!\w+/.test(message.text);
-	if (!isCommand) {
-		return next();
-	}
 
-	const commandName = message.text
-		.split(' ')[0]
-		.replace('!', '')
-		.toLowerCase();
+	const commandName = ctx.match[1].toLowerCase();
 	const command = await getCommand({ isActive: true, name: commandName });
 
 	if (!command) {
@@ -23,14 +28,6 @@ const runCustomCmdHandler = async (ctx, next) => {
 
 	const { caption, content, type } = command;
 	const role = command.role.toLowerCase();
-	const replyTo = message.reply_to_message
-		? { reply_to_message_id: message.reply_to_message.message_id }
-		: {};
-	const options = Object.assign(
-		replyTo,
-		caption ? { caption } : {},
-		{ disable_web_page_preview: true },
-	);
 	if (
 		role === 'master' &&
 		!isMaster ||
@@ -40,27 +37,14 @@ const runCustomCmdHandler = async (ctx, next) => {
 		return next();
 	}
 
-	if (type === 'text') {
-		ctx.replyWithHTML(content, options);
-		return next();
-	}
-	if (type === 'photo') {
-		ctx.replyWithPhoto(content, options);
-		return next();
-	}
-	if (type === 'video') {
-		ctx.replyWithVideo(content, replyTo);
-		return next();
-	}
-	if (type === 'document') {
-		ctx.replyWithDocument(content, replyTo);
-		return next();
-	}
-	if (type === 'audio') {
-		ctx.replyWithAudio(content, replyTo);
-		return next();
-	}
-	return next();
+	const reply_to_message_id = getRepliedToId(message);
+	const options = {
+		caption,
+		disable_web_page_preview: true,
+		reply_to_message_id,
+	};
+
+	return ctx[typeToMethod(type)](content, options);
 };
 
-module.exports = runCustomCmdHandler;
+module.exports = hears(/^!(\w+)/, runCustomCmdHandler);
