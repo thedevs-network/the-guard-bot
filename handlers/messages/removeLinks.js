@@ -66,18 +66,18 @@ const removeLinks = async ({ message, chat, reply, state, update }, next) => {
 			.map(entity => entity.url));
 	}
 
-	const isAd = await Promise.all(usernames
-		? usernames.map(username => new Promise(async (resolve) => {
+	const isAd = usernames.length && await Promise.all(usernames
+		.map(async username => {
 
 			// if is a bot with start link
-			if (username.includes('?start=')) return resolve(true);
+			if (username.includes('?start=')) return true;
 
 			// detect add if it's an invite link
 			if (
 				username.includes('/joinchat/') &&
 				!knownLinks.some(knownLink => knownLink.includes(username))
 			) {
-				return resolve(true);
+				return true;
 			}
 
 			// detect if usernames are channels or public groups
@@ -89,7 +89,7 @@ const removeLinks = async ({ message, chat, reply, state, update }, next) => {
 
 			try {
 				const { type } = await bot.telegram.getChat(username);
-				if (!type) return resolve(false);
+				if (!type) return false;
 				if (
 					!excludeLinks
 						.some(knownLink =>
@@ -97,14 +97,13 @@ const removeLinks = async ({ message, chat, reply, state, update }, next) => {
 								.toLowerCase()
 								.includes(username.replace('@', '')))
 				) {
-					return resolve(true);
+					return true;
 				}
 			} catch (err) {
 				logError(err);
 			}
-			return resolve(false);
-		}))
-		: '');
+			return false;
+		}));
 
 	const domains = [ 't.me', 'telegram.me', 'telegram.dog' ];
 
@@ -122,7 +121,7 @@ const removeLinks = async ({ message, chat, reply, state, update }, next) => {
 				entities && entities.some(entity =>
 					entity.type === 'mention' ||
 					entity.url))) &&
-		isAd
+		isAd && isAd.some(item => item)
 	) {
 		const reason = 'Forwarded or linked channels/groups';
 		await warn(user, reason);
