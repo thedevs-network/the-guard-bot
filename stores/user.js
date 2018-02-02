@@ -106,7 +106,11 @@ const isBanned = ({ id }) =>
 		.then(user => user ? user.ban_reason : null);
 
 const warn = ({ id }, reason) =>
-	User.update({ id }, { $push: { warns: reason } });
+	User.update(
+		{ id },
+		{ $push: { warns: reason } },
+		{ returnUpdatedDocs: true }
+	).then(getUpdatedDocument);
 
 const unwarn = ({ id }) =>
 	User.update(
