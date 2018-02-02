@@ -1,27 +1,24 @@
 'use strict';
 
 // Utils
-const { link } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 
 // Config
 const {
 	excludeLinks,
-	numberOfWarnsToBan,
 	warnInlineKeyboard,
 } = require('../../config');
 const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
 
-// Bot
-const bot = require('../../bot');
-const { replyOptions } = require('../../bot/options');
-
 // DB
-const { ban, warn, getWarns, getUser } = require('../../stores/user');
+const { getUser } = require('../../stores/user');
 const { listGroups } = require('../../stores/group');
 
-const removeLinks = async ({ message, chat, reply, state, update }, next) => {
+const warn = require('../../actions/warn');
+
+const removeLinks = async (ctx, next) => {
+	const { message, state, update } = ctx;
 	const { isAdmin: isStateAdmin, user: stateUser } = state;
 	const user = stateUser ||
 		await getUser({ id: update.edited_message.from.id });
@@ -88,7 +85,7 @@ const removeLinks = async ({ message, chat, reply, state, update }, next) => {
 				.toLowerCase();
 
 			try {
-				const { type } = await bot.telegram.getChat(username);
+				const { type } = await ctx.telegram.getChat(username);
 				if (!type) return false;
 				if (
 					!excludeLinks
@@ -124,37 +121,12 @@ const removeLinks = async ({ message, chat, reply, state, update }, next) => {
 		isAd && isAd.some(item => item)
 	) {
 		const reason = 'Forwarded or linked channels/groups';
-		await warn(user, reason);
-		const warnCount = await getWarns(user);
-		const promises = [
-			bot.telegram.deleteMessage(chat.id, updateData.message_id)
-		];
-		if (warnCount.length < numberOfWarnsToBan) {
-			promises.push(reply(
-				`⚠️ ${link(user)} <b>got warned!</b> ` +
-				`(${warnCount.length}/${numberOfWarnsToBan})` +
-				`\n\nReason: ${reason}`,
-				{ parse_mode: 'HTML', reply_markup }
-			));
-		} else {
-			promises.push(bot.telegram.kickChatMember(chat.id, user.id));
-			promises.push(ban(
-				user,
-				'Reached max number of warnings'
-			));
-			promises.push(reply(
-				`🚫 ${link(user)} <b>got banned</b>! ` +
-				`(${warnCount.length}/${numberOfWarnsToBan})` +
-				'\n\nReason: Reached max number of warnings',
-				replyOptions
-			));
-		}
-		try {
-			await Promise.all(promises);
-		} catch (err) {
-			logError(err);
-		}
-		return next();
+		ctx.deleteMessage(updateData.message_id);
+
+		const replies = await warn(ctx.botInfo, ctx.from, reason);
+
+		await ctx.replyWithHTML(replies[0], { reply_markup });
+		return replies[1] && ctx.replyWithHTML(replies[1]);
 	}
 	return next();
 };
