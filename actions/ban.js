@@ -1,7 +1,5 @@
 'use strict';
 
-const emitter = require('./emitter');
-
 const { telegram } = require('../bot');
 
 const { listGroups } = require('../stores/group');
@@ -17,8 +15,6 @@ module.exports = async (userToBan, reason) => {
 
 	groups.forEach(group =>
 		telegram.kickChatMember(group.id, userToBan.id));
-
-	emitter.emit('ban', userToBan, reason);
 
 	// return something useful?
 };
