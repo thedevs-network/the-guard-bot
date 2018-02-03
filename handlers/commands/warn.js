@@ -59,10 +59,9 @@ const warnHandler = async (ctx) => {
 		ctx.deleteMessage(message.reply_to_message.message_id);
 	}
 
-	const replies = await warn(ctx.from, userToWarn, reason);
+	const warnMessage = await warn(ctx.from, userToWarn, reason);
 
-	await ctx.replyWithHTML(replies[0], { reply_markup });
-	return replies[1] && ctx.replyWithHTML(replies[1]);
+	return ctx.replyWithHTML(warnMessage, { reply_markup });
 };
 
 module.exports = warnHandler;

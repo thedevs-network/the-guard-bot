@@ -123,10 +123,9 @@ const removeLinks = async (ctx, next) => {
 		const reason = 'Forwarded or linked channels/groups';
 		ctx.deleteMessage(updateData.message_id);
 
-		const replies = await warn(ctx.botInfo, ctx.from, reason);
+		const warnMessage = await warn(ctx.from, ctx.from, reason);
 
-		await ctx.replyWithHTML(replies[0], { reply_markup });
-		return replies[1] && ctx.replyWithHTML(replies[1]);
+		return ctx.replyWithHTML(warnMessage, { reply_markup });
 	}
 	return next();
 };
