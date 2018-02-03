@@ -13,8 +13,8 @@ module.exports = async (admin, userToWarn, reason) => {
 	const { warns } = await warn(userToWarn, reason);
 
 
-	const warnMessage =
-		dedent(`⚠️ ${link(admin)} <b>warned</b> ${link(userToWarn)} <b>for</b>:
+	const warnMessage = dedent(`
+		⚠️ ${link(admin)} <b>warned</b> ${link(userToWarn)} <b>for</b>:
 
 		${reason} (${warns.length}/${numberOfWarnsToBan})`);
 
