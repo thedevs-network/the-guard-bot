@@ -12,11 +12,13 @@ const ban = require('./ban');
 module.exports = async (admin, userToWarn, reason) => {
 	const { warns } = await warn(userToWarn, reason);
 
+	const isLastWarn = ', <b>last warning!</b>'
+		.repeat(warns.length === numberOfWarnsToBan - 1);
 
 	const warnMessage = dedent(`
 		⚠️ ${link(admin)} <b>warned</b> ${link(userToWarn)} <b>for</b>:
 
-		${reason} (${warns.length}/${numberOfWarnsToBan})`);
+		${reason} (${warns.length}/${numberOfWarnsToBan}${isLastWarn})`);
 
 	if (warns.length >= numberOfWarnsToBan) {
 		await ban(
