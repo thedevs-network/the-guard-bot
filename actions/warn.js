@@ -9,7 +9,7 @@ const { warn } = require('../stores/user');
 const ban = require('./ban');
 
 
-module.exports = async (admin, userToWarn, reason) => {
+module.exports = async ({ admin, userToWarn, reason }) => {
 	const { warns } = await warn(userToWarn, reason);
 
 	const isLastWarn = ', <b>last warning!</b>'
@@ -21,11 +21,11 @@ module.exports = async (admin, userToWarn, reason) => {
 		${reason} (${warns.length}/${numberOfWarnsToBan}${isLastWarn})`);
 
 	if (warns.length >= numberOfWarnsToBan) {
-		await ban(
-			context.botInfo,
-			userToWarn,
-			'Reached max number of warnings'
-		);
+		await ban({
+			admin: context.botInfo,
+			reason: 'Reached max number of warnings',
+			userToBan: userToWarn,
+		});
 		return warnMessage +
 			'\n\n' +
 			'🚫 The user was <b>banned</b> ' +

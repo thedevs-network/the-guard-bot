@@ -60,7 +60,7 @@ const banHandler = async (ctx) => {
 		);
 	}
 
-	return ban(ctx.from, userToBan, reason).then(ctx.replyWithHTML);
+	return ban({ admin: ctx.from, reason, userToBan }).then(ctx.replyWithHTML);
 };
 
 module.exports = banHandler;

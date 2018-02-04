@@ -121,9 +121,11 @@ const removeLinks = async (ctx, next) => {
 		isAd && isAd.some(item => item)
 	) {
 		const reason = 'Forwarded or linked channels/groups';
+		const admin = ctx.botInfo;
+		const userToWarn = ctx.from;
 		ctx.deleteMessage(updateData.message_id);
 
-		const warnMessage = await warn(ctx.from, ctx.from, reason);
+		const warnMessage = await warn({ admin, reason, userToWarn });
 
 		return ctx.replyWithHTML(warnMessage, { reply_markup });
 	}
