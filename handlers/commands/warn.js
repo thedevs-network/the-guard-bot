@@ -6,27 +6,26 @@ const { logError } = require('../../utils/log');
 
 // Config
 const {
-	numberOfWarnsToBan,
 	warnInlineKeyboard,
 } = require('../../config');
 const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
 // Bot
-const bot = require('../../bot');
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { isAdmin, ban, getWarns, warn } = require('../../stores/user');
+const { isAdmin } = require('../../stores/user');
+const warn = require('../../actions/warn');
 
-const warnHandler = async ({ message, chat, reply, me, state }) => {
-	const { user } = state;
+const warnHandler = async (ctx) => {
+	const { message, reply, me } = ctx;
 	const userToWarn = message.reply_to_message
 		? Object.assign({ username: '' }, message.reply_to_message.from)
 		: message.commandMention
 			? Object.assign({ username: '' }, message.commandMention)
 			: null;
 
-	if (!state.isAdmin) return null;
+	if (ctx.from.status !== 'admin') return null;
 
 	if (message.chat.type === 'private') {
 		return reply(
@@ -56,42 +55,13 @@ const warnHandler = async ({ message, chat, reply, me, state }) => {
 			.then(scheduleDeletion);
 	}
 
-	await warn(userToWarn, reason);
-	const warnCount = await getWarns(userToWarn);
-	const promises = [];
-
 	if (message.reply_to_message) {
-		promises.push(bot.telegram.deleteMessage(
-			chat.id,
-			message.reply_to_message.message_id
-		));
+		ctx.deleteMessage(message.reply_to_message.message_id);
 	}
 
-	try {
-		await reply(
-			`⚠️ ${link(user)} <b>warned</b> ${link(userToWarn)} <b>for:</b>` +
-			`\n\n${reason} (${warnCount.length}/${numberOfWarnsToBan})`,
-			{ parse_mode: 'HTML', reply_markup }
-		);
-	} catch (e) {
-		// we don't expect an error
-		// but we do wish to continue if one happens
-		// to ban people who reach max number of warnings
-		logError(e);
-	}
+	const warnMessage = await warn({ admin: ctx.from, reason, userToWarn });
 
-	if (warnCount.length >= numberOfWarnsToBan) {
-		promises.push(bot.telegram.kickChatMember(chat.id, userToWarn.id));
-		promises.push(ban(userToWarn, 'Reached max number of warnings'));
-		promises.push(reply(
-			`🚫 ${link(user)} <b>banned</b> ${link(userToWarn)} ` +
-			'<b>for:</b>\n\nReached max number of warnings ' +
-			`(${warnCount.length}/${numberOfWarnsToBan})`,
-			replyOptions
-		));
-	}
-
-	return Promise.all(promises).catch(logError);
+	return ctx.replyWithHTML(warnMessage, { reply_markup });
 };
 
 module.exports = warnHandler;
