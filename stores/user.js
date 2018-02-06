@@ -20,10 +20,18 @@ User.ensureIndex({
 	fieldName: 'status',
 });
 
+// Migration
+User.update(
+	{ username: '' },
+	{ $unset: { username: true } },
+	{ multi: true }
+).then(() =>
+	User.ensureIndex({ fieldName: 'username', sparse: true, unique: true }));
+
 const normalizeTgUser = R.pipe(
 	R.pick([ 'first_name', 'id', 'last_name', 'username' ]),
 	R.evolve({ username: R.toLower }),
-	R.merge({ first_name: '', last_name: '', username: '' }),
+	R.merge({ first_name: '', last_name: '' }),
 );
 
 const getUpdatedDocument = R.prop(1);
@@ -52,9 +60,12 @@ const getUser = user =>
 const updateUser = async (rawTgUser) => {
 	const tgUser = normalizeTgUser(rawTgUser);
 
-	const { id } = tgUser;
+	const { id, username } = tgUser;
 
-	const rawDbUser = await getUser({ id });
+	const [ rawDbUser ] = await Promise.all([
+		getUser({ id }),
+		User.update({ $not: { id }, username }, { $unset: { username: true } }),
+	]);
 
 	if (rawDbUser === null) {
 		return User.update(
