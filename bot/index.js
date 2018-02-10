@@ -6,9 +6,7 @@ const config = require('../config');
 const bot = new Telegraf(config.token);
 
 if (process.env.NODE_ENV === 'development') {
-	bot.state.offset = -1;
+	bot.polling.offset = -1;
 }
 
 module.exports = bot;
-
-
