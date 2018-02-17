@@ -6,9 +6,26 @@ const { logError } = require('../../utils/log');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
+const { telegram } = require('../../bot');
 
 // DB
 const { isAdmin, unadmin } = require('../../stores/user');
+const { listGroups } = require('../../stores/group');
+
+const noop = Function.prototype;
+
+const tgUnadmin = async (userToUnadmin) => {
+	for (const group of await listGroups()) {
+		telegram.promoteChatMember(group.id, userToUnadmin.id, {
+			can_change_info: false,
+			can_delete_messages: false,
+			can_invite_users: false,
+			can_pin_messages: false,
+			can_promote_members: false,
+			can_restrict_members: false,
+		}).catch(noop);
+	}
+};
 
 const unAdminHandler = async ({ message, reply, state }) => {
 	const { isMaster } = state;
@@ -33,6 +50,8 @@ const unAdminHandler = async ({ message, reply, state }) => {
 			replyOptions
 		);
 	}
+
+	tgUnadmin(userToUnadmin);
 
 	try {
 		await unadmin(userToUnadmin);
