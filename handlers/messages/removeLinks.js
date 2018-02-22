@@ -41,7 +41,7 @@ const removeLinks = async (ctx, next) => {
 	];
 
 	const regexp =
-		/(@\w+)|(\?start=)|(((t.me)|(telegram.(me|dog)))\/\w+(\/[A-Za-z0-9_-]+)?)/g; // eslint-disable-line max-len
+		/(@\w+)|(\?start=)|(((t.me)|(telegram.(me|dog)))\/\w+(\/[A-Za-z0-9_-]+)?)/gi; // eslint-disable-line max-len
 
 	const usernames =
 		text
