@@ -1,4 +1,0 @@
-# Don't lint plugins
-plugins/*
-# ...but do lint plugin loader
-!plugins/index.js
