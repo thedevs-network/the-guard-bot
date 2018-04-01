@@ -11,7 +11,7 @@ const { ban } = require('../stores/user');
 const displayUser = user =>
 	user.first_name
 		? link(user)
-		: `an user with id <code>${user.id}</code>`;
+		: `a user with id <code>${user.id}</code>`;
 
 module.exports = async ({ admin, userToBan, reason }) => {
 	// move some checks from handler here?
