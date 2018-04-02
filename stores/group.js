@@ -13,7 +13,10 @@ Group.ensureIndex({
 });
 
 const addGroup = group =>
-	Group.update(group.id, group, { upsert: true });
+	Group.update({ id: group.id }, group, { upsert: true });
+
+const updateGroup = group =>
+	Group.update({ id: group.id }, { $set: group });
 
 const listGroups = () =>
 	Group.find({});
@@ -29,4 +32,5 @@ module.exports = {
 	listGroups,
 	managesGroup,
 	removeGroup,
+	updateGroup,
 };
