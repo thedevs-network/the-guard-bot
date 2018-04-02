@@ -8,6 +8,8 @@ const commandReference = `\
 <code>/admin</code> - Makes the user admin.
 <code>/unadmin</code> - Demotes the user from admin list.
 <code>/leave &lt;name|id&gt;</code> - Makes the bot leave the group cleanly.
+<code>/hidegroup</code> - Hide the group from </code>/groups</code> list.
+<code>/showgroup</code> - Show the group it in <code>/groups</code> list.
 
 <b>Admin commands</b>:
 <code>/warn &lt;reason&gt;</code> - Warns the user.

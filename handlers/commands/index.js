@@ -7,6 +7,8 @@ const composer = new Composer();
 const adminHandler = require('./admin');
 const unAdminHandler = require('./unadmin');
 const leaveCommandHandler = require('./leave');
+const hideGroupHandler = require('./hideGroup');
+const showGroupHandler = require('./showGroup');
 const warnHandler = require('./warn');
 const unwarnHandler = require('./unwarn');
 const nowarnsHandler = require('./nowarns');
@@ -22,11 +24,9 @@ const addCommandHandler = require('./addCommand');
 const removeCommandHandler = require('./removeCommand');
 const helpHandler = require('./help');
 
-let { deleteCommands } = require('../../config');
+const { deleteCommands = 'own' } = require('../../config');
 
-if (typeof deleteCommands === 'undefined') {
-	deleteCommands = 'own';
-} else if (![ 'all', 'own', 'none' ].includes(deleteCommands)) {
+if (![ 'all', 'own', 'none' ].includes(deleteCommands)) {
 	throw new Error('Invalid value for `deleteCommands` in `config.json`: ' +
 		deleteCommands);
 }
@@ -41,6 +41,8 @@ const deleteMessage = ({ chat, message, telegram }, next) => {
 composer.command('admin', deleteMessage, adminHandler);
 composer.command('unadmin', deleteMessage, unAdminHandler);
 composer.command('leave', deleteMessage, leaveCommandHandler);
+composer.command('hidegroup', deleteMessage, hideGroupHandler);
+composer.command('showgroup', deleteMessage, showGroupHandler);
 composer.command('warn', deleteMessage, warnHandler);
 composer.command('unwarn', deleteMessage, unwarnHandler);
 composer.command('nowarns', deleteMessage, nowarnsHandler);

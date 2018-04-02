@@ -4,7 +4,7 @@
 const { escapeHtml, scheduleDeletion } = require('../../utils/tg');
 
 // DB
-const { listGroups } = require('../../stores/group');
+const { listVisibleGroups } = require('../../stores/group');
 
 const config = require('../../config');
 
@@ -21,8 +21,7 @@ const groupsHandler = async ({ replyWithHTML }) => {
 		return replyWithHTML(config.groupsString);
 	}
 
-	const groups = await listGroups();
-	groups.sort((a, b) => a.title > b.title ? 1 : -1);
+	const groups = await listVisibleGroups();
 
 	const entries = groups.map(entry).join('\n');
 
