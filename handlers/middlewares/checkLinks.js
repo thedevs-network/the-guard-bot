@@ -103,6 +103,8 @@ const classifyList = async (urls) => {
 
 
 module.exports = async (ctx, next) => {
+	if (ctx.chat.type === 'private') return next();
+
 	const message = ctx.message || ctx.editedMessage;
 
 	const entities = message.entities || message.caption_entities || [];
