@@ -97,13 +97,6 @@ module.exports = async (ctx, next) => {
 	const admin = ctx.botInfo;
 	const userToWarn = ctx.from;
 
-	if (rawUrls.length > 5) {
-		const reason = 'Too many links in 1 message, possibly spam';
-		ctx.deleteMessage();
-		const warnMessage = await warn({ admin, reason, userToWarn });
-		return ctx.replyWithHTML(warnMessage, { reply_markup });
-	}
-
 	const urls = R.uniq(rawUrls).map(constructAbsUrl);
 
 	// if one link is repeated 3 times or more
