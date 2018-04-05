@@ -9,18 +9,23 @@ const fetch = require('node-fetch');
 const R = require('ramda');
 
 const { isAdmin } = require('../../stores/user');
+const { managesGroup } = require('../../stores/group');
 const warn = require('../../actions/warn');
 
 
 const { warnInlineKeyboard } = require('../../config');
 const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
-const bannedDomains = new Set([
-	'chat.whatsapp.com',
-	'loverdesuootnosheniya.blogspot.com',
+const tmeDomains = new Set([
 	't.me',
 	'telegram.dog',
 	'telegram.me',
+]);
+
+const bannedDomains = new Set([
+	...tmeDomains,
+	'chat.whatsapp.com',
+	'loverdesuootnosheniya.blogspot.com',
 	'your-sweet-dating.com',
 ]);
 
@@ -47,6 +52,9 @@ const isHttp = R.where({ protocol: R.test(/https?:/) });
 const isUrl = entity => entity.type === 'url' || entity.type === 'text_link ';
 const memoize = R.memoizeWith(R.identity);
 
+const domainContainedIn = R.curry((domains, url) =>
+	domains.has(url.host.toLowerCase()));
+
 const obtainUrlFromText = text => ({ length, offset, url }) =>
 	url
 		? url
@@ -54,23 +62,36 @@ const obtainUrlFromText = text => ({ length, offset, url }) =>
 
 
 const blacklisted = {
-	domain: url =>
-		bannedDomains.has(url.host.toLowerCase()),
+	domain: domainContainedIn(bannedDomains),
 	protocol: url =>
 		url.protocol === 'tg:' && url.host.toLowerCase() === 'resolve',
 };
 
-const unshorten = memoize(url =>
+const whitelisted = async (url) => {
+	if (domainContainedIn(tmeDomains, url)) {
+		const tmeLink = new URL(url);
+		tmeLink.domain = 't.me';
+		tmeLink.protocol = 'https:';
+		if (await managesGroup({ link: tmeLink.toString() })) return true;
+	}
+	// handle custom whitelist right here
+	return false;
+};
+
+const unshorten = url =>
 	fetch(url, { redirect: 'follow' }).then(res =>
 		res.ok
 			? new URL(res.url)
 			: Promise.reject(new Error(`Request to ${url} failed, ` +
-				`reason: ${res.status} ${res.statusText}`))));
+				`reason: ${res.status} ${res.statusText}`)));
 
-const classifyAsync = url =>
-	unshorten(url).then(long => blacklisted.domain(long)
-		? Action.Warn('blacklisted domain')
-		: Action.Nothing).catch(Action.Notify);
+const classifyAsync = memoize(url =>
+	unshorten(url)
+		.then(async long =>
+			blacklisted.domain(long) && !await whitelisted(long)
+				? Action.Warn('blacklisted domain')
+				: Action.Nothing)
+		.catch(Action.Notify));
 
 const classifyList = (urls) => {
 	if (urls.some(blacklisted.protocol)) return Action.Warn('tg: protocol');
@@ -101,8 +122,6 @@ const classifyCtx = async (ctx) => {
 		return Action.Warn('multiple copies');
 	}
 
-	// TODO Whitelist invite links somewhere around here
-	// Could support whitelist here as well
 	return classifyList(urls);
 };
 
