@@ -80,8 +80,8 @@ const classifyList = (urls) => {
 };
 
 
-module.exports = async (ctx, next) => {
-	if (ctx.chat.type === 'private') return next();
+const classifyCtx = async (ctx) => {
+	if (ctx.chat.type === 'private') return Action.Nothing;
 
 	const message = ctx.message || ctx.editedMessage;
 
@@ -94,30 +94,31 @@ module.exports = async (ctx, next) => {
 		.map(obtainUrlFromText(text))
 		.map(assumeProtocol);
 
-	const admin = ctx.botInfo;
-	const userToWarn = ctx.from;
-
 	const urls = R.uniq(rawUrls).map(constructAbsUrl);
 
 	// if one link is repeated 3 times or more
-	if (rawUrls.length - urls.length >= 2 && !await isAdmin(userToWarn)) {
-		const reason = 'Link - multiple copies, possibly spam';
-		ctx.deleteMessage();
-		const warnMessage = await warn({ admin, reason, userToWarn });
-		return ctx.replyWithHTML(warnMessage, { reply_markup });
+	if (rawUrls.length - urls.length >= 2 && !await isAdmin(ctx.from)) {
+		return Action.Warn('multiple copies');
 	}
 
 	// TODO Whitelist invite links somewhere around here
 	// Could support whitelist here as well
-	return (await classifyList(urls)).cata({
+	return classifyList(urls);
+};
+
+module.exports = async (ctx, next) =>
+	(await classifyCtx(ctx)).cata({
 		Nothing: next,
 		Notify(errorMsg) {
+			const message = ctx.message || ctx.editedMessage;
 			const reply_to_message_id = message.message_id;
 			ctx.reply(`️ℹ️ ${errorMsg}`, { reply_to_message_id });
 			return next();
 		},
 		Warn: async (blacklist) => {
+			const admin = ctx.botInfo;
 			const reason = `Link - ${blacklist}`;
+			const userToWarn = ctx.from;
 
 			if (await isAdmin(userToWarn)) return next();
 
@@ -126,4 +127,3 @@ module.exports = async (ctx, next) => {
 			return ctx.replyWithHTML(warnMessage, { reply_markup });
 		},
 	});
-};
