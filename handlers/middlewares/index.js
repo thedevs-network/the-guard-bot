@@ -29,7 +29,7 @@ composer.on('text', removeCommandsHandler);
 composer.on(
 	[ 'new_chat_members', 'left_chat_member' ],
 	deleteJoinsAfter === false
-		? Composer.passThru
+		? Composer.passThru()
 		: deleteAfter(millisecond(deleteJoinsAfter))
 );
 
