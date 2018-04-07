@@ -1,6 +1,6 @@
 'use strict';
 
-/* eslint-disable new-cap */
+/* eslint new-cap: ["error", {"capIsNewExceptionPattern": "^Action.\w+$"}] */
 
 const { URL } = require('url');
 
@@ -48,7 +48,7 @@ const highestPriorityAction = R.reduce(maxByActionPriority, Action.Nothing);
 
 const assumeProtocol = R.unless(R.contains('://'), R.concat('http://'));
 const constructAbsUrl = R.constructN(1, URL);
-const isHttp = R.where({ protocol: R.test(/https?:/) });
+const isHttp = R.propSatisfies(R.test(/^https?:$/i), 'protocol');
 const isUrl = entity => entity.type === 'url' || entity.type === 'text_link ';
 const memoize = R.memoizeWith(R.identity);
 
