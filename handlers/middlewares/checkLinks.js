@@ -22,7 +22,7 @@ if (excludeLinks === false || excludeLinks === '*') {
 }
 
 const normalizeTme = R.replace(
-	/^(?:@|(?:https?:\/\/)?(?:t\.me|telegram\.(?:me|dog))\/)(\w+)(\/.+)?/,
+	/^(?:@|(?:https?:\/\/)?(?:t\.me|telegram\.(?:me|dog))\/)(\w+)(\/.+)?/i,
 	(_match, username, rest) => /^\/\d+$/.test(rest)
 		? `https://t.me/${username.toLowerCase()}`
 		: `https://t.me/${username.toLowerCase()}${rest || ''}`
@@ -64,9 +64,13 @@ const maxByActionPriority = R.maxBy(actionPriority);
 const highestPriorityAction = R.reduce(maxByActionPriority, Action.Nothing);
 
 const assumeProtocol = R.unless(R.contains('://'), R.concat('http://'));
+const conatained = R.flip(R.contains);
 const constructAbsUrl = R.constructN(1, URL);
 const isHttp = R.propSatisfies(R.test(/^https?:$/i), 'protocol');
-const isUrl = entity => entity.type === 'url' || entity.type === 'text_link ';
+const isLink = R.propSatisfies(
+	conatained([ 'url', 'text_link', 'mention' ]),
+	'type'
+);
 const memoize = R.memoizeWith(R.identity);
 
 const domainContainedIn = R.curry((domains, url) =>
@@ -140,11 +144,13 @@ const classifyCtx = async (ctx) => {
 	const text = message.text || message.caption;
 
 	const rawUrls = entities
-		.filter(isUrl)
-		.map(obtainUrlFromText(text))
-		.map(assumeProtocol);
+		.filter(isLink)
+		.map(obtainUrlFromText(text));
 
-	const urls = R.uniq(rawUrls).map(normalizeTme).map(constructAbsUrl);
+	const urls = R.uniq(rawUrls)
+		.map(normalizeTme)
+		.map(assumeProtocol)
+		.map(constructAbsUrl);
 
 	// if one link is repeated 3 times or more
 	if (rawUrls.length - urls.length >= 2 && !await isAdmin(ctx.from)) {
