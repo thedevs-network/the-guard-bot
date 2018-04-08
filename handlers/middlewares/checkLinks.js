@@ -114,13 +114,19 @@ const unshorten = url =>
 			: Promise.reject(new Error(`Request to ${url} failed, ` +
 				`reason: ${res.status} ${res.statusText}`)));
 
-const classifyAsync = memoize(url =>
-	unshorten(url)
-		.then(async long =>
-			blacklisted.domain(long) && !await isWhitelisted(long)
-				? Action.Warn('blacklisted domain')
-				: Action.Nothing)
-		.catch(Action.Notify));
+const classifyAsync = memoize(async url =>
+	domainContainedIn(tmeDomains, url)
+		? await isWhitelisted(url)
+			? Action.Nothing
+			: url.searchParams.has('start')
+				? Action.Warn('bot reflink')
+				: Action.Warn('telegram group or channel')
+		: unshorten(url)
+			.then(async long =>
+				blacklisted.domain(long) && !await isWhitelisted(long)
+					? Action.Warn('blacklisted domain')
+					: Action.Nothing)
+			.catch(Action.Notify));
 
 const classifyList = (urls) => {
 	if (urls.some(blacklisted.protocol)) return Action.Warn('tg: protocol');
