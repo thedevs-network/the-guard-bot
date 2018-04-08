@@ -119,20 +119,22 @@ const classifyAsync = memoize(async url =>
 		? await isWhitelisted(url)
 			? Action.Nothing
 			: url.searchParams.has('start')
-				? Action.Warn('bot reflink')
-				: Action.Warn('telegram group or channel')
+				? Action.Warn('Bot reflink')
+				: Action.Warn('Link to Telegram group or channel')
 		: unshorten(url)
 			.then(async long =>
 				blacklisted.domain(long) && !await isWhitelisted(long)
-					? Action.Warn('blacklisted domain')
+					? Action.Warn('Link to blacklisted domain')
 					: Action.Nothing)
 			.catch(Action.Notify));
 
 const classifyList = (urls) => {
-	if (urls.some(blacklisted.protocol)) return Action.Warn('tg: protocol');
+	if (urls.some(blacklisted.protocol)) {
+		return Action.Warn('Link using tg: protocol');
+	}
 
 	if (urls.some(domainContainedIn(blacklistedShorteners))) {
-		return Action.Warn('blacklisted url shortener');
+		return Action.Warn('Using blacklisted url shortener');
 	}
 
 	return Promise.all(urls.filter(isHttp).map(classifyAsync))
@@ -160,7 +162,7 @@ const classifyCtx = async (ctx) => {
 
 	// if one link is repeated 3 times or more
 	if (rawUrls.length - urls.length >= 2 && !await isAdmin(ctx.from)) {
-		return Action.Warn('multiple copies');
+		return Action.Warn('Multiple copies of the same link');
 	}
 
 	return classifyList(urls);
@@ -175,9 +177,8 @@ module.exports = async (ctx, next) =>
 			ctx.reply(`️ℹ️ ${errorMsg}`, { reply_to_message_id });
 			return next();
 		},
-		Warn: async (blacklist) => {
+		Warn: async (reason) => {
 			const admin = ctx.botInfo;
-			const reason = `Link - ${blacklist}`;
 			const userToWarn = ctx.from;
 
 			if (await isAdmin(userToWarn)) return next();
