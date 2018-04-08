@@ -9,13 +9,26 @@ const fetch = require('node-fetch');
 const R = require('ramda');
 
 const { isAdmin } = require('../../stores/user');
-const { telegram } = require('../../bot');
 const { managesGroup } = require('../../stores/group');
+const { telegram } = require('../../bot');
 const warn = require('../../actions/warn');
 
 
-const { warnInlineKeyboard } = require('../../config');
+const { excludeLinks = [], warnInlineKeyboard } = require('../../config');
 const reply_markup = { inline_keyboard: warnInlineKeyboard };
+
+if (excludeLinks === false || excludeLinks === '*') {
+	return module.exports = (ctx, next) => next();
+}
+
+const normalizeTme = R.replace(
+	/^(?:@|(?:https?:\/\/)?(?:t\.me|telegram\.(?:me|dog))\/)(\w+)(\/.+)?/,
+	(_match, username, rest) => /^\/\d+$/.test(rest)
+		? `https://t.me/${username.toLowerCase()}`
+		: `https://t.me/${username.toLowerCase()}${rest || ''}`
+);
+
+const customWhitelist = new Set(excludeLinks.map(normalizeTme));
 
 const tmeDomains = new Set([
 	't.me',
@@ -95,7 +108,7 @@ const whitelisted = async (url) => {
 		}
 		if (await managesGroup({ link: tmeLink.toString() })) return true;
 	}
-	// handle custom whitelist right here
+	if (customWhitelist.has(url.toString())) return true;
 	return false;
 };
 
@@ -140,7 +153,7 @@ const classifyCtx = async (ctx) => {
 		.map(obtainUrlFromText(text))
 		.map(assumeProtocol);
 
-	const urls = R.uniq(rawUrls).map(constructAbsUrl);
+	const urls = R.uniq(rawUrls).map(normalizeTme).map(constructAbsUrl);
 
 	// if one link is repeated 3 times or more
 	if (rawUrls.length - urls.length >= 2 && !await isAdmin(ctx.from)) {
