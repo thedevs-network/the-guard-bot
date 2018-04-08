@@ -93,22 +93,13 @@ const isPublic = async username => {
 	}
 };
 
-const whitelisted = async (url) => {
-	if (domainContainedIn(tmeDomains, url)) {
-		const tmeLink = new URL(url);
-		tmeLink.domain = 't.me';
-		tmeLink.protocol = 'https:';
-		const [ , username ] = R.match(/^\/(\w+)(?:\/\d*)?$/, tmeLink.pathname);
-		if (username) {
-			const { searchParams } = tmeLink;
-			if (!searchParams.has('start') && !await isPublic('@' + username)) {
-				return true;
-			}
-			tmeLink.pathname = '/' + username.toLowerCase();
-		}
-		if (await managesGroup({ link: tmeLink.toString() })) return true;
-	}
+const isWhitelisted = async (url) => {
 	if (customWhitelist.has(url.toString())) return true;
+	if (url.host === 't.me' && !url.searchParams.has('start')) {
+		const [ , username ] = R.match(/^\/(\w+)(?:\/\d*)?$/, url.pathname);
+		if (await managesGroup({ link: url.toString() })) return true;
+		if (username && !await isPublic('@' + username)) return true;
+	}
 	return false;
 };
 
@@ -122,7 +113,7 @@ const unshorten = url =>
 const classifyAsync = memoize(url =>
 	unshorten(url)
 		.then(async long =>
-			blacklisted.domain(long) && !await whitelisted(long)
+			blacklisted.domain(long) && !await isWhitelisted(long)
 				? Action.Warn('blacklisted domain')
 				: Action.Nothing)
 		.catch(Action.Notify));
