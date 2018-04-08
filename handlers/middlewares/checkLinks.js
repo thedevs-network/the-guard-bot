@@ -29,6 +29,9 @@ const bannedDomains = new Set([
 	'your-sweet-dating.com',
 ]);
 
+const blacklistedShorteners = new Set([
+	'tinyurl.com',
+]);
 
 const Action = taggedSum('Action', {
 	Nothing: [],
@@ -95,6 +98,10 @@ const classifyAsync = memoize(url =>
 
 const classifyList = (urls) => {
 	if (urls.some(blacklisted.protocol)) return Action.Warn('tg: protocol');
+
+	if (urls.some(domainContainedIn(blacklistedShorteners))) {
+		return Action.Warn('blacklisted url shortener');
+	}
 
 	return Promise.all(urls.filter(isHttp).map(classifyAsync))
 		.then(highestPriorityAction);
