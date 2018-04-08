@@ -9,7 +9,7 @@ module.exports = async (ctx, next) => {
 
 	try {
 		const link = username
-			? `https://t.me/${username}`
+			? `https://t.me/${username.toLowerCase()}`
 			: await ctx.exportChatInviteLink();
 
 		return updateGroup({ id, link, title });

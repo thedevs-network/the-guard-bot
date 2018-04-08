@@ -9,6 +9,7 @@ const fetch = require('node-fetch');
 const R = require('ramda');
 
 const { isAdmin } = require('../../stores/user');
+const { telegram } = require('../../bot');
 const { managesGroup } = require('../../stores/group');
 const warn = require('../../actions/warn');
 
@@ -70,11 +71,28 @@ const blacklisted = {
 		url.protocol === 'tg:' && url.host.toLowerCase() === 'resolve',
 };
 
+const isPublic = async username => {
+	try {
+		const chat = await telegram.getChat(username);
+		return chat.type !== 'private';
+	} catch (err) {
+		return false;
+	}
+};
+
 const whitelisted = async (url) => {
 	if (domainContainedIn(tmeDomains, url)) {
 		const tmeLink = new URL(url);
 		tmeLink.domain = 't.me';
 		tmeLink.protocol = 'https:';
+		const [ , username ] = R.match(/^\/(\w+)(?:\/\d*)?$/, tmeLink.pathname);
+		if (username) {
+			const { searchParams } = tmeLink;
+			if (!searchParams.has('start') && !await isPublic('@' + username)) {
+				return true;
+			}
+			tmeLink.pathname = '/' + username.toLowerCase();
+		}
 		if (await managesGroup({ link: tmeLink.toString() })) return true;
 	}
 	// handle custom whitelist right here
