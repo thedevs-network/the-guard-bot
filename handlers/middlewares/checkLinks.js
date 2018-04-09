@@ -99,7 +99,8 @@ const isPublic = async username => {
 
 const isWhitelisted = async (url) => {
 	if (customWhitelist.has(url.toString())) return true;
-	if (url.host === 't.me' && !url.searchParams.has('start')) {
+	if (domainContainedIn(tmeDomains, url) && !url.searchParams.has('start')) {
+		if (url.pathname === '/') return true;
 		const [ , username ] = R.match(/^\/(\w+)(?:\/\d*)?$/, url.pathname);
 		if (await managesGroup({ link: url.toString() })) return true;
 		if (username && !await isPublic('@' + username)) return true;
