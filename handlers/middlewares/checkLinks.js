@@ -18,7 +18,8 @@ const { excludeLinks = [], warnInlineKeyboard } = require('../../config');
 const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
 if (excludeLinks === false || excludeLinks === '*') {
-	return module.exports = (ctx, next) => next();
+	module.exports = (ctx, next) => next();
+	return;
 }
 
 const normalizeTme = R.replace(
@@ -29,23 +30,6 @@ const normalizeTme = R.replace(
 );
 
 const customWhitelist = new Set(excludeLinks.map(normalizeTme));
-
-const tmeDomains = new Set([
-	't.me',
-	'telegram.dog',
-	'telegram.me',
-]);
-
-const bannedDomains = new Set([
-	...tmeDomains,
-	'chat.whatsapp.com',
-	'loverdesuootnosheniya.blogspot.com',
-	'your-sweet-dating.com',
-]);
-
-const blacklistedShorteners = new Set([
-	'tinyurl.com',
-]);
 
 const Action = taggedSum('Action', {
 	Nothing: [],
@@ -83,7 +67,6 @@ const obtainUrlFromText = text => ({ length, offset, url }) =>
 
 
 const blacklisted = {
-	domain: domainContainedIn(bannedDomains),
 	protocol: url =>
 		url.protocol === 'tg:' && url.host.toLowerCase() === 'resolve',
 };
@@ -97,53 +80,68 @@ const isPublic = async username => {
 	}
 };
 
-const isWhitelisted = async (url) => {
-	if (customWhitelist.has(url.toString())) return true;
-	if (domainContainedIn(tmeDomains, url) && !url.searchParams.has('start')) {
-		if (url.pathname === '/') return true;
+const dh = {
+	blacklistedDomain: R.always(Action.Warn('Link to blacklisted domain')),
+	nothing: R.always(Action.Nothing),
+	tme: async url => {
+		if (url.pathname === '/') return Action.Nothing;
+		if (url.searchParams.has('start')) return Action.Warn('Bot reflink');
+		if (await managesGroup({ link: url.toString() })) return Action.Nothing;
 		const [ , username ] = R.match(/^\/(\w+)(?:\/\d*)?$/, url.pathname);
-		if (await managesGroup({ link: url.toString() })) return true;
-		if (username && !await isPublic('@' + username)) return true;
-	}
-	return false;
+		if (username && !await isPublic('@' + username)) return Action.Nothing;
+		return Action.Warn('Link to Telegram group or channel');
+	},
 };
+
+const domainHandlers = new Map([
+	[ 'chat.whatsapp.com', dh.blacklistedDomain ],
+	[ 'loverdesuootnosheniya.blogspot.com', dh.blacklistedDomain ],
+	[ 't.me', dh.tme ],
+	[ 'telegram.dog', dh.tme ],
+	[ 'telegram.me', dh.tme ],
+	[ 'tinyurl.com', dh.blacklistedDomain ],
+	[ 'your-sweet-dating.com', dh.blacklistedDomain ],
+]);
+
+const isWhitelisted = (url) => customWhitelist.has(url.toString());
 
 const unshorten = url =>
 	fetch(url, { redirect: 'follow' }).then(res =>
 		res.ok
-			? new URL(res.url)
+			? new URL(normalizeTme(res.url))
 			: Promise.reject(new Error(`Request to ${url} failed, ` +
 				`reason: ${res.status} ${res.statusText}`)));
 
-const classifyAsync = memoize(async url =>
-	domainContainedIn(tmeDomains, url)
-		? await isWhitelisted(url)
-			? Action.Nothing
-			: url.searchParams.has('start')
-				? Action.Warn('Bot reflink')
-				: Action.Warn('Link to Telegram group or channel')
-		: unshorten(url)
-			.then(async long =>
-				blacklisted.domain(long) && !await isWhitelisted(long)
-					? Action.Warn('Link to blacklisted domain')
-					: Action.Nothing)
-			.catch(Action.Notify));
-
-const classifyList = (urls) => {
-	if (urls.some(blacklisted.protocol)) {
-		return Action.Warn('Link using tg: protocol');
-	}
-
-	if (urls.some(domainContainedIn(blacklistedShorteners))) {
-		return Action.Warn('Using blacklisted url shortener');
-	}
-
-	return Promise.all(urls.filter(isHttp).map(classifyAsync))
-		.then(highestPriorityAction);
+const checkLinkByDomain = url => {
+	const domain = url.host.toLowerCase();
+	const handler = domainHandlers.get(domain) || dh.nothing;
+	return handler(url);
 };
 
+const classifyAsync = memoize(async url => {
+	if (isWhitelisted(url)) return Action.Nothing;
 
-const classifyCtx = async (ctx) => {
+	if (blacklisted.protocol(url)) return Action.Warn('Link using tg protocol');
+
+	if (domainContainedIn(domainHandlers, url)) return checkLinkByDomain(url);
+
+	if (!isHttp(url)) return Action.Nothing;
+
+	try {
+		const longUrl = await unshorten(url);
+		if (isWhitelisted(longUrl)) return Action.Nothing;
+		return checkLinkByDomain(longUrl);
+	} catch (e) {
+		return Action.Notify(e);
+	}
+});
+
+const classifyList = (urls) =>
+	Promise.all(urls.map(classifyAsync))
+		.then(highestPriorityAction);
+
+
+const classifyCtx = (ctx) => {
 	if (ctx.chat.type === 'private') return Action.Nothing;
 
 	const message = ctx.message || ctx.editedMessage;
@@ -162,7 +160,7 @@ const classifyCtx = async (ctx) => {
 		.map(constructAbsUrl);
 
 	// if one link is repeated 3 times or more
-	if (rawUrls.length - urls.length >= 2 && !await isAdmin(ctx.from)) {
+	if (rawUrls.length - urls.length >= 2) {
 		return Action.Warn('Multiple copies of the same link');
 	}
 
