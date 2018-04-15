@@ -14,7 +14,7 @@ const handler = async (ctx, next) => {
 		groupName = ctx.chat.title;
 	}
 
-	const $regex = XRegExp.tag('i')`${groupName}`;
+	const $regex = XRegExp.tag('i')`^${groupName}$`;
 
 	const group = await managesGroup({ title: { $regex } });
 	const { link } = group || {};
