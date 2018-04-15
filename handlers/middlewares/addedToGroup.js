@@ -19,7 +19,7 @@ const addedToGroupHandler = async (ctx, next) => {
 	if (wasAdded && isMaster) {
 		await admin(ctx.from);
 		const link = ctx.chat.username
-			? `t.me/${ctx.chat.username}`
+			? `https://t.me/${ctx.chat.username.toLowerCase()}`
 			: await ctx.exportChatInviteLink().catch(() => '');
 		if (!link) {
 			// eslint-disable-next-line function-paren-newline

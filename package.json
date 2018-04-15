@@ -28,9 +28,11 @@
   },
   "homepage": "https://github.com/TheDevs-Network/the-guard-bot/",
   "dependencies": {
+    "daggy": "^1.2.0",
     "dedent-js": "^1.0.1",
     "millisecond": "^0.1.2",
     "nedb-promise": "^2.0.1",
+    "node-fetch": "^2.1.2",
     "ramda": "^0.25.0",
     "telegraf": "^3.17.8",
     "xregexp": "^4.0.0"
