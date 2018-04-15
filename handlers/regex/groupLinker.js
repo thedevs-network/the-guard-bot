@@ -6,8 +6,8 @@ const XRegExp = require('xregexp');
 const { managesGroup } = require.main.require('./stores/group');
 
 const regex = XRegExp.tag('ix')`^
-	(?:ple?a?[sz]e?\s)?
-	(?:Can\s(?:(?:some|any)(?:one|body)\s))?
+	(?:ple?a?[sz]e?,?\s)?
+	(?:(?:Can|Could)\s(?:you\s|(?:some|any)(?:one|body)\s))?
 	(?:(?:
 		Any
 		|Link\sto
@@ -20,7 +20,7 @@ const regex = XRegExp.tag('ix')`^
 	(?<groupName>.+?)
 	\sgro?u?p(?:\slink)?
 	(?:\sexists?)?
-	(?:\sple?a?[sz]e?)?
+	(?:,?\sple?a?[sz]e?)?
 	\s*\?*
 $`;
 
