@@ -5,7 +5,24 @@ const XRegExp = require('xregexp');
 
 const { managesGroup } = require.main.require('./stores/group');
 
-const regex = /^(?:Link to\s+)?(.+) group(?: link)?\s*\?*$/i;
+const regex = XRegExp.tag('ix')`^
+	(?:ple?a?[sz]e?\s)?
+	(?:Can\s(?:(?:some|any)(?:one|body)\s))?
+	(?:(?:
+		Any
+		|Link\sto
+		|Go\s*to
+		|Ask\sin
+		|Move\sthis\sto
+		|(?:Give|tell|dm|pm|send|share)(?:\sme)?
+		|(?:Do\swe\shave|Is\sthere)(?:\san?y?)?
+	)\s+)?
+	(?<groupName>.+?)
+	\sgro?u?p(?:\slink)?
+	(?:\sexists?)?
+	(?:\sple?a?[sz]e?)?
+	\s*\?*
+$`;
 
 const handler = async (ctx, next) => {
 	let [ , groupName ] = ctx.match;
