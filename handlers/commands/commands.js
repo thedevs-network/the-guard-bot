@@ -3,6 +3,8 @@
 // DB
 const { listCommands } = require('../../stores/command');
 
+const { scheduleDeletion } = require('../../utils/tg');
+
 const commandReference = `\
 <b>Master commands</b>:
 <code>/admin</code> - Makes the user admin.
@@ -28,9 +30,7 @@ const commandReference = `\
 <code>/report</code> - Reports the replied-to message to admins.
 `;
 
-const commandReferenceHandler = async ({ chat, replyWithHTML }) => {
-	if (chat.type !== 'private') return null;
-
+const commandReferenceHandler = async ({ replyWithHTML }) => {
 	const customCommands = await listCommands();
 	const customCommandsText = customCommands.length
 		? '\n<b>Custom commands:</b>\n' +
@@ -42,7 +42,8 @@ const commandReferenceHandler = async ({ chat, replyWithHTML }) => {
 				`<code>!${command.name}</code>`)
 			.join('\n')
 		: '';
-	return replyWithHTML(commandReference + customCommandsText);
+	return replyWithHTML(commandReference + customCommandsText)
+		.then(scheduleDeletion);
 };
 
 module.exports = commandReferenceHandler;
