@@ -10,7 +10,10 @@ const ban = require('./ban');
 
 
 module.exports = async ({ admin, userToWarn, reason }) => {
-	const { warns } = await warn(userToWarn, reason);
+	const by_id = admin.id;
+	const date = new Date();
+
+	const { warns } = await warn(userToWarn, { by_id, date, reason });
 
 	const isLastWarn = ', <b>last warning!</b>'
 		.repeat(warns.length === numberOfWarnsToBan - 1);

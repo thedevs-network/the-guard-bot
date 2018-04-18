@@ -34,7 +34,7 @@ const getWarnsHandler = async ({ message, reply, state }) => {
 		: '';
 	const userWarns = warns.length
 		? '\n<b>⚠️ Warns:</b>\n' + warns
-			.map((warn, i) => `${i + 1}. ${warn}`)
+			.map((warn, i) => `${i + 1}. ${warn.reason || warn}`)
 			.join('\n') + '\n'
 		: '';
 
@@ -50,4 +50,3 @@ const getWarnsHandler = async ({ message, reply, state }) => {
 };
 
 module.exports = getWarnsHandler;
-

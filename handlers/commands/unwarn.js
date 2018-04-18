@@ -1,5 +1,7 @@
 'use strict';
 
+const { last } = require('ramda');
+
 // Utils
 const { link, scheduleDeletion } = require('../../utils/tg');
 
@@ -63,9 +65,11 @@ const unwarnHandler = async ({ message, reply, state, telegram }) => {
 		// (it's an expected, non-critical failure)
 	}
 
+	const lastWarn = last(allWarns);
+
 	return reply(
 		`❎ ${link(user)} <b>pardoned</b> ${link(userToUnwarn)} ` +
-		`<b>for:</b>\n\n${allWarns[allWarns.length - 1]}` +
+		`<b>for:</b>\n\n${lastWarn.reason || lastWarn}` +
 		` (${allWarns.length - 1}/${numberOfWarnsToBan})`,
 		replyOptions
 	);
