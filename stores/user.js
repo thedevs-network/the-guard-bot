@@ -103,13 +103,21 @@ const unadmin = ({ id }) =>
 const isAdmin = ({ id }) =>
 	User.findOne({ id, status: 'admin' });
 
-const ban = ({ id }, ban_reason) =>
-	User.update({ id }, { $set: { ban_reason, status: 'banned' } });
+const ban = ({ id }, ban_details) => {
+	const ban_reason = ban_details.reason;
+	return User.update(
+		{ id },
+		{ $set: { ban_details, ban_reason, status: 'banned' } }
+	);
+};
 
 const unban = ({ id }) =>
 	User.update(
 		{ id },
-		{ $set: { ban_reason: null, status: 'member', warns: [] } }
+		{
+			$set: { status: 'member', warns: [] },
+			$unset: { ban_details: true, ban_reason: true },
+		}
 	);
 
 const isBanned = ({ id }) =>
@@ -126,7 +134,11 @@ const warn = ({ id }, reason) =>
 const unwarn = ({ id }) =>
 	User.update(
 		{ id },
-		{ $pop: { warns: 1 }, $set: { ban_reason: null, status: 'member' } }
+		{
+			$pop: { warns: 1 },
+			$set: { status: 'member' },
+			$unset: { ban_details: true, ban_reason: true },
+		}
 	);
 
 const nowarns = unban;
