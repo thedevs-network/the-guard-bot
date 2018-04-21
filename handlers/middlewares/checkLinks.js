@@ -13,8 +13,11 @@ const { managesGroup } = require('../../stores/group');
 const { telegram } = require('../../bot');
 const warn = require('../../actions/warn');
 
-
-const { excludeLinks = [], warnInlineKeyboard } = require('../../config');
+const {
+	excludeLinks = [],
+	notifyBrokenLink,
+	warnInlineKeyboard,
+} = require('../../config');
 const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
 if (excludeLinks === false || excludeLinks === '*') {
@@ -105,12 +108,18 @@ const domainHandlers = new Map([
 
 const isWhitelisted = (url) => customWhitelist.has(url.toString());
 
+class CodeError extends Error {
+	constructor(code) {
+		super(code);
+		this.code = code;
+	}
+}
+
 const unshorten = url =>
 	fetch(url, { redirect: 'follow' }).then(res =>
 		res.ok
 			? new URL(normalizeTme(res.url))
-			: Promise.reject(new Error(`Request to ${url} failed, ` +
-				`reason: ${res.status} ${res.statusText}`)));
+			: Promise.reject(new CodeError(`${res.status} ${res.statusText}`)));
 
 const checkLinkByDomain = url => {
 	const domain = url.host.toLowerCase();
@@ -132,6 +141,7 @@ const classifyAsync = memoize(async url => {
 		if (isWhitelisted(longUrl)) return Action.Nothing;
 		return checkLinkByDomain(longUrl);
 	} catch (e) {
+		e.url = url;
 		return Action.Notify(e);
 	}
 });
@@ -170,10 +180,15 @@ const classifyCtx = (ctx) => {
 module.exports = async (ctx, next) =>
 	(await classifyCtx(ctx)).cata({
 		Nothing: next,
-		Notify(errorMsg) {
+		Notify(error) {
 			const message = ctx.message || ctx.editedMessage;
 			const reply_to_message_id = message.message_id;
-			ctx.reply(`️ℹ️ ${errorMsg}`, { reply_to_message_id });
+			if (notifyBrokenLink) {
+				ctx.reply(
+					`️ℹ️ Link ${error.url} seems to be broken (${error.code}).`,
+					{ reply_to_message_id }
+				);
+			}
 			return next();
 		},
 		Warn: async (reason) => {
