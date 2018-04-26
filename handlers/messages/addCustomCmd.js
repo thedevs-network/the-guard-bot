@@ -1,6 +1,7 @@
 'use strict';
 
 const { Markup } = require('telegraf');
+const { last } = require('ramda');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
@@ -12,8 +13,27 @@ const {
 	updateCommand
 } = require('../../stores/command');
 
-const addCustomCmdHandler = async ({ chat, message, reply, from }, next) => {
-	const { text, photo, document, video, audio } = message;
+const createNewCommand = ctx => {
+	const { message } = ctx;
+	const { caption, text, photo } = message;
+	const [ type ] = ctx.updateSubTypes;
+
+	if (text) {
+		return { content: text, type: 'text' };
+	}
+	if (photo) {
+		return {
+			caption,
+			content: last(photo).file_id,
+			type: 'photo',
+		};
+	}
+	return { caption, content: message[type].file_id, type };
+};
+
+const addCustomCmdHandler = async (ctx, next) => {
+	const { chat, message, reply, from } = ctx;
+	const { text } = message;
 	const { id } = from;
 	const isAdmin = from.status === 'admin';
 
@@ -51,28 +71,8 @@ const addCustomCmdHandler = async ({ chat, message, reply, from }, next) => {
 	}
 
 	if (command.state === 'content') {
-		let newCommand;
-		if (text) {
-			newCommand = { content: text, type: 'text' };
-		}
-		if (photo) {
-			newCommand = {
-				content: photo[photo.length - 1].file_id,
-				type: 'photo'
-			};
-		}
-		if (document) {
-			newCommand = { content: document.file_id, type: 'document' };
-		}
-		if (video) {
-			newCommand = { content: video.file_id, type: 'video' };
-		}
-		if (audio) {
-			newCommand = { content: audio.file_id, type: 'audio' };
-		}
-		if (message.caption) {
-			newCommand.caption = message.caption;
-		}
+		const newCommand = createNewCommand(ctx);
+
 		await updateCommand({ ...newCommand, id, isActive: true, state: null });
 		return reply(
 			'✅ <b>New command has been created successfully.</b>\n\n' +
