@@ -169,11 +169,6 @@ const classifyCtx = (ctx) => {
 		.map(assumeProtocol)
 		.map(constructAbsUrl);
 
-	// if one link is repeated 3 times or more
-	if (rawUrls.length - urls.length >= 2) {
-		return Action.Warn('Multiple copies of the same link');
-	}
-
 	return classifyList(urls);
 };
 
