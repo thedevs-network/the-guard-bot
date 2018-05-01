@@ -150,6 +150,7 @@ const classifyList = (urls) =>
 	Promise.all(urls.map(classifyAsync))
 		.then(highestPriorityAction);
 
+const matchTmeLinks = R.match(/\b(?:t\.me|telegram\.(?:me|dog))\/[\w-/]+/gi);
 
 const classifyCtx = (ctx) => {
 	if (ctx.chat.type === 'private') return Action.Nothing;
@@ -158,11 +159,12 @@ const classifyCtx = (ctx) => {
 
 	const entities = message.entities || message.caption_entities || [];
 
-	const text = message.text || message.caption;
+	const text = message.text || message.caption || '';
 
 	const rawUrls = entities
 		.filter(isLink)
-		.map(obtainUrlFromText(text));
+		.map(obtainUrlFromText(text))
+		.concat(matchTmeLinks(text));
 
 	const urls = R.uniq(rawUrls)
 		.map(normalizeTme)
