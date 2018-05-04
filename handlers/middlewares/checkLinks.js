@@ -11,14 +11,11 @@ const R = require('ramda');
 const { isAdmin } = require('../../stores/user');
 const { managesGroup } = require('../../stores/group');
 const { telegram } = require('../../bot');
-const warn = require('../../actions/warn');
 
 const {
 	excludeLinks = [],
 	notifyBrokenLink,
-	warnInlineKeyboard,
 } = require('../../config');
-const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
 if (excludeLinks === false || excludeLinks === '*') {
 	module.exports = (ctx, next) => next();
@@ -195,7 +192,6 @@ module.exports = async (ctx, next) =>
 			if (await isAdmin(userToWarn)) return next();
 
 			ctx.deleteMessage();
-			const warnMessage = await warn({ admin, reason, userToWarn });
-			return ctx.replyWithHTML(warnMessage, { reply_markup });
+			return ctx.warn({ admin, reason, userToWarn });
 		},
 	});

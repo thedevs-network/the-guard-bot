@@ -9,4 +9,6 @@ if (process.env.NODE_ENV === 'development') {
 	bot.polling.offset = -1;
 }
 
+Object.assign(bot.context, require('./context'));
+
 module.exports = bot;

@@ -1,21 +1,13 @@
 'use strict';
 
 // Utils
-const { link, scheduleDeletion } = require('../../utils/tg');
-const { logError } = require('../../utils/log');
-
-// Config
-const {
-	warnInlineKeyboard,
-} = require('../../config');
-const reply_markup = { inline_keyboard: warnInlineKeyboard };
+const { scheduleDeletion } = require('../../utils/tg');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
 
 // DB
 const { isAdmin } = require('../../stores/user');
-const warn = require('../../actions/warn');
 
 const warnHandler = async (ctx) => {
 	const { message, reply, me } = ctx;
@@ -59,9 +51,7 @@ const warnHandler = async (ctx) => {
 		ctx.deleteMessage(message.reply_to_message.message_id);
 	}
 
-	const warnMessage = await warn({ admin: ctx.from, reason, userToWarn });
-
-	return ctx.replyWithHTML(warnMessage, { reply_markup });
+	return ctx.warn({ admin: ctx.from, reason, userToWarn });
 };
 
 module.exports = warnHandler;

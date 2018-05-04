@@ -6,16 +6,12 @@ const { logError } = require('../../utils/log');
 // Config
 const {
 	excludeLinks,
-	warnInlineKeyboard,
 } = require('../../config');
-const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
 
 // DB
 const { getUser } = require('../../stores/user');
 const { listGroups } = require('../../stores/group');
-
-const warn = require('../../actions/warn');
 
 const removeLinks = async (ctx, next) => {
 	const { message, state, update } = ctx;
@@ -125,9 +121,7 @@ const removeLinks = async (ctx, next) => {
 		const userToWarn = ctx.from;
 		ctx.deleteMessage(updateData.message_id);
 
-		const warnMessage = await warn({ admin, reason, userToWarn });
-
-		return ctx.replyWithHTML(warnMessage, { reply_markup });
+		return ctx.warn({ admin, reason, userToWarn });
 	}
 	return next();
 };
