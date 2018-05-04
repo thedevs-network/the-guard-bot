@@ -1,7 +1,6 @@
 'use strict';
 
-// Config
-const { master } = require('../../config');
+const { isMaster } = require('../../utils/config');
 
 // DB
 const { updateUser } = require('../../stores/user');
@@ -17,11 +16,7 @@ const updateUserDataHandler = async (ctx, next) => {
 
 	ctx.state = {
 		isAdmin: user && user.status === 'admin',
-		isMaster: user &&
-		(user.id === Number(master) ||
-			user.username &&
-			user.username.toLowerCase() ===
-			String(master).replace('@', '').toLowerCase()),
+		isMaster: isMaster(ctx.from),
 		user,
 	};
 

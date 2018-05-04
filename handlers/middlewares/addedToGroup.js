@@ -5,18 +5,14 @@ const { replyOptions } = require('../../bot/options');
 
 const { admin } = require('../../stores/user');
 const { addGroup } = require('../../stores/group');
-const { master } = require('../../config');
+const { isMaster } = require('../../utils/config');
 
 const addedToGroupHandler = async (ctx, next) => {
 	const msg = ctx.message;
-	const isMaster = ctx.from.id === Number(master) ||
-		ctx.from.username &&
-		ctx.from.username.toLowerCase() ===
-		String(master).replace('@', '').toLowerCase();
 
 	const wasAdded = msg.new_chat_members.some(user =>
 		user.username === ctx.me);
-	if (wasAdded && isMaster) {
+	if (wasAdded && isMaster(ctx.from)) {
 		await admin(ctx.from);
 		const link = ctx.chat.username
 			? `https://t.me/${ctx.chat.username.toLowerCase()}`
