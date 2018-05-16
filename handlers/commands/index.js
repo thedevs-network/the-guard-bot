@@ -50,7 +50,6 @@ composer.command('user', deleteMessage, userHandler);
 composer.command('ban', deleteMessage, banHandler);
 composer.command('unban', deleteMessage, unbanHandler);
 composer.command('report', deleteMessage, reportHandler);
-composer.hears(/^@admins?\s?/i, deleteMessage, reportHandler);
 composer.command('staff', deleteMessage, staffHandler);
 composer.command('link', deleteMessage, linkHandler);
 composer.command('groups', deleteMessage, groupsHandler);
