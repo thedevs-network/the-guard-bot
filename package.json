@@ -35,6 +35,7 @@
     "nedb-promise": "^2.0.1",
     "node-fetch": "^2.1.2",
     "ramda": "^0.25.0",
+    "require-directory": "^2.1.1",
     "telegraf": "^3.17.8",
     "xregexp": "^4.0.0"
   },
