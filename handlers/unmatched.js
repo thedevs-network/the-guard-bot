@@ -1,9 +1,12 @@
 'use strict';
 
-const R = require('ramda');
-const Tf = require('telegraf');
+const unmatchedHandler = ctx => {
+	ctx.state[unmatchedHandler.unmatched] = true;
+	if (ctx.chat && ctx.chat.type === 'private') {
+		ctx.reply('Sorry, I couldn\'t understand that, do you need /help?');
+	}
+};
 
-module.exports = Tf.optional(
-	R.pathEq([ 'chat', 'type' ], 'private'),
-	Tf.reply('Sorry, I couldn\'t understand that, do you need /help?')
-);
+unmatchedHandler.unmatched = Symbol('unmatchedHandler.unmatched');
+
+module.exports = unmatchedHandler;

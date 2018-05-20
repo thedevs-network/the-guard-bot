@@ -1,23 +1,31 @@
 'use strict';
 
 const { deleteCommands } = require('../../config');
+const { isCommand } = require('../../utils/tg.js');
+const { unmatched } = require('../unmatched');
+
+const shouldDelete = {
+	all: () => true,
+	none: () => false,
+	own: ctx => !ctx.state[unmatched],
+};
+
+if (!shouldDelete.hasOwnProperty(deleteCommands)) {
+	throw new Error('Invalid value for `deleteCommands` in config file: ' +
+		deleteCommands);
+}
 
 const noop = Function.prototype;
 
-const removeCommandsHandler = ({ chat, message, telegram }, next) => {
+const removeCommandsHandler = async (ctx, next) => {
+	await next();
 	if (
-		deleteCommands === 'all' &&
-		message &&
-		message.text &&
-		message.entities &&
-		message.entities[0] &&
-		message.entities[0].offset === 0 &&
-		message.entities[0].type === 'bot_command' &&
-		chat.type !== 'private'
+		shouldDelete[deleteCommands](ctx) &&
+		isCommand(ctx.message) &&
+		ctx.chat.type !== 'private'
 	) {
-		telegram.deleteMessage(chat.id, message.message_id).catch(noop);
+		ctx.deleteMessage().catch(noop);
 	}
-	return next();
 };
 
 module.exports = removeCommandsHandler;

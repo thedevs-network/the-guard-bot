@@ -28,38 +28,24 @@ const addCommandHandler = require('./addCommand');
 const removeCommandHandler = require('./removeCommand');
 const helpHandler = require('./help');
 
-const { deleteCommands = 'own' } = require('../../config');
-
-if (![ 'all', 'own', 'none' ].includes(deleteCommands)) {
-	throw new Error('Invalid value for `deleteCommands` in `config.json`: ' +
-		deleteCommands);
-}
-
-const deleteMessage = ({ chat, message, telegram }, next) => {
-	if (deleteCommands === 'own' && chat.type !== 'private') {
-		telegram.deleteMessage(chat.id, message.message_id);
-	}
-	return next();
-};
-
-router.on('admin', deleteMessage, adminHandler);
-router.on('unadmin', deleteMessage, unAdminHandler);
-router.on('leave', deleteMessage, leaveCommandHandler);
-router.on('hidegroup', deleteMessage, hideGroupHandler);
-router.on('showgroup', deleteMessage, showGroupHandler);
-router.on('warn', deleteMessage, warnHandler);
-router.on('unwarn', deleteMessage, unwarnHandler);
-router.on('nowarns', deleteMessage, nowarnsHandler);
-router.on('user', deleteMessage, userHandler);
-router.on('ban', deleteMessage, banHandler);
-router.on('unban', deleteMessage, unbanHandler);
-router.on('report', deleteMessage, reportHandler);
-router.on('staff', deleteMessage, staffHandler);
-router.on('link', deleteMessage, linkHandler);
-router.on('groups', deleteMessage, groupsHandler);
-router.on('commands', deleteMessage, commandReferenceHandler);
-router.on('addcommand', deleteMessage, addCommandHandler);
-router.on('replacecommand', deleteMessage, addCommandHandler);
-router.on('removecommand', deleteMessage, removeCommandHandler);
-router.on('start', deleteMessage, helpHandler);
-router.on('help', deleteMessage, helpHandler);
+router.on('admin', adminHandler);
+router.on('unadmin', unAdminHandler);
+router.on('leave', leaveCommandHandler);
+router.on('hidegroup', hideGroupHandler);
+router.on('showgroup', showGroupHandler);
+router.on('warn', warnHandler);
+router.on('unwarn', unwarnHandler);
+router.on('nowarns', nowarnsHandler);
+router.on('user', userHandler);
+router.on('ban', banHandler);
+router.on('unban', unbanHandler);
+router.on('report', reportHandler);
+router.on('staff', staffHandler);
+router.on('link', linkHandler);
+router.on('groups', groupsHandler);
+router.on('commands', commandReferenceHandler);
+router.on('addcommand', addCommandHandler);
+router.on('replacecommand', addCommandHandler);
+router.on('removecommand', removeCommandHandler);
+router.on('start', helpHandler);
+router.on('help', helpHandler);
