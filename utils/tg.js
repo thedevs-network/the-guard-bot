@@ -2,6 +2,15 @@
 
 const { telegram } = require('../bot');
 
+const R = require('ramda');
+
+const isCommand = R.pipe(
+	R.defaultTo({}),
+	R.path([ 'entities', 0 ]),
+	R.defaultTo({}),
+	R.whereEq({ offset: 0, type: 'bot_command' }),
+);
+
 const escapeHtml = s => s
 	.replace(/</g, '&lt;');
 
@@ -36,6 +45,7 @@ const scheduleDeletion = ({ chat, message_id }) => {
 module.exports = {
 	deleteAfter,
 	escapeHtml,
+	isCommand,
 	link,
 	quietLink,
 	scheduleDeletion,

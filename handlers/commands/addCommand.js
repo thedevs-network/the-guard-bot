@@ -7,11 +7,9 @@ const { addCommand, getCommand } = require('../../stores/command');
 const { Markup } = require('telegraf');
 const { replyOptions } = require('../../bot/options');
 
-const preserved = [ 'admin', 'unadmin', 'leave', 'warn', 'unwarn', 'nowarns',
-	'getwarns', 'ban', 'unban', 'report', 'staff', 'link', 'groups', 'commands',
-	'addcommand', 'removecommand' ];
+const preserved = require('../commands').handlers;
 
-const addCommandHandler = async (ctx, next) => {
+const addCommandHandler = async (ctx) => {
 	const { chat, message, reply } = ctx;
 	const { id } = ctx.from;
 	if (chat.type !== 'private') return null;
@@ -24,7 +22,7 @@ const addCommandHandler = async (ctx, next) => {
 	}
 
 	const [ slashCommand, commandName ] = message.text.split(' ');
-	const isValidName = commandName && commandName.match(/^(?:[!])?(\w+)$/);
+	const isValidName = /^!?(\w+)$/.exec(commandName);
 	if (!isValidName) {
 		return reply(
 			'<b>Send a valid command.</b>\n\nExample:\n' +
@@ -33,10 +31,9 @@ const addCommandHandler = async (ctx, next) => {
 		);
 	}
 	const newCommand = isValidName[1].toLowerCase();
-	if (preserved.includes(newCommand)) {
-		reply('❗️ Sorry you can\'t use this name, it\'s preserved.\n\n' +
+	if (preserved.has(newCommand)) {
+		return reply('❗️ Sorry you can\'t use this name, it\'s preserved.\n\n' +
 			'Try another one.');
-		return next();
 	}
 
 	const replaceCmd = slashCommand.toLowerCase() === '/replacecommand';

@@ -1,8 +1,12 @@
 'use strict';
 
-const { Composer } = require('telegraf');
+const { Router } = require('telegraf');
 
-const composer = new Composer();
+const routingFn = require('./routingFn');
+
+const router = new Router(routingFn);
+
+module.exports = router;
 
 const adminHandler = require('./admin');
 const unAdminHandler = require('./unadmin');
@@ -38,28 +42,24 @@ const deleteMessage = ({ chat, message, telegram }, next) => {
 	return next();
 };
 
-composer.command('admin', deleteMessage, adminHandler);
-composer.command('unadmin', deleteMessage, unAdminHandler);
-composer.command('leave', deleteMessage, leaveCommandHandler);
-composer.command('hidegroup', deleteMessage, hideGroupHandler);
-composer.command('showgroup', deleteMessage, showGroupHandler);
-composer.command('warn', deleteMessage, warnHandler);
-composer.command('unwarn', deleteMessage, unwarnHandler);
-composer.command('nowarns', deleteMessage, nowarnsHandler);
-composer.command('user', deleteMessage, userHandler);
-composer.command('ban', deleteMessage, banHandler);
-composer.command('unban', deleteMessage, unbanHandler);
-composer.command('report', deleteMessage, reportHandler);
-composer.command('staff', deleteMessage, staffHandler);
-composer.command('link', deleteMessage, linkHandler);
-composer.command('groups', deleteMessage, groupsHandler);
-composer.command('commands', deleteMessage, commandReferenceHandler);
-composer.command(
-	[ 'addcommand', 'replaceCommand' ],
-	deleteMessage,
-	addCommandHandler
-);
-composer.command('removecommand', deleteMessage, removeCommandHandler);
-composer.command([ 'start', 'help' ], deleteMessage, helpHandler);
-
-module.exports = composer;
+router.on('admin', deleteMessage, adminHandler);
+router.on('unadmin', deleteMessage, unAdminHandler);
+router.on('leave', deleteMessage, leaveCommandHandler);
+router.on('hidegroup', deleteMessage, hideGroupHandler);
+router.on('showgroup', deleteMessage, showGroupHandler);
+router.on('warn', deleteMessage, warnHandler);
+router.on('unwarn', deleteMessage, unwarnHandler);
+router.on('nowarns', deleteMessage, nowarnsHandler);
+router.on('user', deleteMessage, userHandler);
+router.on('ban', deleteMessage, banHandler);
+router.on('unban', deleteMessage, unbanHandler);
+router.on('report', deleteMessage, reportHandler);
+router.on('staff', deleteMessage, staffHandler);
+router.on('link', deleteMessage, linkHandler);
+router.on('groups', deleteMessage, groupsHandler);
+router.on('commands', deleteMessage, commandReferenceHandler);
+router.on('addcommand', deleteMessage, addCommandHandler);
+router.on('replacecommand', deleteMessage, addCommandHandler);
+router.on('removecommand', deleteMessage, removeCommandHandler);
+router.on('start', deleteMessage, helpHandler);
+router.on('help', deleteMessage, helpHandler);
