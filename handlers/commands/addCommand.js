@@ -21,7 +21,7 @@ const addCommandHandler = async (ctx) => {
 		);
 	}
 
-	const [ slashCommand, commandName ] = message.text.split(' ');
+	const [ slashCommand, commandName = '' ] = message.text.split(' ');
 	const isValidName = /^!?(\w+)$/.exec(commandName);
 	if (!isValidName) {
 		return reply(
