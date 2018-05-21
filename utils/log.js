@@ -1,15 +1,15 @@
-'use strict';
+'use strict'
 
 /* eslint-disable no-console */
 
-const { inspect } = require('util');
+const { inspect } = require('util')
 
 /**
  * @param {Error} err
  * Logs errors to console
  * @returns {undefined}
  */
-const logError = err => console.error(err);
+const logError = err => console.error(err)
 
 /**
  * @param {Object} value
@@ -17,9 +17,9 @@ const logError = err => console.error(err);
  * @returns {undefined}
  */
 const print = value =>
-	console.log(inspect(value, { colors: true, depth: null }));
+  console.log(inspect(value, { colors: true, depth: null }))
 
 module.exports = {
-	logError,
-	print
-};
+  logError,
+  print
+}

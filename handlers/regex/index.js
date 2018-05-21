@@ -1,11 +1,11 @@
-'use strict';
+'use strict'
 
-const { compose, hears } = require('telegraf');
+const { compose, hears } = require('telegraf')
 
 /* eslint-disable global-require */
 
 module.exports = compose([
-	hears(/^(?:!report|[@!]admins?)\b/i, require('../commands/report')),
-	require('./runCustomCmd'),
-	require('./groupLinker'),
-]);
+  hears(/^(?:!report|[@!]admins?)\b/i, require('../commands/report')),
+  require('./runCustomCmd'),
+  require('./groupLinker')
+])

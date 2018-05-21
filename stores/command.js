@@ -1,37 +1,37 @@
-'use strict';
+'use strict'
 
-const Datastore = require('nedb-promise');
+const Datastore = require('nedb-promise')
 
 const Command = new Datastore({
-	autoload: true,
-	filename: 'data/Command.db',
-});
+  autoload: true,
+  filename: 'data/Command.db'
+})
 
 Command.ensureIndex({
-	fieldName: 'name',
-	unique: true,
-});
+  fieldName: 'name',
+  unique: true
+})
 
 const addCommand = command =>
-	Command.update(
-		{ name: command.name },
-		Object.assign({}, command, { isActive: false }),
-		{ upsert: true }
-	);
+  Command.update(
+    { name: command.name },
+    Object.assign({}, command, { isActive: false }),
+    { upsert: true }
+  )
 
 const updateCommand = (data) =>
-	Command.update({ id: data.id, isActive: false }, { $set: data });
+  Command.update({ id: data.id, isActive: false }, { $set: data })
 
-const removeCommand = command => Command.remove(command);
+const removeCommand = command => Command.remove(command)
 
-const getCommand = (data) => Command.findOne(data);
+const getCommand = (data) => Command.findOne(data)
 
-const listCommands = () => Command.find({ isActive: true });
+const listCommands = () => Command.find({ isActive: true })
 
 module.exports = {
-	addCommand,
-	getCommand,
-	listCommands,
-	removeCommand,
-	updateCommand,
-};
+  addCommand,
+  getCommand,
+  listCommands,
+  removeCommand,
+  updateCommand
+}

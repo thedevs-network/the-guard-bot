@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 // DB
-const { listCommands } = require('../../stores/command');
+const { listCommands } = require('../../stores/command')
 
-const { scheduleDeletion } = require('../../utils/tg');
+const { scheduleDeletion } = require('../../utils/tg')
 
 const commandReference = `\
 <b>Master commands</b>:
@@ -28,22 +28,22 @@ const commandReference = `\
 <code>/link</code> - Show the current group's link.
 <code>/groups</code> - Show a list of groups which the bot is admin in.
 <code>/report</code> - Reports the replied-to message to admins.
-`;
+`
 
 const commandReferenceHandler = async ({ replyWithHTML }) => {
-	const customCommands = await listCommands();
-	const customCommandsText = customCommands.length
-		? '\n<b>Custom commands:</b>\n' +
-		customCommands
-			.filter(command => command.isActive)
-			.sort((a, b) => a.role.toLowerCase() < b.role.toLowerCase())
-			.map(command =>
-				`[${command.role.toLowerCase()}] ` +
-				`<code>!${command.name}</code>`)
-			.join('\n')
-		: '';
-	return replyWithHTML(commandReference + customCommandsText)
-		.then(scheduleDeletion);
-};
+  const customCommands = await listCommands()
+  const customCommandsText = customCommands.length
+    ? '\n<b>Custom commands:</b>\n' +
+    customCommands
+      .filter(command => command.isActive)
+      .sort((a, b) => a.role.toLowerCase() < b.role.toLowerCase())
+      .map(command =>
+        `[${command.role.toLowerCase()}] ` +
+        `<code>!${command.name}</code>`)
+      .join('\n')
+    : ''
+  return replyWithHTML(commandReference + customCommandsText)
+    .then(scheduleDeletion)
+}
 
-module.exports = commandReferenceHandler;
+module.exports = commandReferenceHandler

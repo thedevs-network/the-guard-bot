@@ -1,6 +1,6 @@
-'use strict';
-const { Markup } = require('telegraf');
-const { homepage } = require('../../package.json');
+'use strict'
+const { Markup } = require('telegraf')
+const { homepage } = require('../../package.json')
 
 const message = `\
 Hey there!
@@ -16,17 +16,17 @@ you also need to <b>setup a new bot.</b>
 
 So if you only need to manage a single group, @GroupButler_bot \
 and @mattatabot might be better choices for you.
-`;
+`
 
 const helpHandler = ({ chat, replyWithHTML }) => {
-	if (chat.type !== 'private') return null;
+  if (chat.type !== 'private') return null
 
-	return replyWithHTML(
-		message,
-		Markup.inlineKeyboard([
-			Markup.urlButton('🛠 Setup a New Bot', homepage)
-		]).extra()
-	);
-};
+  return replyWithHTML(
+    message,
+    Markup.inlineKeyboard([
+      Markup.urlButton('🛠 Setup a New Bot', homepage)
+    ]).extra()
+  )
+}
 
-module.exports = helpHandler;
+module.exports = helpHandler

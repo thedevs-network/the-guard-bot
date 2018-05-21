@@ -6,7 +6,8 @@
   "scripts": {
     "precommit": "bash scripts/pre-commit.sh",
     "start": "node index",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "standard"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "eslint": "^4.17.0",
-    "husky": "^0.14.3"
+    "husky": "^0.14.3",
+    "standard": "^11.0.1"
   }
 }

@@ -1,17 +1,17 @@
-'use strict';
+'use strict'
 
-const requireDir = require('require-directory');
-const R = require('ramda');
-const { Router } = require('telegraf');
+const requireDir = require('require-directory')
+const R = require('ramda')
+const { Router } = require('telegraf')
 
-const routingFn = require('./routingFn');
+const routingFn = require('./routingFn')
 
-const router = new Router(routingFn);
+const router = new Router(routingFn)
 
-module.exports = router;
+module.exports = router
 
-const exclude = (_, filename) => filename === 'routingFn.js';
-const rename = R.toLower;
+const exclude = (_, filename) => filename === 'routingFn.js'
+const rename = R.toLower
 
-const handlers = requireDir(module, { exclude, rename });
-router.handlers = new Map(Object.entries(handlers));
+const handlers = requireDir(module, { exclude, rename })
+router.handlers = new Map(Object.entries(handlers))
