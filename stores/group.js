@@ -1,44 +1,44 @@
-'use strict';
+'use strict'
 
-const Datastore = require('nedb-promise');
+const Datastore = require('nedb-promise')
 
 const Group = new Datastore({
-	autoload: true,
-	filename: 'data/Group.db',
-});
+  autoload: true,
+  filename: 'data/Group.db'
+})
 
 Group.ensureIndex({
-	fieldName: 'id',
-	unique: true,
-});
+  fieldName: 'id',
+  unique: true
+})
 
 const addGroup = group =>
-	Group.update({ id: group.id }, group, { upsert: true });
+  Group.update({ id: group.id }, group, { upsert: true })
 
 const hideGroup = ({ id }) =>
-	Group.update({ id }, { $set: { link: '' } });
+  Group.update({ id }, { $set: { link: '' } })
 
 const updateGroup = group =>
-	Group.update({ id: group.id }, { $set: group });
+  Group.update({ id: group.id }, { $set: group })
 
 const listGroups = () =>
-	Group.find({});
+  Group.find({})
 
 const listVisibleGroups = () =>
-	Group.cfind({ $not: { link: '' } }).sort({ title: 1 }).exec();
+  Group.cfind({ $not: { link: '' } }).sort({ title: 1 }).exec()
 
 const managesGroup = group =>
-	Group.findOne(group);
+  Group.findOne(group)
 
 const removeGroup = ({ id }) =>
-	Group.remove({ id });
+  Group.remove({ id })
 
 module.exports = {
-	addGroup,
-	hideGroup,
-	listGroups,
-	listVisibleGroups,
-	managesGroup,
-	removeGroup,
-	updateGroup,
-};
+  addGroup,
+  hideGroup,
+  listGroups,
+  listVisibleGroups,
+  managesGroup,
+  removeGroup,
+  updateGroup
+}

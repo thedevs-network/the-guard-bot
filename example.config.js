@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /*
  * Create `config.js` by running `cp example.config.js config.js`
@@ -10,70 +10,69 @@
 
 module.exports = {
 
-	/**
-	 * @type {!( number | string )}
-	 * ID (number) or username (string) of master,
-	 * the person who can promote and demote admins,
-	 * and add the bot to groups.
-	 */
-	master: 123456789,
+  /**
+   * @type {!( number | string )}
+   * ID (number) or username (string) of master,
+   * the person who can promote and demote admins,
+   * and add the bot to groups.
+   */
+  master: 123456789,
 
-	/**
-	 * @type {!string}
-	 * Telegram Bot token obtained from https://t.me/BotFather.
-	 */
-	token: '',
+  /**
+   * @type {!string}
+   * Telegram Bot token obtained from https://t.me/BotFather.
+   */
+  token: '',
 
+  /**
+   * @type {( 'all' | 'own' | 'none' )}
+   * Which messages with commands should be deleted?
+   * Defaults to 'own' -- don't delete commands meant for other bots.
+   */
+  deleteCommands: 'own', // eslint-disable-line sort-keys
 
-	/**
-	 * @type {( 'all' | 'own' | 'none' )}
-	 * Which messages with commands should be deleted?
-	 * Defaults to 'own' -- don't delete commands meant for other bots.
-	 */
-	deleteCommands: 'own', // eslint-disable-line sort-keys
+  /**
+   * @type {( number | string | false )}
+   * Timeout before removing join and leave messages.
+   * String to be parsed by https://npmjs.com/millisecond,
+   * or number of milliseconds.
+   * Pass 0 to remove immediately.
+   * Pass false to never remove.
+   */
+  deleteJoinsAfter: '2 minutes',
 
-	/**
-	 * @type {( number | string | false )}
-	 * Timeout before removing join and leave messages.
-	 * String to be parsed by https://npmjs.com/millisecond,
-	 * or number of milliseconds.
-	 * Pass 0 to remove immediately.
-	 * Pass false to never remove.
-	 */
-	deleteJoinsAfter: '2 minutes',
+  /**
+   * @type {( string[] | false )}
+   * List of whitelisted links and usernames,
+   * For channels and groups to stop warning users for them.
+   * Pass false to disable this feature
+   */
+  excludeLinks: [],
 
-	/**
-	 * @type {( string[] | false )}
-	 * List of whitelisted links and usernames,
-	 * For channels and groups to stop warning users for them.
-	 * Pass false to disable this feature
-	 */
-	excludeLinks: [],
+  /**
+   * @type {InlineKeyboardMarkup}
+   * Inline keyboard to be added to reply to /groups.
+   * We use it to display button opening our webpage.
+   */
+  groupsInlineKeyboard: [],
 
-	/**
-	 * @type {InlineKeyboardMarkup}
-	 * Inline keyboard to be added to reply to /groups.
-	 * We use it to display button opening our webpage.
-	 */
-	groupsInlineKeyboard: [],
+  notifyBrokenLink: false,
 
-	notifyBrokenLink: false,
+  numberOfWarnsToBan: 3,
 
-	numberOfWarnsToBan: 3,
+  /**
+   * @type {string[]}
+   * List of plugin names to be loaded.
+   * See Readme in plugins directory for more details.
+   */
+  plugins: [],
 
-	/**
-	 * @type {string[]}
-	 * List of plugin names to be loaded.
-	 * See Readme in plugins directory for more details.
-	 */
-	plugins: [],
+  /**
+   * @type {InlineKeyboardMarkup}
+   * Inline keyboard to be added to warn message.
+   * We use it to display button showing our rules.
+   */
+  warnInlineKeyboard: []
+}
 
-	/**
-	 * @type {InlineKeyboardMarkup}
-	 * Inline keyboard to be added to warn message.
-	 * We use it to display button showing our rules.
-	 */
-	warnInlineKeyboard: [],
-};
-
-Object.freeze(module.exports);
+Object.freeze(module.exports)

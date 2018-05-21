@@ -1,12 +1,11 @@
-'use strict';
+'use strict'
 
 // Utils
-const { logError } = require('../../utils/log');
+const { logError } = require('../../utils/log')
 
-const { managesGroup } = require('../../stores/group');
+const { managesGroup } = require('../../stores/group')
 
-const pkg = require('../../package.json');
-
+const pkg = require('../../package.json')
 
 const caption = `\
 Sorry, you need to set up your own instance \
@@ -14,32 +13,30 @@ to use me in your group or a network of groups.
 
 For managing a single group, it'll be simpler for you \
 to use @GroupButler_bot or @mattatabot instead.
-`;
+`
 
-const inline_keyboard = [ [ {
-	text: '🛠 Setup a New Bot',
-	url: pkg.homepage,
-} ] ];
+const inlineKeyboard = [ [ {
+  text: '🛠 Setup a New Bot',
+  url: pkg.homepage
+} ] ]
 
-const reply_markup = JSON.stringify({ inline_keyboard });
+const replyMarkup = JSON.stringify({ inlineKeyboard })
 
 const gifIds = [
-	'xTk9ZBWrma4PIC9y4E',
-	'l2Sqc3POpzkj5r8SQ',
-	'StaMzjNkq5PqM',
-	'fjYDN5flDJ756',
-	'3XiQswSmbjBiU'
-];
+  'xTk9ZBWrma4PIC9y4E',
+  'l2Sqc3POpzkj5r8SQ',
+  'StaMzjNkq5PqM',
+  'fjYDN5flDJ756',
+  '3XiQswSmbjBiU'
+]
 
-const gifs = gifIds.map(x => `https://media.giphy.com/media/${x}/giphy.gif`);
-
+const gifs = gifIds.map(x => `https://media.giphy.com/media/${x}/giphy.gif`)
 
 /**
  * @param {Array} arr An anonymous array
  * @returns {Number} A random number
  */
-const randomChoice = arr => arr[Math.floor(Math.random() * arr.length)];
-
+const randomChoice = arr => arr[Math.floor(Math.random() * arr.length)]
 
 /**
  * @param {TelegrafContext} ctx - Telegraf context object
@@ -47,19 +44,19 @@ const randomChoice = arr => arr[Math.floor(Math.random() * arr.length)];
  * @returns {Promise.<*>} - returns next object
  */
 const leaveUnmanagedHandler = async (ctx, next) => {
-	if (
-		ctx.chat.type === 'private' ||
-		await managesGroup({ id: ctx.chat.id })) {
-		return next();
-	}
+  if (
+    ctx.chat.type === 'private' ||
+    await managesGroup({ id: ctx.chat.id })) {
+    return next()
+  }
 
-	try {
-		await ctx.replyWithVideo(randomChoice(gifs), { caption, reply_markup });
-	} catch (err) {
-		logError(err);
-	}
-	await ctx.telegram.leaveChat(ctx.chat.id);
-	return next();
-};
+  try {
+    await ctx.replyWithVideo(randomChoice(gifs), { caption, replyMarkup })
+  } catch (err) {
+    logError(err)
+  }
+  await ctx.telegram.leaveChat(ctx.chat.id)
+  return next()
+}
 
-module.exports = leaveUnmanagedHandler;
+module.exports = leaveUnmanagedHandler

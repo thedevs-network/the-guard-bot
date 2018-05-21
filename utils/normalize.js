@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
-const username = s => s.replace(/^@/, '').toLowerCase();
+const username = s => s.replace(/^@/, '').toLowerCase()
 
 module.exports = {
-	username,
-};
+  username
+}

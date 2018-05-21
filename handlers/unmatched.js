@@ -1,12 +1,12 @@
-'use strict';
+'use strict'
 
 const unmatchedHandler = ctx => {
-	ctx.state[unmatchedHandler.unmatched] = true;
-	if (ctx.chat && ctx.chat.type === 'private') {
-		ctx.reply('Sorry, I couldn\'t understand that, do you need /help?');
-	}
-};
+  ctx.state[unmatchedHandler.unmatched] = true
+  if (ctx.chat && ctx.chat.type === 'private') {
+    ctx.reply('Sorry, I couldn\'t understand that, do you need /help?')
+  }
+}
 
-unmatchedHandler.unmatched = Symbol('unmatchedHandler.unmatched');
+unmatchedHandler.unmatched = Symbol('unmatchedHandler.unmatched')
 
-module.exports = unmatchedHandler;
+module.exports = unmatchedHandler

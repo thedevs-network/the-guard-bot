@@ -1,16 +1,16 @@
-'use strict';
+'use strict'
 
-const { Composer } = require('telegraf');
+const { Composer } = require('telegraf')
 
-const composer = new Composer();
+const composer = new Composer()
 
-const checkUsernameHandler = require('./checkUsername');
-const addCustomCmdHandler = require('./addCustomCmd');
+const checkUsernameHandler = require('./checkUsername')
+const addCustomCmdHandler = require('./addCustomCmd')
 
 composer.on(
-	'message',
-	checkUsernameHandler,
-	addCustomCmdHandler,
-);
+  'message',
+  checkUsernameHandler,
+  addCustomCmdHandler
+)
 
-module.exports = composer;
+module.exports = composer

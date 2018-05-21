@@ -1,5 +1,5 @@
-'use strict';
+'use strict'
 
-const R = require('ramda');
+const R = require('ramda')
 
-module.exports = R.map(R.eqBy, require('./normalize'));
+module.exports = R.map(R.eqBy, require('./normalize'))
