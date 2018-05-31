@@ -85,6 +85,7 @@ const dh = {
 	nothing: R.always(Action.Nothing),
 	tme: async url => {
 		if (url.pathname === '/') return Action.Nothing;
+		if (url.pathname.toLowerCase().startsWith('/addstickers/')) return Action.Nothing;
 		if (url.searchParams.has('start')) return Action.Warn('Bot reflink');
 		if (await managesGroup({ link: url.toString() })) return Action.Nothing;
 		const [ , username ] = R.match(/^\/(\w+)(?:\/\d*)?$/, url.pathname);
