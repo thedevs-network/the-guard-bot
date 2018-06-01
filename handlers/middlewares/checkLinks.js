@@ -29,7 +29,11 @@ const normalizeTme = R.replace(
 		: `https://t.me/${username.toLowerCase()}${rest || ''}`
 );
 
-const customWhitelist = new Set(excludeLinks.map(normalizeTme));
+const stripQuery = s => s.split('?', 1)[0];
+
+const customWhitelist = new Set(excludeLinks
+	.map(normalizeTme)
+	.map(stripQuery));
 
 const Action = taggedSum('Action', {
 	Nothing: [],
@@ -85,7 +89,9 @@ const dh = {
 	nothing: R.always(Action.Nothing),
 	tme: async url => {
 		if (url.pathname === '/') return Action.Nothing;
-		if (url.pathname.toLowerCase().startsWith('/addstickers/')) return Action.Nothing;
+		if (url.pathname.toLowerCase().startsWith('/addstickers/')) {
+			return Action.Nothing;
+		}
 		if (url.searchParams.has('start')) return Action.Warn('Bot reflink');
 		if (await managesGroup({ link: url.toString() })) return Action.Nothing;
 		const [ , username ] = R.match(/^\/(\w+)(?:\/\d*)?$/, url.pathname);
@@ -104,7 +110,7 @@ const domainHandlers = new Map([
 	[ 'your-sweet-dating.com', dh.blacklistedDomain ],
 ]);
 
-const isWhitelisted = (url) => customWhitelist.has(url.toString());
+const isWhitelisted = (url) => customWhitelist.has(stripQuery(url.toString()));
 
 class CodeError extends Error {
 	constructor(code) {
