@@ -7,6 +7,8 @@ const { addCommand, getCommand } = require('../../stores/command');
 const { Markup } = require('telegraf');
 const { replyOptions } = require('../../bot/options');
 
+const { isMaster } = require('../../utils/config');
+
 const preserved = require('../commands').handlers;
 
 const addCommandHandler = async (ctx) => {
@@ -51,6 +53,12 @@ const addCommandHandler = async (ctx) => {
 				.oneTime()
 				.resize()
 				.extra()
+		);
+	}
+	if (cmdExists && cmdExists.role === 'master' && !isMaster(ctx.from)) {
+		return ctx.reply(
+			'ℹ️ <b>Sorry, only master can replace this command.</b>',
+			replyOptions
 		);
 	}
 	await addCommand({ id, name: newCommand, state: 'role' });
