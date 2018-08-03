@@ -8,6 +8,8 @@ Initially created to moderate [The Devs Network](https://thedevs.network).
 
 **NOTE: The Guard is still in alpha phase and is not ready for production**
 
+If you need help with using the Bot or setting it up, join our [Support Chat](https://t.me/theguardsupport).
+
 ## Setup
 You need [Node.js](https://nodejs.org/) (> 8.1) to run this bot.
 
