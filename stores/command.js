@@ -26,7 +26,8 @@ const removeCommand = command => Command.remove(command);
 
 const getCommand = (data) => Command.findOne(data);
 
-const listCommands = () => Command.find({ isActive: true });
+const listCommands = () =>
+	Command.cfind({ isActive: true }).sort({ name: 1 }).exec();
 
 module.exports = {
 	addCommand,
