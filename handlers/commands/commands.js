@@ -38,6 +38,7 @@ const userCommands = `\
 <code>/report</code> - Reports the replied-to message to admins.\n
 `;
 const role = R.prop('role');
+const name = R.prop('name');
 
 const commandReferenceHandler = async (ctx) => {
 	const customCommands = await listCommands();
@@ -46,8 +47,7 @@ const commandReferenceHandler = async (ctx) => {
 	const userCustomCommands = customCommandsGrouped.everyone
 		? '[everyone]\n<code>' +
 		customCommandsGrouped.everyone
-			.map(command =>
-				`${command.name}`)
+			.map(name)
 			.join(', ') +
 		'</code>\n\n'
 		: '';
@@ -55,8 +55,7 @@ const commandReferenceHandler = async (ctx) => {
 	const adminCustomCommands = customCommandsGrouped.admins
 		? '[admins]\n<code>' +
 		customCommandsGrouped.admins
-			.map(command =>
-				`${command.name}`)
+			.map(name)
 			.join(', ') +
 		'</code>\n\n'
 		: '';
@@ -64,8 +63,7 @@ const commandReferenceHandler = async (ctx) => {
 	const masterCustomCommands = customCommandsGrouped.master
 		? '[master]\n<code>' +
 		customCommandsGrouped.master
-			.map(command =>
-				`${command.name}`)
+			.map(name)
 			.join(', ') +
 		'</code>\n\n'
 		: '';
