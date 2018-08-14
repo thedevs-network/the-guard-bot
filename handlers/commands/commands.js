@@ -1,18 +1,25 @@
 'use strict';
 
+const R = require('ramda');
+
 // DB
 const { listCommands } = require('../../stores/command');
 
+// cfg
+const { isMaster } = require('../../utils/config');
+
 const { scheduleDeletion } = require('../../utils/tg');
 
-const commandReference = `\
+const masterCommands = `\
 <b>Master commands</b>:
 <code>/admin</code> - Makes the user admin.
 <code>/unadmin</code> - Demotes the user from admin list.
 <code>/leave &lt;name|id&gt;</code> - Makes the bot leave the group cleanly.
 <code>/hidegroup</code> - Hide the group from <code>/groups</code> list.
 <code>/showgroup</code> - Show the group it in <code>/groups</code> list.
+`;
 
+const adminCommands = `\
 <b>Admin commands</b>:
 <code>/warn &lt;reason&gt;</code> - Warns the user.
 <code>/unwarn</code> - Removes the last warn from the user.
@@ -22,7 +29,8 @@ const commandReference = `\
 <code>/user</code> - Shows user's status and warns.
 <code>/addcommand &lt;name&gt;</code> - to create a custom command.
 <code>/removecommand &lt;name&gt;</code> - to remove a custom command.
-
+`;
+const userCommands = `\
 <b>Commands for everyone</b>:
 <code>/staff</code> - Shows a list of admins.
 <code>/link</code> - Show the current group's link.
@@ -30,19 +38,43 @@ const commandReference = `\
 <code>/report</code> - Reports the replied-to message to admins.
 `;
 
-const commandReferenceHandler = async ({ replyWithHTML }) => {
+const commandReferenceHandler = async (ctx) => {
 	const customCommands = await listCommands();
-	const customCommandsText = customCommands.length
-		? '\n<b>Custom commands:</b>\n' +
-		customCommands
-			.filter(command => command.isActive)
-			.sort((a, b) => a.role.toLowerCase() < b.role.toLowerCase())
+
+	const role = R.prop('role');
+	const customCommandsGrouped = R.groupBy(role, customCommands);
+	const userCustomCommands = '[everyone]\n<code>' +
+		customCommandsGrouped.everyone
 			.map(command =>
-				`[${command.role.toLowerCase()}] ` +
-				`<code>!${command.name}</code>`)
-			.join('\n')
+				`${command.name}`)
+			.join(', ') +
+			'</code>\n\n';
+
+	const adminCustomCommands = '[admins]\n<code>' +
+		customCommandsGrouped.admins
+			.map(command =>
+				`${command.name}`)
+			.join(', ') +
+			'</code>\n\n';
+
+	const masterCustomCommands = '[admin]\n<code>' +
+		customCommandsGrouped.master
+			.map(command =>
+				`${command.name}`)
+			.join(', ') +
+			'</code>\n\n';
+
+	const customCommandsText = customCommands.length
+		? masterCommands.repeat(isMaster(ctx.from)) +
+			adminCommands.repeat(ctx.from.status === 'admin') +
+			userCommands +
+			'\n<b>Custom commands(prefix with !):</b>\n' +
+			masterCustomCommands.repeat(isMaster(ctx.from)) +
+			adminCustomCommands.repeat(ctx.from.status === 'admin') +
+			userCustomCommands
 		: '';
-	return replyWithHTML(commandReference + customCommandsText)
+
+	return ctx.replyWithHTML(customCommandsText)
 		.then(scheduleDeletion);
 };
 
