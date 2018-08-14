@@ -37,11 +37,11 @@ const userCommands = `\
 <code>/groups</code> - Show a list of groups which the bot is admin in.
 <code>/report</code> - Reports the replied-to message to admins.\n
 `;
+const role = R.prop('role');
 
 const commandReferenceHandler = async (ctx) => {
 	const customCommands = await listCommands();
 
-	const role = R.prop('role');
 	const customCommandsGrouped = R.groupBy(role, customCommands);
 	const userCustomCommands = customCommandsGrouped.everyone
 		? '[everyone]\n<code>' +
