@@ -43,36 +43,40 @@ const commandReferenceHandler = async (ctx) => {
 
 	const role = R.prop('role');
 	const customCommandsGrouped = R.groupBy(role, customCommands);
-	const userCustomCommands = '[everyone]\n<code>' +
+	const userCustomCommands = customCommandsGrouped.everyone
+		? '[everyone]\n<code>' +
 		customCommandsGrouped.everyone
 			.map(command =>
 				`${command.name}`)
 			.join(', ') +
-			'</code>\n\n';
+		'</code>\n\n'
+		: '';
 
-	const adminCustomCommands = '[admins]\n<code>' +
+	const adminCustomCommands = customCommandsGrouped.admins
+		? '[admins]\n<code>' +
 		customCommandsGrouped.admins
 			.map(command =>
 				`${command.name}`)
 			.join(', ') +
-			'</code>\n\n';
+		'</code>\n\n'
+		: '';
 
-	const masterCustomCommands = '[admin]\n<code>' +
+	const masterCustomCommands = customCommandsGrouped.master
+		? '[master]\n<code>' +
 		customCommandsGrouped.master
 			.map(command =>
 				`${command.name}`)
 			.join(', ') +
-			'</code>\n\n';
-
-	const customCommandsText = customCommands.length
-		? masterCommands.repeat(isMaster(ctx.from)) +
-			adminCommands.repeat(ctx.from.status === 'admin') +
-			userCommands +
-			'\n<b>Custom commands(prefix with !):</b>\n' +
-			masterCustomCommands.repeat(isMaster(ctx.from)) +
-			adminCustomCommands.repeat(ctx.from.status === 'admin') +
-			userCustomCommands
+		'</code>\n\n'
 		: '';
+
+	const customCommandsText = masterCommands.repeat(isMaster(ctx.from)) +
+		adminCommands.repeat(ctx.from.status === 'admin') +
+		userCommands +
+		'\n<b>Custom commands(prefix with !):</b>\n' +
+		masterCustomCommands.repeat(isMaster(ctx.from)) +
+		adminCustomCommands.repeat(ctx.from.status === 'admin') +
+		userCustomCommands;
 
 	return ctx.replyWithHTML(customCommandsText)
 		.then(scheduleDeletion);
