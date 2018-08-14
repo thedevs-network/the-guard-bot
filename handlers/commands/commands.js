@@ -16,7 +16,7 @@ const masterCommands = `\
 <code>/unadmin</code> - Demotes the user from admin list.
 <code>/leave &lt;name|id&gt;</code> - Makes the bot leave the group cleanly.
 <code>/hidegroup</code> - Hide the group from <code>/groups</code> list.
-<code>/showgroup</code> - Show the group it in <code>/groups</code> list.
+<code>/showgroup</code> - Show the group it in <code>/groups</code> list.\n
 `;
 
 const adminCommands = `\
@@ -28,14 +28,14 @@ const adminCommands = `\
 <code>/unban</code> - Removes the user from ban list.
 <code>/user</code> - Shows user's status and warns.
 <code>/addcommand &lt;name&gt;</code> - to create a custom command.
-<code>/removecommand &lt;name&gt;</code> - to remove a custom command.
+<code>/removecommand &lt;name&gt;</code> - to remove a custom command.\n
 `;
 const userCommands = `\
 <b>Commands for everyone</b>:
 <code>/staff</code> - Shows a list of admins.
 <code>/link</code> - Show the current group's link.
 <code>/groups</code> - Show a list of groups which the bot is admin in.
-<code>/report</code> - Reports the replied-to message to admins.
+<code>/report</code> - Reports the replied-to message to admins.\n
 `;
 
 const commandReferenceHandler = async (ctx) => {
