@@ -12,6 +12,8 @@ const bot = require('./bot');
 bot.telegram.getMe().then((botInfo) => {
 	bot.options.username = botInfo.username;
 	bot.context.botInfo = botInfo;
+}).then(() => {
+	bot.startPolling();
 });
 
 bot.use(
@@ -25,5 +27,3 @@ bot.use(
 
 
 bot.catch(logError);
-
-bot.startPolling();
