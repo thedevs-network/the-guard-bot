@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable sort-keys */
+
 /*
  * Create `config.js` by running `cp example.config.js config.js`
  * in the project folder, then edit it.
@@ -30,7 +32,7 @@ module.exports = {
 	 * Which messages with commands should be deleted?
 	 * Defaults to 'own' -- don't delete commands meant for other bots.
 	 */
-	deleteCommands: 'own', // eslint-disable-line sort-keys
+	deleteCommands: 'own',
 
 	/**
 	 * @type {( number | string | false )}
@@ -41,6 +43,15 @@ module.exports = {
 	 * Pass false to never remove.
 	 */
 	deleteJoinsAfter: '2 minutes',
+
+	/**
+	 * @type {string[]}
+	 * List of blacklisted domains.
+	 * Messages containing blacklisted domains will automatically be warned.
+	 * If the link is shortened, an attempt will be made to resolve it.
+	 * If resolved link is blacklisted, it will be warned for.
+	 */
+	blacklistedDomains: [],
 
 	/**
 	 * @type {( string[] | false )}
