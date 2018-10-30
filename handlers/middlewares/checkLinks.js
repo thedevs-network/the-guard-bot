@@ -14,6 +14,7 @@ const { telegram } = require('../../bot');
 
 const {
 	excludeLinks = [],
+	blacklistedDomains = [],
 	notifyBrokenLink,
 } = require('../../config');
 
@@ -101,13 +102,10 @@ const dh = {
 };
 
 const domainHandlers = new Map([
-	[ 'chat.whatsapp.com', dh.blacklistedDomain ],
-	[ 'loverdesuootnosheniya.blogspot.com', dh.blacklistedDomain ],
 	[ 't.me', dh.tme ],
 	[ 'telegram.dog', dh.tme ],
 	[ 'telegram.me', dh.tme ],
-	[ 'tinyurl.com', dh.blacklistedDomain ],
-	[ 'your-sweet-dating.com', dh.blacklistedDomain ],
+	...blacklistedDomains.map(domain => [ domain, dh.blacklistedDomain ])
 ]);
 
 const isWhitelisted = (url) => customWhitelist.has(stripQuery(url.toString()));
