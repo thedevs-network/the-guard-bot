@@ -1,5 +1,6 @@
 'use strict';
 
+const millisecond = require('millisecond');
 const { telegram } = require('../bot');
 
 const R = require('ramda');
@@ -32,14 +33,17 @@ const deleteAfter = ms => (ctx, next) => {
 	next();
 };
 
-const scheduleDeletion = ({ chat, message_id }) => {
-	if (chat.type === 'private') {
-		return null;
-	}
-	return setTimeout(
-		() => telegram.deleteMessage(chat.id, message_id),
-		5 * 60 * 1000
-	);
+const scheduleDeletion = (ms = 5 * 60 * 1000) => chatObject => {
+	const { chat, message_id } = chatObject;
+
+	chatObject.timeout = chat.type === 'private' || ms === false
+		? {}
+		: setTimeout(
+			() => telegram.deleteMessage(chat.id, message_id),
+			millisecond(ms)
+		);
+
+	return chatObject;
 };
 
 module.exports = {

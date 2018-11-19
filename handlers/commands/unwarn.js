@@ -31,7 +31,7 @@ const unwarnHandler = async ({ message, reply, state, telegram }) => {
 		return reply(
 			'ℹ️ <b>Reply to a message or mention a user.</b>',
 			replyOptions
-		).then(scheduleDeletion);
+		).then(scheduleDeletion());
 	}
 
 	const dbUser = await getUser({ id: userToUnwarn.id });

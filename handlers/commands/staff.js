@@ -17,7 +17,7 @@ const staffHandler = async ctx => {
 	return ctx.replyWithHTML(`<b>Admins in the network:</b>\n\n${list}`, {
 		disable_notification: true,
 		disable_web_page_preview: true,
-	}).then(scheduleDeletion);
+	}).then(scheduleDeletion());
 };
 
 module.exports = staffHandler;

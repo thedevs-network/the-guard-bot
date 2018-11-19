@@ -12,7 +12,7 @@ const reportHandler = async ctx => {
 		return ctx.reply(
 			'ℹ️ <b>Reply to message you\'d like to report</b>',
 			replyOptions
-		).then(scheduleDeletion);
+		).then(scheduleDeletion());
 	}
 	const admins = (await ctx.getChatAdministrators())
 		.filter(member =>

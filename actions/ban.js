@@ -13,7 +13,7 @@ const displayUser = user =>
 		? link(user)
 		: `a user with id <code>${user.id}</code>`;
 
-module.exports = async ({ admin, userToBan, reason }) => {
+module.exports = async ({ admin, reason, userToBan }) => {
 	// move some checks from handler here?
 
 	const by_id = admin.id;
