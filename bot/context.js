@@ -11,7 +11,8 @@ const {
 } = require('../config');
 
 const normalisedDeleteWarnsAfter = typeof deleteWarnsAfter === 'object'
-	? deleteWarnsAfter : { auto: deleteWarnsAfter, manual: deleteWarnsAfter };
+	? { auto: false, manual: false, ...deleteWarnsAfter }
+	: { auto: deleteWarnsAfter, manual: deleteWarnsAfter };
 
 const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
