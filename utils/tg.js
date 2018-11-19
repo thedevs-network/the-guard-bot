@@ -33,17 +33,17 @@ const deleteAfter = ms => (ctx, next) => {
 	next();
 };
 
-const scheduleDeletion = (ms = 5 * 60 * 1000) => chatObject => {
-	const { chat, message_id } = chatObject;
+const scheduleDeletion = (ms = 5 * 60 * 1000) => message => {
+	const { chat, message_id } = message;
 
-	chatObject.timeout = chat.type === 'private' || ms !== 0 && !ms
-		? {}
-		: setTimeout(
+	if (chat.type === 'private' || ms !== false) {
+		message.timeout = setTimeout(
 			() => telegram.deleteMessage(chat.id, message_id),
 			millisecond(ms)
 		);
+	}
 
-	return chatObject;
+	return message;
 };
 
 module.exports = {
