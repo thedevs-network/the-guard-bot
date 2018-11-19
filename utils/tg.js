@@ -36,7 +36,7 @@ const deleteAfter = ms => (ctx, next) => {
 const scheduleDeletion = (ms = 5 * 60 * 1000) => chatObject => {
 	const { chat, message_id } = chatObject;
 
-	chatObject.timeout = chat.type === 'private' || ms === false
+	chatObject.timeout = chat.type === 'private' || ms !== 0 && !ms
 		? {}
 		: setTimeout(
 			() => telegram.deleteMessage(chat.id, message_id),
