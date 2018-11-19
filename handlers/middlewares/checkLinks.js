@@ -197,6 +197,11 @@ module.exports = async (ctx, next) =>
 			if (await isAdmin(userToWarn)) return next();
 
 			ctx.deleteMessage();
-			return ctx.warn({ admin, reason, userToWarn });
+			return ctx.warn({
+				admin,
+				reason,
+				userToWarn,
+				mode: 'auto',
+			});
 		},
 	});

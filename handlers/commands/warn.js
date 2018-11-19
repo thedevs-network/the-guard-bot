@@ -31,7 +31,7 @@ const warnHandler = async (ctx) => {
 		return reply(
 			'ℹ️ <b>Reply to a message or mention a user.</b>',
 			replyOptions
-		).then(scheduleDeletion);
+		).then(scheduleDeletion());
 	}
 
 	if (userToWarn.username.toLowerCase() === me.toLowerCase()) return null;
@@ -44,14 +44,19 @@ const warnHandler = async (ctx) => {
 
 	if (reason.length === 0) {
 		return reply('ℹ️ <b>Need a reason to warn.</b>', replyOptions)
-			.then(scheduleDeletion);
+			.then(scheduleDeletion());
 	}
 
 	if (message.reply_to_message) {
 		ctx.deleteMessage(message.reply_to_message.message_id);
 	}
 
-	return ctx.warn({ admin: ctx.from, reason, userToWarn });
+	return ctx.warn({
+		admin: ctx.from,
+		reason,
+		userToWarn,
+		mode: 'manual',
+	});
 };
 
 module.exports = warnHandler;

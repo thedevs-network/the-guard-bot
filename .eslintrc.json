@@ -128,13 +128,6 @@
 		],
 		"block-spacing": "error",
 		"brace-style": "error",
-		/* "camelcase": [
-			"error",
-			{
-				"properties": "never"
-			}
-		], */
-		// "comma-dangle": "error",
 		"comma-spacing": "error",
 		"comma-style": "error",
 		"computed-property-spacing": "error",
@@ -213,14 +206,6 @@
 		],
 		"semi-spacing": "error",
 		"semi-style": "error",
-		"sort-keys": [
-			"error",
-			"asc",
-			{
-				"caseSensitive": false,
-				"natural": true
-			}
-		],
 		"sort-vars": [
 			"error",
 			{

@@ -46,6 +46,7 @@ const handler = ctx => {
 		admin: ctx.botInfo,
 		reason: 'Channel forward',
 		userToWarn: ctx.from,
+		mode: 'auto',
 	});
 };
 

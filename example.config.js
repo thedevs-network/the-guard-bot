@@ -10,6 +10,14 @@
  * For backwards compatibility, and because why not, it needs no extra code.
  */
 
+/**
+ * Millisecond
+ * String to be parsed by https://npmjs.com/millisecond,
+ * or number of milliseconds. Pass 0 to remove immediately.
+ * Pass false to disable option.
+ * @typedef {( number | string | false )} ms
+ */
+
 module.exports = {
 
 	/**
@@ -35,14 +43,27 @@ module.exports = {
 	deleteCommands: 'own',
 
 	/**
-	 * @type {( number | string | false )}
+	 * @type {ms} Millisecond
 	 * Timeout before removing join and leave messages.
-	 * String to be parsed by https://npmjs.com/millisecond,
-	 * or number of milliseconds.
-	 * Pass 0 to remove immediately.
-	 * Pass false to never remove.
+	 * [Look at typedef above for details.]
 	 */
 	deleteJoinsAfter: '2 minutes',
+
+	/**
+	 * @type {(ms | { auto: ms, manual: ms })}
+	 * Timeout before removing auto-warn messages.
+	 * [Look at typedef above for details.]
+	 * Pass an object with { auto, manual } for more granular control
+	 * over which messages get deleted
+	 */
+	deleteWarnsAfter: false,
+
+	/**
+	 * @type {ms}
+	 * Timeout before removing ban messages.
+	 * [Look at typedef above for details.]
+	 */
+	deleteBansAfter: false,
 
 	/**
 	 * @type {string[]}
