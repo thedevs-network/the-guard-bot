@@ -41,7 +41,7 @@ const unAdminHandler = async ({ message, reply, state }) => {
 		return reply(
 			'ℹ️ <b>Reply to a message or mention a user.</b>',
 			replyOptions
-		).then(scheduleDeletion);
+		).then(scheduleDeletion());
 	}
 
 	if (!await isAdmin(userToUnadmin)) {

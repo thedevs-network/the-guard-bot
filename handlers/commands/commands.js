@@ -77,7 +77,7 @@ const commandReferenceHandler = async (ctx) => {
 		userCustomCommands;
 
 	return ctx.replyWithHTML(customCommandsText)
-		.then(scheduleDeletion);
+		.then(scheduleDeletion());
 };
 
 module.exports = commandReferenceHandler;

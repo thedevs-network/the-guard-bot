@@ -46,7 +46,7 @@ const getWarnsHandler = async ({ message, reply, state }) => {
 		userWarns +
 		banReason,
 		replyOptions
-	).then(scheduleDeletion);
+	).then(scheduleDeletion());
 };
 
 module.exports = getWarnsHandler;

@@ -9,9 +9,6 @@ const { replyOptions } = require('../../bot/options');
 // DB
 const { isAdmin, isBanned } = require('../../stores/user');
 
-// Actions
-const ban = require('../../actions/ban');
-
 const banHandler = async (ctx) => {
 	const { message, reply, me } = ctx;
 
@@ -35,7 +32,7 @@ const banHandler = async (ctx) => {
 		return reply(
 			'ℹ️ <b>Reply to a message or mention a user.</b>',
 			replyOptions
-		).then(scheduleDeletion);
+		).then(scheduleDeletion());
 	}
 
 	if (userToBan.username.toLowerCase() === me.toLowerCase()) return null;
@@ -46,7 +43,7 @@ const banHandler = async (ctx) => {
 
 	if (reason.length === 0) {
 		return reply('ℹ️ <b>Need a reason to ban.</b>', replyOptions)
-			.then(scheduleDeletion);
+			.then(scheduleDeletion());
 	}
 
 	if (message.reply_to_message) {
@@ -60,7 +57,7 @@ const banHandler = async (ctx) => {
 		);
 	}
 
-	return ban({ admin: ctx.from, reason, userToBan }).then(ctx.replyWithHTML);
+	return ctx.ban({ admin: ctx.from, reason, userToBan });
 };
 
 module.exports = banHandler;

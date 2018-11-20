@@ -9,7 +9,7 @@ const { warn } = require('../stores/user');
 const ban = require('./ban');
 
 
-module.exports = async ({ admin, userToWarn, reason }) => {
+module.exports = async ({ admin, reason, userToWarn }) => {
 	const by_id = admin.id;
 	const date = new Date();
 

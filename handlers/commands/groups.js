@@ -28,7 +28,7 @@ const groupsHandler = async ({ replyWithHTML }) => {
 	return replyWithHTML(`🛠 <b>Groups I manage</b>:\n\n${entries}`, {
 		disable_web_page_preview: true,
 		reply_markup,
-	}).then(scheduleDeletion);
+	}).then(scheduleDeletion());
 };
 
 module.exports = groupsHandler;
