@@ -1,29 +1,35 @@
 'use strict';
 
 const dedent = require('dedent-js');
+const ms = require('millisecond');
 
 const { context } = require('../bot');
 const { link } = require('../utils/tg');
-const { numberOfWarnsToBan } = require('../config');
+const {
+	expireWarnsAfter = Infinity,
+	numberOfWarnsToBan,
+} = require('../config');
 const { warn } = require('../stores/user');
 const ban = require('./ban');
 
+const isNewerThan = date => warning => warning.date >= date;
 
 module.exports = async ({ admin, reason, userToWarn }) => {
 	const by_id = admin.id;
 	const date = new Date();
 
 	const { warns } = await warn(userToWarn, { by_id, date, reason });
+	const recentWarns = warns.filter(isNewerThan(date - ms(expireWarnsAfter)));
 
 	const isLastWarn = ', <b>last warning!</b>'
-		.repeat(warns.length === numberOfWarnsToBan - 1);
+		.repeat(recentWarns.length === numberOfWarnsToBan - 1);
 
 	const warnMessage = dedent(`
 		⚠️ ${link(admin)} <b>warned</b> ${link(userToWarn)} <b>for</b>:
 
-		${reason} (${warns.length}/${numberOfWarnsToBan}${isLastWarn})`);
+		${reason} (${recentWarns.length}/${numberOfWarnsToBan}${isLastWarn})`);
 
-	if (warns.length >= numberOfWarnsToBan) {
+	if (recentWarns.length >= numberOfWarnsToBan) {
 		await ban({
 			admin: context.botInfo,
 			reason: 'Reached max number of warnings',

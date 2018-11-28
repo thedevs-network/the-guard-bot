@@ -14,8 +14,7 @@
  * Millisecond
  * String to be parsed by https://npmjs.com/millisecond,
  * or number of milliseconds. Pass 0 to remove immediately.
- * Pass false to disable option.
- * @typedef {( number | string | false )} ms
+ * @typedef {( number | string )} ms
  */
 
 module.exports = {
@@ -46,6 +45,7 @@ module.exports = {
 	 * @type {ms} Millisecond
 	 * Timeout before removing join and leave messages.
 	 * [Look at typedef above for details.]
+	 * Pass false to disable this feature.
 	 */
 	deleteJoinsAfter: '2 minutes',
 
@@ -55,6 +55,7 @@ module.exports = {
 	 * [Look at typedef above for details.]
 	 * Pass an object with { auto, manual } for more granular control
 	 * over which messages get deleted
+	 * Pass false to disable this feature.
 	 */
 	deleteWarnsAfter: false,
 
@@ -62,6 +63,7 @@ module.exports = {
 	 * @type {ms}
 	 * Timeout before removing ban messages.
 	 * [Look at typedef above for details.]
+	 * Pass false to disable this feature.
 	 */
 	deleteBansAfter: false,
 
@@ -81,6 +83,13 @@ module.exports = {
 	 * Pass false to disable this feature
 	 */
 	excludeLinks: [],
+
+	/**
+	 * @type {ms}
+	 * Don't count warns older than this value towards automatic ban.
+	 * [Look at typedef above for details.]
+	 */
+	expireWarnsAfter: Infinity,
 
 	/**
 	 * @type {InlineKeyboardMarkup}
