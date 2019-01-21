@@ -34,6 +34,16 @@ module.exports = {
 	token: '',
 
 
+	chats: {
+
+		/**
+		 * @type {(number | false)}
+		 * Chat to send report notifications to.
+		 * Pass false to disable this feature.
+		 */
+		report: -1001148607297,
+	},
+
 	/**
 	 * @type {( 'all' | 'own' | 'none' )}
 	 * Which messages with commands should be deleted?

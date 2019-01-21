@@ -1,10 +1,12 @@
 'use strict';
 
 // Utils
-const { link, scheduleDeletion } = require('../../utils/tg');
+const { escapeHtml, link, scheduleDeletion } = require('../../utils/tg');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
+
+const { chats = {} } = require('../../config');
 
 const reportHandler = async ctx => {
 	const msg = ctx.message;
@@ -13,6 +15,13 @@ const reportHandler = async ctx => {
 			'ℹ️ <b>Reply to message you\'d like to report</b>',
 			replyOptions
 		).then(scheduleDeletion());
+	}
+	if (chats.report) {
+		ctx.tg.sendMessage(
+			chats.report,
+			`❗️<b>Report in ${escapeHtml(msg.chat.title)}!</b>`,
+			replyOptions
+		);
 	}
 	const admins = (await ctx.getChatAdministrators())
 		.filter(member =>
