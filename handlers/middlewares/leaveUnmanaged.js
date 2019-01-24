@@ -5,6 +5,8 @@ const { logError } = require('../../utils/log');
 
 const { managesGroup } = require('../../stores/group');
 
+const { chats = {} } = require('../../config');
+
 const pkg = require('../../package.json');
 
 
@@ -49,6 +51,7 @@ const randomChoice = arr => arr[Math.floor(Math.random() * arr.length)];
 const leaveUnmanagedHandler = async (ctx, next) => {
 	if (
 		ctx.chat.type === 'private' ||
+		Object.values(chats).includes(ctx.chat.id) ||
 		await managesGroup({ id: ctx.chat.id })) {
 		return next();
 	}
