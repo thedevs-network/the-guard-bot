@@ -16,6 +16,8 @@ const isChannelForward = R.pathEq(
 );
 const fromAdmin = R.pathEq([ 'from', 'status' ], 'admin');
 
+const inGroup = ctx => ctx.chat.type.endsWith('group');
+
 const capturingGroups = R.tail;
 
 const toUsername = R.compose(
@@ -35,6 +37,7 @@ const fromWhitelisted = ctx =>
 	isWhitelisted(ctx.message.forward_from_chat.username || '');
 
 const pred = R.allPass([
+	inGroup,
 	isChannelForward,
 	R.complement(fromAdmin),
 	R.complement(fromWhitelisted),

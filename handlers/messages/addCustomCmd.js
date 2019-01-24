@@ -32,7 +32,9 @@ const createNewCommand = ctx => {
 };
 
 const addCustomCmdHandler = async (ctx, next) => {
-	const { chat, message, reply, from } = ctx;
+	if (ctx.chat.type !== 'private') return next();
+
+	const { message, reply, from } = ctx;
 	const { text } = message;
 	const { id } = from;
 	const isAdmin = from.status === 'admin';
@@ -43,8 +45,7 @@ const addCustomCmdHandler = async (ctx, next) => {
 	}
 
 	const command = await getCommand({ id, isActive: false });
-	if (chat.type !== 'private' ||
-		!isAdmin ||
+	if (!isAdmin ||
 		!command ||
 		!command.state) {
 		return next();

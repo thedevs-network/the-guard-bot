@@ -10,6 +10,8 @@ const updateUserDataHandler = async (ctx, next) => {
 		updateUser(ctx.message.forward_from);
 	}
 
+	if (!ctx.from) return next();
+
 	const user = await updateUser(ctx.from);
 
 	Object.defineProperty(ctx, 'from', { value: { ...user, ...ctx.from } });

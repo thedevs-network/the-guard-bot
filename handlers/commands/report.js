@@ -9,6 +9,7 @@ const { replyOptions } = require('../../bot/options');
 const { chats = {} } = require('../../config');
 
 const reportHandler = async ctx => {
+	if (!ctx.chat.type.endsWith('group')) return null;
 	const msg = ctx.message;
 	if (!msg.reply_to_message) {
 		return ctx.reply(

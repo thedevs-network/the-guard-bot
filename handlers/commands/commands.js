@@ -69,11 +69,11 @@ const commandReferenceHandler = async (ctx) => {
 		: '';
 
 	const customCommandsText = masterCommands.repeat(isMaster(ctx.from)) +
-		adminCommands.repeat(ctx.from.status === 'admin') +
+		adminCommands.repeat(ctx.from && ctx.from.status === 'admin') +
 		userCommands +
 		'\n<b>Custom commands(prefix with !):</b>\n' +
 		masterCustomCommands.repeat(isMaster(ctx.from)) +
-		adminCustomCommands.repeat(ctx.from.status === 'admin') +
+		adminCustomCommands.repeat(ctx.from && ctx.from.status === 'admin') +
 		userCustomCommands;
 
 	return ctx.replyWithHTML(customCommandsText)

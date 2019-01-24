@@ -13,8 +13,8 @@ const preserved = require('../commands').handlers;
 
 const addCommandHandler = async (ctx) => {
 	const { chat, message, reply } = ctx;
-	const { id } = ctx.from;
 	if (chat.type !== 'private') return null;
+	const { id } = ctx.from;
 
 	if (ctx.from.status !== 'admin') {
 		return reply(

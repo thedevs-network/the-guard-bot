@@ -100,8 +100,13 @@ const getAdmins = () =>
 const unadmin = ({ id }) =>
 	User.update({ id }, { $set: { status: 'member' } });
 
-const isAdmin = ({ id }) =>
-	User.findOne({ id, status: 'admin' });
+const isAdmin = (user) => {
+	if (!user) return false;
+
+	if (user.status) return user.status === 'admin';
+
+	return User.findOne({ id: user.id, status: 'admin' });
+};
 
 const ban = ({ id }, ban_details) => {
 	const ban_reason = ban_details.reason;

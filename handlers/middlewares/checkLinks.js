@@ -155,7 +155,7 @@ const classifyList = (urls) =>
 const matchTmeLinks = R.match(/\b(?:t\.me|telegram\.(?:me|dog))\/[\w-/]+/gi);
 
 const classifyCtx = (ctx) => {
-	if (ctx.chat.type === 'private') return Action.Nothing;
+	if (!ctx.chat.type.endsWith('group')) return Action.Nothing;
 
 	const message = ctx.message || ctx.editedMessage;
 
