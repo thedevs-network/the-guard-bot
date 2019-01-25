@@ -6,7 +6,8 @@ The Guard is a Telegram bot made to help admins manage their groups.
 
 Initially created to moderate [The Devs Network](https://thedevs.network).
 
-**NOTE: The Guard is still in alpha phase and is not ready for production**
+**NOTE: The Guard is in beta phase;**
+**it has known issues, but it's successfully being used in production**
 
 If you need help with using the Bot or setting it up, join our [Support Chat](https://t.me/theguardsupport).
 
@@ -70,7 +71,7 @@ All commands and actions are synchronized across all of the groups managed by th
 
 If used by reply, `/ban` and `/warn` would remove the replied-to message.
 
-The bot is still in alpha phase so feel free to open issues and ask for a _feature_.
+The bot is still in beta phase so feel free to [open issues](https://github.com/thedevs-network/the-guard-bot/issues/new) and ask for features.
 
 [**Roadmap**](https://github.com/TheDevs-Network/the-guard-bot/projects/1)
 

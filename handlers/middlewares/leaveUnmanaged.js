@@ -14,8 +14,8 @@ const caption = `\
 Sorry, you need to set up your own instance \
 to use me in your group or a network of groups.
 
-For managing a single group, it'll be simpler for you \
-to use @GroupButler_bot or @mattatabot instead.
+If you need to manage only a single group and don't wish to self host, \
+you can try @GroupButler_bot instead.
 `;
 
 const inline_keyboard = [ [ {

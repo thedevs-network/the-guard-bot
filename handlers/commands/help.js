@@ -15,7 +15,7 @@ note that I'm more useful on a network of groups and \
 you also need to <b>setup a new bot.</b>
 
 So if you only need to manage a single group, @GroupButler_bot \
-and @mattatabot might be better choices for you.
+might be a better choice for you.
 `;
 
 const helpHandler = ({ chat, replyWithHTML }) => {
