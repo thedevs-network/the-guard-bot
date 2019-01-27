@@ -1,15 +1,17 @@
 'use strict';
 
 // Utils
+const { isMaster } = require('../../utils/config');
 const { link, scheduleDeletion } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
+const { parse, strip } = require('../../utils/parse');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
 const { telegram } = require('../../bot');
 
 // DB
-const { isAdmin, unadmin } = require('../../stores/user');
+const { getUser, unadmin } = require('../../stores/user');
 const { listGroups } = require('../../stores/group');
 
 const noop = Function.prototype;
@@ -27,24 +29,28 @@ const tgUnadmin = async (userToUnadmin) => {
 	}
 };
 
-const unAdminHandler = async ({ message, reply, state }) => {
-	const { isMaster } = state;
-	if (!isMaster) return null;
+const unAdminHandler = async ({ from, message, reply }) => {
+	if (!isMaster(from)) return null;
 
-	const userToUnadmin = message.reply_to_message
-		? message.reply_to_message.from
-		: message.commandMention
-			? message.commandMention
-			: null;
+	const { targets } = parse(message);
 
-	if (!userToUnadmin) {
+	if (targets.length !== 1) {
 		return reply(
-			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			'ℹ️ <b>Specify one user to unadmin.</b>',
 			replyOptions
 		).then(scheduleDeletion());
 	}
 
-	if (!await isAdmin(userToUnadmin)) {
+	const userToUnadmin = await getUser(strip(targets[0]));
+
+	if (!userToUnadmin) {
+		return reply(
+			'❓ <b>User unknown.</b>',
+			replyOptions
+		).then(scheduleDeletion());
+	}
+
+	if (userToUnadmin.status !== 'admin') {
 		return reply(
 			`ℹ️ ${link(userToUnadmin)} <b>is not admin.</b>`,
 			replyOptions

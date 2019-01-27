@@ -1,37 +1,42 @@
 'use strict';
 
 // Utils
-const { link, scheduleDeletion } = require('../../utils/tg');
+const { displayUser, link, scheduleDeletion } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
+const { parse, strip } = require('../../utils/parse');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
 
 // DB
 const { listGroups } = require('../../stores/group');
-const { isBanned, unban } = require('../../stores/user');
+const { getUser, unban } = require('../../stores/user');
 
 const noop = Function.prototype;
 
-const unbanHandler = async ({ message, reply, telegram, state }) => {
-	const { isAdmin, user } = state;
-	if (!isAdmin) return null;
+const unbanHandler = async ({ from, message, reply, telegram }) => {
+	if (!from || from.status !== 'admin') return null;
 
-	const userToUnban = message.reply_to_message
-		? message.reply_to_message.from
-		: message.commandMention
-			? message.commandMention
-			: null;
+	const { targets } = parse(message);
+
+	if (targets.length !== 1) {
+		return reply(
+			'ℹ️ <b>Specify one user to unban.</b>',
+			replyOptions
+		).then(scheduleDeletion());
+	}
+
+	const userToUnban = await getUser(strip(targets[0]));
 
 	if (!userToUnban) {
 		return reply(
-			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			'❓ <b>User unknown.</b>',
 			replyOptions
 		).then(scheduleDeletion());
 	}
 
 
-	if (!await isBanned(userToUnban)) {
+	if (userToUnban.status !== 'banned') {
 		return reply('ℹ️ <b>User is not banned.</b>', replyOptions);
 	}
 
@@ -61,14 +66,9 @@ const unbanHandler = async ({ message, reply, telegram, state }) => {
 	// hance .catch(noop)
 	// (it's an expected, non-critical failure)
 
-	if (userToUnban.first_name === '') {
-		return reply(`♻️ ${link(user)} <b>unbanned an user ` +
-		`with id</b> <code>${userToUnban.id}</code>.`, replyOptions);
-	}
 
-
-	return reply(`♻️ ${link(user)} <b>unbanned</b> ` +
-		`${link(userToUnban)}.`, replyOptions);
+	return reply(`♻️ ${link(from)} <b>unbanned</b> ` +
+		`${displayUser(userToUnban)}.`, replyOptions);
 };
 
 module.exports = unbanHandler;

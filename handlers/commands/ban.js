@@ -1,43 +1,49 @@
 'use strict';
 
 // Utils
-const { link, scheduleDeletion } = require('../../utils/tg');
+const { displayUser, scheduleDeletion } = require('../../utils/tg');
+const { parse, strip } = require('../../utils/parse');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
 
 // DB
-const { isAdmin, isBanned } = require('../../stores/user');
+const { getUser } = require('../../stores/user');
 
 const banHandler = async (ctx) => {
-	const { message, reply, me } = ctx;
+	const { message, reply } = ctx;
 
-	const userToBan = message.reply_to_message
-		? Object.assign({ username: '' }, message.reply_to_message.from)
-		: message.commandMention
-			? Object.assign({ username: '' }, message.commandMention)
-			: null;
-	const reason = message.text.split(' ').slice(1).join(' ').trim();
-
-	if (ctx.from.status !== 'admin') return null;
-
-	if (message.chat.type === 'private') {
+	if (!message.chat.type.endsWith('group')) {
 		return reply(
 			'ℹ️ <b>This command is only available in groups.</b>',
 			replyOptions
 		);
 	}
 
-	if (!userToBan) {
+	if (ctx.from.status !== 'admin') return null;
+
+	const { targets, reason } = parse(message);
+
+	if (targets.length !== 1) {
 		return reply(
-			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			'ℹ️ <b>Specify one user to ban.</b>',
 			replyOptions
 		).then(scheduleDeletion());
 	}
 
-	if (userToBan.username.toLowerCase() === me.toLowerCase()) return null;
+	const userToBan = await getUser(strip(targets[0])) || targets[0];
 
-	if (await isAdmin(userToBan)) {
+	if (!userToBan.id) {
+		return reply(
+			'❓ <b>User unknown.</b>\n' +
+			'Please forward their message, then try again.',
+			replyOptions
+		).then(scheduleDeletion());
+	}
+
+	if (userToBan.id === ctx.botInfo.id) return null;
+
+	if (userToBan.status === 'admin') {
 		return reply('ℹ️ <b>Can\'t ban other admins.</b>', replyOptions);
 	}
 
@@ -50,9 +56,9 @@ const banHandler = async (ctx) => {
 		ctx.deleteMessage(message.reply_to_message.message_id);
 	}
 
-	if (await isBanned(userToBan)) {
+	if (userToBan.status === 'banned') {
 		return reply(
-			`🚫 ${link(userToBan)} <b>is already banned.</b>`,
+			`🚫 ${displayUser(userToBan)} <b>is already banned.</b>`,
 			replyOptions
 		);
 	}

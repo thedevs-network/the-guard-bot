@@ -4,6 +4,7 @@ const { last } = require('ramda');
 
 // Utils
 const { link, scheduleDeletion } = require('../../utils/tg');
+const { parse, strip } = require('../../utils/parse');
 
 // Config
 const { numberOfWarnsToBan } = require('../../config');
@@ -17,26 +18,28 @@ const { getUser, unwarn } = require('../../stores/user');
 
 const noop = Function.prototype;
 
-const unwarnHandler = async ({ message, reply, state, telegram }) => {
-	const { isAdmin, user } = state;
-	if (!isAdmin) return null;
+const unwarnHandler = async ({ from, message, reply, telegram }) => {
+	if (!from || from.status !== 'admin') return null;
 
-	const userToUnwarn = message.reply_to_message
-		? message.reply_to_message.from
-		: message.commandMention
-			? message.commandMention
-			: null;
+	const { targets } = parse(message);
 
-	if (!userToUnwarn) {
+	if (targets.length !== 1) {
 		return reply(
-			'ℹ️ <b>Reply to a message or mention a user.</b>',
+			'ℹ️ <b>Specify one user to unwarn.</b>',
 			replyOptions
 		).then(scheduleDeletion());
 	}
 
-	const dbUser = await getUser({ id: userToUnwarn.id });
+	const userToUnwarn = await getUser(strip(targets[0]));
 
-	const allWarns = dbUser.warns;
+	if (!userToUnwarn) {
+		return reply(
+			'❓ <b>User unknown</b>',
+			replyOptions
+		).then(scheduleDeletion());
+	}
+
+	const allWarns = userToUnwarn.warns;
 
 	if (allWarns.length === 0) {
 		return reply(
@@ -45,7 +48,7 @@ const unwarnHandler = async ({ message, reply, state, telegram }) => {
 		);
 	}
 
-	if (dbUser.status === 'banned') {
+	if (userToUnwarn.status === 'banned') {
 		const groups = await listGroups();
 
 		groups.forEach(group =>
@@ -54,7 +57,7 @@ const unwarnHandler = async ({ message, reply, state, telegram }) => {
 
 	await unwarn(userToUnwarn);
 
-	if (dbUser.status === 'banned') {
+	if (userToUnwarn.status === 'banned') {
 		telegram.sendMessage(
 			userToUnwarn.id,
 			'♻️ You were unbanned from all of the /groups!'
@@ -68,7 +71,7 @@ const unwarnHandler = async ({ message, reply, state, telegram }) => {
 	const lastWarn = last(allWarns);
 
 	return reply(
-		`❎ ${link(user)} <b>pardoned</b> ${link(userToUnwarn)} ` +
+		`❎ ${link(from)} <b>pardoned</b> ${link(userToUnwarn)} ` +
 		`<b>for:</b>\n\n${lastWarn.reason || lastWarn}` +
 		` (${allWarns.length - 1}/${numberOfWarnsToBan})`,
 		replyOptions

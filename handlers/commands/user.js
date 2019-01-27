@@ -1,6 +1,7 @@
 'use strict';
 
 // Utils
+const { parse, strip } = require('../../utils/parse');
 const { scheduleDeletion } = require('../../utils/tg');
 
 // Bot
@@ -9,18 +10,34 @@ const { replyOptions } = require('../../bot/options');
 // DB
 const { getUser } = require('../../stores/user');
 
-const getWarnsHandler = async ({ message, reply, state }) => {
-	const { isAdmin } = state;
+const getWarnsHandler = async ({ from, message, reply }) => {
+	if (!from) {
+		return reply(
+			'ℹ️ <b>This command is not available in channels.</b>',
+			replyOptions
+		).then(scheduleDeletion());
+	}
 
-	const mentionedUser = message.reply_to_message
-		? message.reply_to_message.from
-		: message.commandMention
-			? message.commandMention
-			: state.user;
+	const { targets } = parse(message);
 
-	if (!isAdmin && mentionedUser.id !== state.user.id) return null;
+	if (targets.length > 1) {
+		return reply(
+			'ℹ️ <b>Specify one user to promote.</b>',
+			replyOptions
+		).then(scheduleDeletion());
+	}
 
-	const theUser = await getUser({ id: mentionedUser.id });
+	const theUser = targets.length && from.status === 'admin'
+		? await getUser(strip(targets[0]))
+		: from;
+
+	if (!theUser) {
+		return reply(
+			'❓ <b>User unknown.</b>',
+			replyOptions
+		).then(scheduleDeletion());
+	}
+
 	const { first_name, id, last_name, status, username, warns } = theUser;
 
 	const userName = `<b>Name:</b> <code>${first_name} ${last_name}</code>\n`;

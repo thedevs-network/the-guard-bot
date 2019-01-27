@@ -91,7 +91,7 @@ const updateUser = async (rawTgUser) => {
 const admin = ({ id }) =>
 	User.update(
 		{ id },
-		{ $set: { status: 'admin' } }
+		{ $set: { status: 'admin', warns: [] } }
 	);
 
 const getAdmins = () =>
@@ -112,7 +112,8 @@ const ban = ({ id }, ban_details) => {
 	const ban_reason = ban_details.reason;
 	return User.update(
 		{ id },
-		{ $set: { ban_details, ban_reason, status: 'banned' } }
+		{ $set: { ban_details, ban_reason, status: 'banned' } },
+		{ upsert: true }
 	);
 };
 
