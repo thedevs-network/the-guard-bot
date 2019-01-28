@@ -23,6 +23,11 @@ const quietLink = (user) =>
 		? `<a href="t.me/${user.username}">${escapeHtml(user.first_name)}</a>`
 		: link(user);
 
+const displayUser = user =>
+	user.first_name
+		? link(user)
+		: `an user with id <code>${user.id}</code>`;
+
 /**
  * @param {number} ms
  * Deletes messages after (ms) milliseconds
@@ -48,6 +53,7 @@ const scheduleDeletion = (ms = 5 * 60 * 1000) => message => {
 
 module.exports = {
 	deleteAfter,
+	displayUser,
 	escapeHtml,
 	isCommand,
 	link,

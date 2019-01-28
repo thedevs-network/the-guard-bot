@@ -2,16 +2,11 @@
 
 const dedent = require('dedent-js');
 
+const { displayUser, link } = require('../utils/tg');
 const { telegram } = require('../bot');
-const { link } = require('../utils/tg');
 
 const { listGroups } = require('../stores/group');
 const { ban } = require('../stores/user');
-
-const displayUser = user =>
-	user.first_name
-		? link(user)
-		: `a user with id <code>${user.id}</code>`;
 
 module.exports = async ({ admin, reason, userToBan }) => {
 	// move some checks from handler here?
