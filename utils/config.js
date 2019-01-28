@@ -3,19 +3,19 @@
 const config = require('../config');
 const eq = require('./eq');
 
-const masterById = /^\d+$/.test(config.master);
-const masterByUsername = /^@?\w+$/.test(config.master);
+const stringOrNumber = x => [ 'string', 'number' ].includes(typeof x);
 
-if (!masterById && !masterByUsername) {
+const masters = [].concat(config.master);
+
+if (!masters.every(x => stringOrNumber(x) && /^@?\w+$/.test(x))) {
 	throw new Error('Invalid value for `master` in config file: ' +
 		config.master);
 }
 
-const isMaster = masterById
-	? user =>
-		user && user.id === Number(config.master)
-	: user =>
-		user && user.username && eq.username(user.username, config.master);
+const isMaster = user =>
+	user && masters.some(x =>
+		user.id === Number(x) ||
+		user.username && eq.username(user.username, String(x)));
 
 module.exports = {
 	isMaster,

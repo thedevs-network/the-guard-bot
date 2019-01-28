@@ -20,7 +20,7 @@
 module.exports = {
 
 	/**
-	 * @type {!( number | string )}
+	 * @type {!( number | string | (number|string)[] )}
 	 * ID (number) or username (string) of master,
 	 * the person who can promote and demote admins,
 	 * and add the bot to groups.
