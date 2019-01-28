@@ -11,9 +11,11 @@ if (!masterById && !masterByUsername) {
 		config.master);
 }
 
-const isMaster = masterByUsername
-	? user => user && user.username && eq.username(user.username, config.master)
-	: user => user && user.id === Number(config.master);
+const isMaster = masterById
+	? user =>
+		user && user.id === Number(config.master)
+	: user =>
+		user && user.username && eq.username(user.username, config.master);
 
 module.exports = {
 	isMaster,
