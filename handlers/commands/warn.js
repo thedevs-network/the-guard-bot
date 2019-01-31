@@ -11,7 +11,7 @@ const { replyOptions } = require('../../bot/options');
 const { getUser } = require('../../stores/user');
 
 const warnHandler = async (ctx) => {
-	const { message, reply, me } = ctx;
+	const { message, reply } = ctx;
 
 	if (!message.chat.type.endsWith('group')) {
 		return reply(
@@ -41,7 +41,7 @@ const warnHandler = async (ctx) => {
 		).then(scheduleDeletion());
 	}
 
-	if (userToWarn.username.toLowerCase() === me.toLowerCase()) return null;
+	if (userToWarn.id === ctx.botInfo.id) return null;
 
 	if (userToWarn.status === 'admin') {
 		return reply('ℹ️ <b>Can\'t warn other admins.</b>', replyOptions);
