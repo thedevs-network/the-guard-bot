@@ -2,6 +2,7 @@
 
 // Utils
 const { logError } = require('../utils/log');
+const { strip } = require('../utils/parse');
 
 const Datastore = require('nedb-promise');
 const R = require('ramda');
@@ -117,6 +118,18 @@ const ban = ({ id }, ban_details) => {
 	);
 };
 
+const batchBan = (users, ban_details) => {
+	const ban_reason = ban_details.reason;
+	return User.update(
+		{ $or: users.map(strip), $not: { status: 'admin' } },
+		{ $set: { ban_details, ban_reason, status: 'banned' } },
+		{ multi: true, returnUpdatedDocs: true }
+	).then(getUpdatedDocument);
+};
+
+const ensureExists = ({ id }) =>
+	id && User.insert({ id, status: 'member', warns: [] }).catch(R.F);
+
 const unban = ({ id }) =>
 	User.update(
 		{ id },
@@ -159,6 +172,8 @@ module.exports = {
 	addUser,
 	admin,
 	ban,
+	batchBan,
+	ensureExists,
 	getAdmins,
 	getUser,
 	getWarns,

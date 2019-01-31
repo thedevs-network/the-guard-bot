@@ -24,11 +24,20 @@ const banHandler = async (ctx) => {
 
 	const { targets, reason } = parse(message);
 
-	if (targets.length !== 1) {
+	if (targets.length === 0) {
 		return reply(
-			'ℹ️ <b>Specify one user to ban.</b>',
+			'ℹ️ <b>Specify at least one user to ban.</b>',
 			replyOptions
 		).then(scheduleDeletion());
+	}
+
+	if (reason.length === 0) {
+		return reply('ℹ️ <b>Need a reason to ban.</b>', replyOptions)
+			.then(scheduleDeletion());
+	}
+
+	if (targets.length > 1) {
+		return ctx.batchBan({ admin: ctx.from, reason, targets });
 	}
 
 	const userToBan = await getUser(strip(targets[0])) || targets[0];
@@ -45,11 +54,6 @@ const banHandler = async (ctx) => {
 
 	if (userToBan.status === 'admin') {
 		return reply('ℹ️ <b>Can\'t ban other admins.</b>', replyOptions);
-	}
-
-	if (reason.length === 0) {
-		return reply('ℹ️ <b>Need a reason to ban.</b>', replyOptions)
-			.then(scheduleDeletion());
 	}
 
 	if (message.reply_to_message) {

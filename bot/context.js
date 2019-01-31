@@ -2,6 +2,7 @@
 
 const warn = require('../actions/warn');
 const ban = require('../actions/ban');
+const batchBan = require('../actions/batchBan');
 const { scheduleDeletion } = require('../utils/tg');
 
 const {
@@ -20,6 +21,11 @@ module.exports = {
 	async ban({ admin, reason, userToBan }) {
 		const banMessage = await ban({ admin, reason, userToBan });
 		return this.replyWithHTML(banMessage)
+			.then(scheduleDeletion(deleteBansAfter));
+	},
+	batchBan({ admin, reason, targets }) {
+		return batchBan({ admin, reason, targets })
+			.then(this.replyWithHTML)
 			.then(scheduleDeletion(deleteBansAfter));
 	},
 	async warn({ admin, reason, userToWarn, mode }) {
