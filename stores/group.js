@@ -25,7 +25,7 @@ const listGroups = () =>
 	Group.find({});
 
 const listVisibleGroups = () =>
-	Group.cfind({ $not: { link: '' } }).sort({ title: 1 }).exec();
+	Group.find({ $not: { link: '' } });
 
 const managesGroup = group =>
 	Group.findOne(group);

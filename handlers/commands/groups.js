@@ -1,5 +1,7 @@
 'use strict';
 
+const XRegExp = require('xregexp');
+
 // Utils
 const { escapeHtml, scheduleDeletion } = require('../../utils/tg');
 
@@ -16,12 +18,24 @@ const entry = group => group.username
 	? `- @${group.username}`
 	: `- <a href="${group.link}">${escapeHtml(group.title)}</a>`;
 
+const emojiRegex = XRegExp.tag('g')`
+	[\uE000-\uF8FF]|
+	\uD83C[\uDC00-\uDFFF]|
+	\uD83D[\uDC00-\uDFFF]|
+	[\u2011-\u26FF]|
+	\uD83E[\uDD10-\uDDFF]`;
+
+const stripEmoji = s => s.replace(emojiRegex, '');
+
 const groupsHandler = async ({ replyWithHTML }) => {
 	if (config.groupsString) {
 		return replyWithHTML(config.groupsString);
 	}
 
 	const groups = await listVisibleGroups();
+
+	groups.sort((a, b) =>
+		stripEmoji(a.title).localeCompare(stripEmoji(b.title)));
 
 	const entries = groups.map(entry).join('\n');
 
