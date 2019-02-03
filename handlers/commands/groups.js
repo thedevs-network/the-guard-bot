@@ -18,7 +18,7 @@ const entry = group => group.username
 	? `- @${group.username}`
 	: `- <a href="${group.link}">${escapeHtml(group.title)}</a>`;
 
-const emojiRegex = XRegExp.tag('g')`
+const emojiRegex = XRegExp.tag('gx')`
 	[\uE000-\uF8FF]|
 	\uD83C[\uDC00-\uDFFF]|
 	\uD83D[\uDC00-\uDFFF]|
