@@ -52,7 +52,7 @@ module.exports = {
 	deleteCommands: 'own',
 
 	/**
-	 * @type {ms} Millisecond
+	 * @type {(ms | false)} Millisecond
 	 * Timeout before removing join and leave messages.
 	 * [Look at typedef above for details.]
 	 * Pass false to disable this feature.
@@ -60,7 +60,7 @@ module.exports = {
 	deleteJoinsAfter: '2 minutes',
 
 	/**
-	 * @type {(ms | { auto: ms, manual: ms })}
+	 * @type {(ms | { auto: (ms | false), manual: (ms | false) } | false)}
 	 * Timeout before removing auto-warn messages.
 	 * [Look at typedef above for details.]
 	 * Pass an object with { auto, manual } for more granular control
@@ -70,7 +70,7 @@ module.exports = {
 	deleteWarnsAfter: false,
 
 	/**
-	 * @type {ms}
+	 * @type {(ms | false)}
 	 * Timeout before removing ban messages.
 	 * [Look at typedef above for details.]
 	 * Pass false to disable this feature.
