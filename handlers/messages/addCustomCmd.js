@@ -72,6 +72,15 @@ const addCustomCmdHandler = async (ctx, next) => {
 	}
 
 	if (command.state === 'content') {
+		if (ctx.message.text) {
+			try {
+				await ctx.replyWithHTML(ctx.message.text);
+			} catch (err) {
+				return ctx.reply(err +
+					'\n\nPlease fix your content and try again.');
+			}
+		}
+
 		const newCommand = createNewCommand(ctx);
 
 		await updateCommand({ ...newCommand, id, isActive: true, state: null });
