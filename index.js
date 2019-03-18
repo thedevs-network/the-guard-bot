@@ -1,5 +1,7 @@
 'use strict';
 
+process.chdir(__dirname);
+
 // Utils
 const { logError } = require('./utils/log');
 

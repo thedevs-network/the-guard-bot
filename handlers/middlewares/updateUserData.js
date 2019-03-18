@@ -10,6 +10,10 @@ const updateUserDataHandler = async (ctx, next) => {
 		updateUser(ctx.message.forward_from);
 	}
 
+	const { entities = [] } = ctx.message;
+
+	await Promise.all(entities.map(({ user }) => user && updateUser(user)));
+
 	if (!ctx.from) return next();
 
 	const user = await updateUser(ctx.from);
