@@ -2,7 +2,7 @@
 
 const dedent = require('dedent-js');
 
-const { displayUser, link } = require('../utils/tg');
+const { escapeHtml, displayUser, link } = require('../utils/tg');
 const { telegram } = require('../bot');
 
 const { listGroups } = require('../stores/group');
@@ -24,5 +24,5 @@ module.exports = async ({ admin, reason, userToBan }) => {
 	return dedent(`
 		🚫 ${link(admin)} <b>banned</b> ${displayUser(userToBan)} <b>for:</b>
 
-		${reason}`);
+		${escapeHtml(reason)}`);
 };

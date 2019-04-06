@@ -13,6 +13,9 @@ const isCommand = R.pipe(
 );
 
 const escapeHtml = s => s
+	.replace(/&/g, '&amp;')
+	.replace(/"/g, '&quot;')
+	.replace(/'/g, '&#39;')
 	.replace(/</g, '&lt;');
 
 const msgLink = msg =>

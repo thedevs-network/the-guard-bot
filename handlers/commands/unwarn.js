@@ -3,7 +3,7 @@
 const { last } = require('ramda');
 
 // Utils
-const { link, scheduleDeletion } = require('../../utils/tg');
+const { escapeHtml, link, scheduleDeletion } = require('../../utils/tg');
 const { parse, strip } = require('../../utils/parse');
 
 // Config
@@ -72,7 +72,7 @@ const unwarnHandler = async ({ from, message, reply, telegram }) => {
 
 	return reply(
 		`❎ ${link(from)} <b>pardoned</b> ${link(userToUnwarn)} ` +
-		`<b>for:</b>\n\n${lastWarn.reason || lastWarn}` +
+		`<b>for:</b>\n\n${escapeHtml(lastWarn.reason || lastWarn)}` +
 		` (${allWarns.length - 1}/${numberOfWarnsToBan})`,
 		replyOptions
 	);

@@ -4,7 +4,7 @@ const dedent = require('dedent-js');
 const ms = require('millisecond');
 
 const { context } = require('../bot');
-const { link } = require('../utils/tg');
+const { escapeHtml, link } = require('../utils/tg');
 const {
 	expireWarnsAfter = Infinity,
 	numberOfWarnsToBan,
@@ -24,10 +24,12 @@ module.exports = async ({ admin, reason, userToWarn }) => {
 	const isLastWarn = ', <b>last warning!</b>'
 		.repeat(recentWarns.length === numberOfWarnsToBan - 1);
 
+	const count = `${recentWarns.length}/${numberOfWarnsToBan}${isLastWarn}`;
+
 	const warnMessage = dedent(`
 		⚠️ ${link(admin)} <b>warned</b> ${link(userToWarn)} <b>for</b>:
 
-		${reason} (${recentWarns.length}/${numberOfWarnsToBan}${isLastWarn})`);
+		${escapeHtml(reason)} (${count})`);
 
 	if (recentWarns.length >= numberOfWarnsToBan) {
 		await ban({
