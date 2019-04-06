@@ -90,6 +90,7 @@ const dh = {
 	nothing: R.always(Action.Nothing),
 	tme: async url => {
 		if (url.pathname === '/') return Action.Nothing;
+		if (url.pathname.toLowerCase().startsWith('/c/')) return Action.Nothing;
 		if (url.pathname.toLowerCase().startsWith('/addstickers/')) {
 			return Action.Nothing;
 		}

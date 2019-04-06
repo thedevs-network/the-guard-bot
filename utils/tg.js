@@ -15,6 +15,9 @@ const isCommand = R.pipe(
 const escapeHtml = s => s
 	.replace(/</g, '&lt;');
 
+const msgLink = msg =>
+	`https://t.me/c/${msg.chat.id.toString().slice(4)}/${msg.message_id}`;
+
 const link = ({ id, first_name }) =>
 	`<a href="tg://user?id=${id}">${escapeHtml(first_name)}</a>`;
 
@@ -57,6 +60,7 @@ module.exports = {
 	escapeHtml,
 	isCommand,
 	link,
+	msgLink,
 	quietLink,
 	scheduleDeletion,
 };

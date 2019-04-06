@@ -1,7 +1,12 @@
 'use strict';
 
 // Utils
-const { escapeHtml, link, scheduleDeletion } = require('../../utils/tg');
+const {
+	escapeHtml,
+	link,
+	msgLink,
+	scheduleDeletion,
+} = require('../../utils/tg');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
@@ -20,7 +25,9 @@ const reportHandler = async ctx => {
 	if (chats.report) {
 		ctx.tg.sendMessage(
 			chats.report,
-			`❗️<b>Report in ${escapeHtml(msg.chat.title)}!</b>`,
+			`❗️ Report in <a href="${msgLink(msg.reply_to_message)}">` +
+				escapeHtml(msg.chat.title) +
+				'</a>!',
 			replyOptions
 		);
 	}
