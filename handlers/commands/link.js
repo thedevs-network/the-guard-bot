@@ -13,8 +13,8 @@ const linkHandler = async ({ chat, replyWithHTML }, next) => {
 
 	const group = await managesGroup({ id: chat.id });
 
-	return replyWithHTML('ℹ️ <b>Group\'s link:</b>\n\n' +
-		`<a href="${group.link}">${group.title}</a>`).then(scheduleDeletion());
+	return replyWithHTML(group.link || '️ℹ️ <b>No link to this group</b>')
+		.then(scheduleDeletion());
 };
 
 module.exports = linkHandler;
