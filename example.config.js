@@ -51,6 +51,11 @@ module.exports = {
 	 */
 	deleteCommands: 'own',
 
+	deleteCustom: {
+		longerThan: 450, // utf16 characters
+		after: '20 minutes'
+	},
+
 	/**
 	 * @type {(ms | false)} Millisecond
 	 * Timeout before removing join and leave messages.

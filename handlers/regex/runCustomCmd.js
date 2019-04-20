@@ -6,6 +6,12 @@ const R = require('ramda');
 // DB
 const { getCommand } = require('../../stores/command');
 
+const { scheduleDeletion } = require('../../utils/tg');
+
+const config = require('../../config');
+
+const deleteCustom = config.deleteCustom || { longerThan: Infinity };
+
 const capitalize = R.replace(/^./, R.toUpper);
 
 const getRepliedToId = R.path([ 'reply_to_message', 'message_id' ]);
@@ -43,6 +49,11 @@ const runCustomCmdHandler = async (ctx, next) => {
 		disable_web_page_preview: true,
 		reply_to_message_id,
 	};
+
+	if (type === 'text' && content.length > deleteCustom.longerThan) {
+		return ctx.replyWithHTML(content, options)
+			.then(scheduleDeletion(deleteCustom.after));
+	}
 
 	return ctx[typeToMethod(type)](content, options);
 };
