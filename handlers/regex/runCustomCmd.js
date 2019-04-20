@@ -47,4 +47,4 @@ const runCustomCmdHandler = async (ctx, next) => {
 	return ctx[typeToMethod(type)](content, options);
 };
 
-module.exports = hears(/^!(\w+)/, runCustomCmdHandler);
+module.exports = hears(/^! ?(\w+)/, runCustomCmdHandler);
