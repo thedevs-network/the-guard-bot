@@ -13,9 +13,6 @@ const pkg = require('../../package.json');
 const caption = `\
 Sorry, you need to set up your own instance \
 to use me in your group or a network of groups.
-
-If you don't wish to self host, \
-you can try @MissRose_bot instead.
 `;
 
 const inline_keyboard = [ [ {
