@@ -2,13 +2,31 @@
 
 // Utils
 const { parse, strip } = require('../../utils/parse');
-const { escapeHtml, scheduleDeletion } = require('../../utils/tg');
+const { scheduleDeletion } = require('../../utils/tg');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
 
 // DB
 const { getUser } = require('../../stores/user');
+
+const html = require('tg-html');
+
+const formatDate = date => date && date.toISOString().slice(0, 10);
+
+const formatEntry = async (entry, defaultVal) => {
+	if (!entry || !entry.by_id) return defaultVal;
+	const { first_name } = await getUser({ id: entry.by_id }) || {};
+	return html`${entry.reason} (${first_name}, ${formatDate(entry.date)})`;
+};
+
+const formatWarn = async (warn, i) =>
+	html`${i + 1}. ${await formatEntry(warn, warn)}`;
+
+const optional = (header, content) =>
+	content
+		? header + content + '\n'
+		: '';
 
 const getWarnsHandler = async ({ from, message, reply }) => {
 	if (!from) {
@@ -22,7 +40,7 @@ const getWarnsHandler = async ({ from, message, reply }) => {
 
 	if (targets.length > 1) {
 		return reply(
-			'ℹ️ <b>Specify one user to promote.</b>',
+			'ℹ️ <b>Specify one user.</b>',
 			replyOptions
 		).then(scheduleDeletion());
 	}
@@ -38,28 +56,22 @@ const getWarnsHandler = async ({ from, message, reply }) => {
 		).then(scheduleDeletion());
 	}
 
-	const { first_name, id, last_name, status, username, warns } = theUser;
+	const { id, first_name, last_name } = theUser;
 
-	const userName = '<b>Name:</b> ' +
-		`<code>${escapeHtml(first_name)} ${escapeHtml(last_name)}</code>\n`;
+	const userName = html`<b>Name:</b> ${first_name} ${last_name}\n`;
 	const userId = `<b>ID:</b> <code>${id}</code>\n`;
-	const userStatus = `<b>Status:</b> <code>${status}</code>\n`;
-	const userUsername = username
-		? `<b>Username:</b> @${username}\n`
-		: '';
-	const banReason = theUser.ban_reason
-		? '\n🚫 <b>Ban reason:</b>\n' +
-			`<code>${escapeHtml(theUser.ban_reason)}</code>`
-		: '';
-	const userWarns = warns.length
-		? '\n<b>⚠️ Warns:</b>\n' + warns
-			.map((warn, i) => `${i + 1}. ${escapeHtml(warn.reason || warn)}`)
-			.join('\n') + '\n'
-		: '';
+	const userUsername = optional('<b>Username:</b> @', theUser.username);
+	const banReason = optional(
+		'\n🚫 <b>Ban reason:</b> ',
+		await formatEntry(theUser.ban_details, theUser.ban_reason)
+	);
+	const userWarns = optional(
+		'\n<b>⚠️ Warns:</b>\n',
+		(await Promise.all(theUser.warns.map(formatWarn))).join('\n')
+	);
 
 	return reply(
 		userName +
-		userStatus +
 		userId +
 		userUsername +
 		userWarns +

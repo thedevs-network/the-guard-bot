@@ -109,23 +109,19 @@ const isAdmin = (user) => {
 	return User.findOne({ id: user.id, status: 'admin' });
 };
 
-const ban = ({ id }, ban_details) => {
-	const ban_reason = ban_details.reason;
-	return User.update(
+const ban = ({ id }, ban_details) =>
+	User.update(
 		{ id },
-		{ $set: { ban_details, ban_reason, status: 'banned' } },
+		{ $set: { ban_details, status: 'banned' } },
 		{ upsert: true }
 	);
-};
 
-const batchBan = (users, ban_details) => {
-	const ban_reason = ban_details.reason;
-	return User.update(
+const batchBan = (users, ban_details) =>
+	User.update(
 		{ $or: users.map(strip), $not: { status: 'admin' } },
-		{ $set: { ban_details, ban_reason, status: 'banned' } },
+		{ $set: { ban_details, status: 'banned' } },
 		{ multi: true, returnUpdatedDocs: true }
 	).then(getUpdatedDocument);
-};
 
 const ensureExists = ({ id }) =>
 	id && User.insert({ id, status: 'member', warns: [] }).catch(R.F);
