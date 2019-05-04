@@ -113,8 +113,6 @@ module.exports = {
 	 */
 	groupsInlineKeyboard: [],
 
-	notifyBrokenLink: false,
-
 	numberOfWarnsToBan: 3,
 
 	/**

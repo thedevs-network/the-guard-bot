@@ -17,6 +17,7 @@ const formatDate = date => date && date.toISOString().slice(0, 10);
 const formatEntry = async (entry, defaultVal) => {
 	if (!entry || !entry.by_id) return defaultVal;
 	const { first_name } = await getUser({ id: entry.by_id }) || {};
+	if (!first_name) return html`${entry.reason} (${formatDate(entry.date)})`;
 	return html`${entry.reason} (${first_name}, ${formatDate(entry.date)})`;
 };
 
