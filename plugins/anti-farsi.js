@@ -8,7 +8,7 @@ module.exports = ({ message, chat, replyWithMarkdown }, next) => {
     const { text } = message;
     const replyOptions = { reply_to_message_id: message.message_id };
 
-    if (!text || !['group', 'supergroup'].includes(chat.type)) {
+    if (!text || !['group', 'supergroup'].includes(chat.type) || chat.id === -1001211669317) {
         return next();
     }
 
