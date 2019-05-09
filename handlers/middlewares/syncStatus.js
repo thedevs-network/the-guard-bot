@@ -19,6 +19,15 @@ const syncStatusHandler = (ctx, next) => {
 		}
 
 		switch (dbUser.status) {
+		case 'master':
+			return ctx.promoteChatMember(dbUser.id, {
+				can_change_info: true,
+				can_delete_messages: true,
+				can_invite_users: true,
+				can_pin_messages: true,
+				can_promote_members: true,
+				can_restrict_members: true,
+			});
 		case 'admin':
 			return ctx.promoteChatMember(dbUser.id, {
 				can_change_info: false,
