@@ -3,18 +3,18 @@
 const FARSI_RE = /[\u0600-\u06FF]/;
 
 const replies = {
-    '-1001493007117':
+	'-1001493007117':
         'Please only send proxies here and write in English. ' +
         'For farsi chatting join [the farsi group]' +
         '(https://t.me/joinchat/E7Xrc0g4m0VlTV7oHyu8EQ).',
 
-    '-1001178537590':
+	'-1001178537590':
         'Please only talk in english here. ' +
         'For farsi chatting join [the farsi group]' +
         '(http://t.me/joinchat/E7Xrc0g4m0VlTV7oHyu8EQ)',
 };
 
-const chatsToReply = Object.keys(replies);
+const chatsToReply = Object.keys(replies).map(Number);
 
 module.exports = ({ message, chat, replyWithMarkdown }, next) => {
 	if (!message) {
