@@ -111,7 +111,7 @@ const isAdmin = (user) => {
 
 const ban = ({ id }, ban_details) =>
 	User.update(
-		{ id },
+		{ id, $not: { status: 'admin' } },
 		{ $set: { ban_details, status: 'banned' } },
 		{ upsert: true }
 	);
@@ -141,7 +141,7 @@ const isBanned = ({ id }) =>
 
 const warn = ({ id }, reason) =>
 	User.update(
-		{ id },
+		{ id, $not: { status: 'admin' } },
 		{ $push: { warns: reason } },
 		{ returnUpdatedDocs: true }
 	).then(getUpdatedDocument);
