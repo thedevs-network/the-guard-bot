@@ -146,11 +146,11 @@ const warn = ({ id }, reason) =>
 		{ returnUpdatedDocs: true }
 	).then(getUpdatedDocument);
 
-const unwarn = ({ id }) =>
+const unwarn = ({ id }, warnQuery) =>
 	User.update(
 		{ id },
 		{
-			$pop: { warns: 1 },
+			$pull: { warns: warnQuery },
 			$set: { status: 'member' },
 			$unset: { ban_details: true, ban_reason: true },
 		}

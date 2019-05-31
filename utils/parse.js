@@ -18,13 +18,12 @@ const botReply = ({ from, entities = [] }) => {
 };
 
 const parse = message => {
-	// eslint-disable-next-line no-empty-character-class
-	const regex = /^\/\w+(?:@\w+)?((?:@\w+|\d+|\s+)*)(.*)$/s;
+	const regex = /^\/\w+(?:@\w+)?((?:@\w+|\d+|\s+)*)(?:\s+(.*))?$/s;
 
 	const textMentions = message.entities.filter(isTextMention);
 	const noTextMentions = textMentions.reduceRight(spliceOut, message.text);
 
-	const [ , ids, reason ] = regex.exec(noTextMentions);
+	const [ , ids, reason = '' ] = regex.exec(noTextMentions);
 	const users = textMentions.concat(ids.match(/@\w+|\d+/g) || []);
 	const { reply_to_message } = message;
 	const targets = users.length

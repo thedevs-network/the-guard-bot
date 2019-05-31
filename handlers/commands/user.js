@@ -12,7 +12,8 @@ const { getUser } = require('../../stores/user');
 
 const html = require('tg-html');
 
-const formatDate = date => date && date.toISOString().slice(0, 10);
+const formatDate = date =>
+	date && date.toISOString().slice(0, -5).replace('T', ' ');
 
 const formatEntry = async (entry, defaultVal) => {
 	if (!entry || !entry.by_id) return defaultVal;
