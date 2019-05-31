@@ -28,8 +28,8 @@ module.exports = {
 			.then(this.replyWithHTML)
 			.then(scheduleDeletion(deleteBansAfter));
 	},
-	async warn({ admin, reason, userToWarn, mode }) {
-		const warnMessage = await warn({ admin, reason, userToWarn });
+	async warn({ admin, amend, reason, userToWarn, mode }) {
+		const warnMessage = await warn({ admin, amend, reason, userToWarn });
 		return this.replyWithHTML(warnMessage, { reply_markup })
 			.then(scheduleDeletion(normalisedDeleteWarnsAfter[mode]));
 	},

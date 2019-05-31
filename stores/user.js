@@ -139,10 +139,10 @@ const isBanned = ({ id }) =>
 	User.findOne({ id, status: 'banned' })
 		.then(user => user ? user.ban_reason : null);
 
-const warn = ({ id }, reason) =>
+const warn = ({ id }, reason, { amend }) =>
 	User.update(
 		{ id, $not: { status: 'admin' } },
-		{ $push: { warns: reason } },
+		{ $pop: { warns: +!!amend }, $push: { warns: reason } },
 		{ returnUpdatedDocs: true }
 	).then(getUpdatedDocument);
 

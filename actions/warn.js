@@ -14,11 +14,16 @@ const ban = require('./ban');
 
 const isNewerThan = date => warning => warning.date >= date;
 
-module.exports = async ({ admin, reason, userToWarn }) => {
+module.exports = async ({ admin, amend, reason, userToWarn }) => {
 	const by_id = admin.id;
 	const date = new Date();
 
-	const { warns } = await warn(userToWarn, { by_id, date, reason });
+	const { warns } = await warn(
+		userToWarn,
+		{ by_id, date, reason },
+		{ amend }
+	);
+
 	const recentWarns = warns.filter(isNewerThan(date - ms(expireWarnsAfter)));
 
 	const isLastWarn = ', <b>last warning!</b>'

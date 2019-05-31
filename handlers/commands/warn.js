@@ -22,7 +22,7 @@ const warnHandler = async (ctx) => {
 
 	if (ctx.from.status !== 'admin') return null;
 
-	const { reason, targets } = parse(message);
+	const { flags, reason, targets } = parse(message);
 
 	if (targets.length !== 1) {
 		return reply(
@@ -58,6 +58,7 @@ const warnHandler = async (ctx) => {
 
 	return ctx.warn({
 		admin: ctx.from,
+		amend: flags.has('amend'),
 		reason,
 		userToWarn,
 		mode: 'manual',
