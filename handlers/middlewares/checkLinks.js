@@ -155,6 +155,15 @@ const classifyList = (urls) =>
 
 const matchTmeLinks = R.match(/\b(?:t\.me|telegram\.(?:me|dog))\/[\w-/]+/gi);
 
+const maybeProp = prop => o => R.has(prop, o) ? [ o[prop] ] : [];
+
+const buttonUrls = R.pipe(
+	R.path([ 'reply_markup', 'inline_keyboard' ]),
+	R.defaultTo([]),
+	R.unnest,
+	R.chain(maybeProp('url'))
+);
+
 const classifyCtx = (ctx) => {
 	if (!ctx.chat.type.endsWith('group')) return Action.Nothing;
 
@@ -167,6 +176,7 @@ const classifyCtx = (ctx) => {
 	const rawUrls = entities
 		.filter(isLink)
 		.map(obtainUrlFromText(text))
+		.concat(buttonUrls(message))
 		.concat(matchTmeLinks(text));
 
 	const urls = R.uniq(rawUrls)
