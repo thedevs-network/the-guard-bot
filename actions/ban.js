@@ -5,7 +5,7 @@ const dedent = require('dedent-js');
 const { escapeHtml, displayUser, link } = require('../utils/tg');
 const { telegram } = require('../bot');
 
-const { listGroups } = require('../stores/group');
+const { listVisibleGroups } = require('../stores/group');
 const { ban } = require('../stores/user');
 
 module.exports = async ({ admin, reason, userToBan }) => {
@@ -16,7 +16,7 @@ module.exports = async ({ admin, reason, userToBan }) => {
 
 	await ban(userToBan, { by_id, date, reason });
 
-	const groups = await listGroups();
+	const groups = await listVisibleGroups();
 
 	groups.forEach(group =>
 		telegram.kickChatMember(group.id, userToBan.id));
