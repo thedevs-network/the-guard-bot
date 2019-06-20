@@ -130,7 +130,7 @@ const unban = ({ id }) =>
 	User.update(
 		{ id },
 		{
-			$set: { status: 'member', warns: [] },
+			$set: { status: 'member' },
 			$unset: { ban_details: true, ban_reason: true },
 		}
 	);
@@ -156,7 +156,7 @@ const unwarn = ({ id }, warnQuery) =>
 		}
 	);
 
-const nowarns = unban;
+const nowarns = query => unwarn(query, {});
 
 const getWarns = ({ id }) =>
 	User.findOne({ id })
