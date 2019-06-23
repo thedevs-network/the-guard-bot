@@ -86,7 +86,7 @@ const isPublic = async username => {
 };
 
 const dh = {
-	blacklistedDomain: R.always(Action.Warn('Link to blacklisted domain')),
+	blacklistedDomain: R.always(Action.Warn('Link to a blacklisted domain')),
 	nothing: R.always(Action.Nothing),
 	tme: async url => {
 		if (url.pathname === '/') return Action.Nothing;
@@ -98,7 +98,7 @@ const dh = {
 		if (await managesGroup({ link: url.toString() })) return Action.Nothing;
 		const [ , username ] = R.match(/^\/(\w+)(?:\/\d*)?$/, url.pathname);
 		if (username && !await isPublic('@' + username)) return Action.Nothing;
-		return Action.Warn('Link to Telegram group or channel');
+		return Action.Warn('Link to a Telegram group or channel');
 	},
 };
 
