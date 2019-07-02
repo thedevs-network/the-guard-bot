@@ -10,7 +10,7 @@ const shouldDelete = {
 	own: ctx => !ctx.state[unmatched],
 };
 
-if (!shouldDelete.hasOwnProperty(deleteCommands)) {
+if (!(deleteCommands in shouldDelete)) {
 	throw new Error('Invalid value for `deleteCommands` in config file: ' +
 		deleteCommands);
 }

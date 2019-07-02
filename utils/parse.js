@@ -19,13 +19,13 @@ const botReply = ({ from, entities = [] }) => {
 	return from.is_bot && textMentions.length === 2 && [ textMentions[1].user ];
 };
 
+const flagsRegex = /\s+(?:--?|—)(\w+)(?:=(\S*))?/g;
+
 function *extractFlags(flagS) {
 	for (const [ , name, value ] of flagS.matchAll(flagsRegex)) {
 		yield [ name.toLowerCase(), value ];
 	}
 }
-
-const flagsRegex = /\s+(?:--?|—)(\w+)(?:=(\S*))?/g;
 
 const regex = XRegExp.tag('snx')`^
 	\/\w+(@\w+)?
