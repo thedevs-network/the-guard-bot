@@ -4,7 +4,7 @@ function getUsername(user) {
 	var str = "";
 	let str = user.first_name;
 	if (user.last_name) str += " " + user.last_name;
-	if (user.username) str += " @" + user.username;
+	if (user.username) str += " (@" + user.username + ")";
 	return str;
 }
 function log(ctx, next) {
