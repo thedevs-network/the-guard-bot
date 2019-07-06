@@ -1,6 +1,5 @@
 'use strict';
 
-const millisecond = require('millisecond');
 const { Composer } = require('telegraf');
 
 const composer = new Composer();
@@ -18,6 +17,7 @@ const removeChannelForwardsHandler = require('./removeChannelForwards');
 const removeCommandsHandler = require('./removeCommands');
 const syncStatusHandler = require('./syncStatus');
 const updateUserDataHandler = require('./updateUserData');
+const presenceLogHandler = require('./logPresence');
 const updateGroupTitleHandler = require('./updateGroupTitle');
 
 composer.on('new_chat_members', addedToGroupHandler);
@@ -32,9 +32,8 @@ composer.on('new_chat_title', updateGroupTitleHandler);
 composer.on('text', removeCommandsHandler);
 composer.on(
 	[ 'new_chat_members', 'left_chat_member' ],
-	deleteJoinsAfter === false
-		? Composer.passThru()
-		: deleteAfter(millisecond(deleteJoinsAfter))
+	deleteAfter(deleteJoinsAfter),
+	presenceLogHandler,
 );
 
 module.exports = composer;
