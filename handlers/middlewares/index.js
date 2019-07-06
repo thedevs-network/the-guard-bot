@@ -18,8 +18,8 @@ const removeChannelForwardsHandler = require('./removeChannelForwards');
 const removeCommandsHandler = require('./removeCommands');
 const syncStatusHandler = require('./syncStatus');
 const updateUserDataHandler = require('./updateUserData');
-const updateGroupTitleHandler = require('./updateGroupTitle');
 const presenceLogHandler = require('./logPresence');
+const updateGroupTitleHandler = require('./updateGroupTitle');
 
 composer.on('new_chat_members', addedToGroupHandler);
 composer.on('left_chat_member', kickedFromGroupHandler);
