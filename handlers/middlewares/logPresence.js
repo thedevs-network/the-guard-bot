@@ -2,7 +2,7 @@
 const config = require('../../config');
 function getUsername(user) {
 	var str = "";
-	if (user.first_name) str += user.first_name;
+	let str = user.first_name;
 	if (user.last_name) str += " " + user.last_name;
 	if (user.username) str += " @" + user.username;
 	return str;
