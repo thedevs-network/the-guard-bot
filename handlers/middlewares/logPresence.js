@@ -8,7 +8,7 @@ function getUsername(user) {
 	return str;
 }
 function log(ctx, next) {
-	if (!("presenceLog" in config.chats) || !config.chats.presenceLog || config.chats.presenceLog === null) return next();
+	if (!chats.presenceLog) return next();
 	if (ctx.updateSubTypes[0] === "new_chat_members") ctx.telegram.sendMessage(
 		config.chats.presenceLog,
 		ctx.message.new_chat_members.map(getUsername).join(", ") + " #joined " + ctx.chat.title
