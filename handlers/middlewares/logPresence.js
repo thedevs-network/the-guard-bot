@@ -1,5 +1,5 @@
 "use strict";
-const config = require('../../config');
+const { chats = {} } = require('../../config');
 function getUsername(user) {
 	var str = "";
 	let str = user.first_name;
