@@ -40,7 +40,9 @@ const displayUser = user =>
  * @returns {undefined}
  */
 const deleteAfter = ms => (ctx, next) => {
-	setTimeout(ctx.deleteMessage, ms);
+	if (ms !== false) {
+		setTimeout(ctx.deleteMessage, millisecond(ms));
+	}
 	next();
 };
 
