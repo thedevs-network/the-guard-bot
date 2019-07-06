@@ -42,6 +42,7 @@ module.exports = {
 		 * Pass false to disable this feature.
 		 */
 		report: -1001148607297,
+		
 		/**
 		 * @type {(number | false)}
 		 * Chat to send member join/leave notifications to.
