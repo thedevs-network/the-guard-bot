@@ -8,13 +8,25 @@ function getUsername(user) {
 	if (user.username) str += ' (@' + user.username + ')';
 	return str;
 }
+
+function getId(user) {
+	return user.id;
+}
+
 function log(ctx, next) {
 	if (!chats.presenceLog) return next();
 	if (ctx.updateSubTypes[0] === 'new_chat_members') {
 		ctx.telegram.sendMessage(
 			chats.presenceLog,
 			ctx.message.new_chat_members.map(getUsername).join(', ') +
-				' #joined ' + ctx.chat.title
+				' #joined ' + ctx.chat.title,
+			{ reply_markup: { inline_keyboard: [ [ {
+				text: '🚫 Ban all',
+				callback_data: `/ban ${
+					ctx.message.new_chat_members
+						.map(getId)
+						.join(' ')} [joining]`
+			} ] ] } }
 		);
 	} else if (ctx.updateSubTypes[0] === 'left_chat_member') {
 		ctx.telegram.sendMessage(

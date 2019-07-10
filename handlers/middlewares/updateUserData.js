@@ -6,11 +6,11 @@ const { isMaster } = require('../../utils/config');
 const { updateUser } = require('../../stores/user');
 
 const updateUserDataHandler = async (ctx, next) => {
-	if (ctx.message.forward_from) {
+	if (ctx.message && ctx.message.forward_from) {
 		updateUser(ctx.message.forward_from);
 	}
 
-	const { entities = [] } = ctx.message;
+	const { entities = [] } = ctx.message || {};
 
 	await Promise.all(entities.map(({ user }) => user && updateUser(user)));
 
