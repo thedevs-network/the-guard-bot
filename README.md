@@ -12,7 +12,7 @@ Initially created to moderate [The Devs Network](https://thedevs.network).
 If you need help with using the Bot or setting it up, join our [Support Chat](https://t.me/theguardsupport).
 
 ## Setup
-You need [Node.js](https://nodejs.org/) (> 8.1) to run this bot.
+You need [Node.js](https://nodejs.org/) (>= 12) to run this bot.
 
 1. Create a bot via [@BotFather](https://t.me/BotFather) and grab a **token**.
 2. Clone this repository or [download zip](https://github.com/TheDevs-Network/the-guard-bot/archive/master.zip).

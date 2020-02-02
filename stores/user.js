@@ -111,7 +111,7 @@ const isAdmin = (user) => {
 
 const ban = ({ id }, ban_details) =>
 	User.update(
-		{ id },
+		{ id, $not: { status: 'admin' } },
 		{ $set: { ban_details, status: 'banned' } },
 		{ upsert: true }
 	);
@@ -130,7 +130,7 @@ const unban = ({ id }) =>
 	User.update(
 		{ id },
 		{
-			$set: { status: 'member', warns: [] },
+			$set: { status: 'member' },
 			$unset: { ban_details: true, ban_reason: true },
 		}
 	);
@@ -139,24 +139,24 @@ const isBanned = ({ id }) =>
 	User.findOne({ id, status: 'banned' })
 		.then(user => user ? user.ban_reason : null);
 
-const warn = ({ id }, reason) =>
+const warn = ({ id }, reason, { amend }) =>
 	User.update(
-		{ id },
-		{ $push: { warns: reason } },
+		{ id, $not: { status: 'admin' } },
+		{ $pop: { warns: +!!amend }, $push: { warns: reason } },
 		{ returnUpdatedDocs: true }
 	).then(getUpdatedDocument);
 
-const unwarn = ({ id }) =>
+const unwarn = ({ id }, warnQuery) =>
 	User.update(
 		{ id },
 		{
-			$pop: { warns: 1 },
+			$pull: { warns: warnQuery },
 			$set: { status: 'member' },
 			$unset: { ban_details: true, ban_reason: true },
 		}
 	);
 
-const nowarns = unban;
+const nowarns = query => unwarn(query, {});
 
 const getWarns = ({ id }) =>
 	User.findOne({ id })

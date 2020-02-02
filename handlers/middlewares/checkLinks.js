@@ -86,7 +86,7 @@ const isPublic = async username => {
 };
 
 const dh = {
-	blacklistedDomain: R.always(Action.Warn('Link to blacklisted domain')),
+	blacklistedDomain: R.always(Action.Warn('Link to a blacklisted domain')),
 	nothing: R.always(Action.Nothing),
 	tme: async url => {
 		if (url.pathname === '/') return Action.Nothing;
@@ -98,7 +98,7 @@ const dh = {
 		if (await managesGroup({ link: url.toString() })) return Action.Nothing;
 		const [ , username ] = R.match(/^\/(\w+)(?:\/\d*)?$/, url.pathname);
 		if (username && !await isPublic('@' + username)) return Action.Nothing;
-		return Action.Warn('Link to Telegram group or channel');
+		return Action.Warn('Link to a Telegram group or channel');
 	},
 };
 
@@ -155,6 +155,15 @@ const classifyList = (urls) =>
 
 const matchTmeLinks = R.match(/\b(?:t\.me|telegram\.(?:me|dog))\/[\w-/]+/gi);
 
+const maybeProp = prop => o => R.has(prop, o) ? [ o[prop] ] : [];
+
+const buttonUrls = R.pipe(
+	R.path([ 'reply_markup', 'inline_keyboard' ]),
+	R.defaultTo([]),
+	R.unnest,
+	R.chain(maybeProp('url'))
+);
+
 const classifyCtx = (ctx) => {
 	if (!ctx.chat.type.endsWith('group')) return Action.Nothing;
 
@@ -167,6 +176,7 @@ const classifyCtx = (ctx) => {
 	const rawUrls = entities
 		.filter(isLink)
 		.map(obtainUrlFromText(text))
+		.concat(buttonUrls(message))
 		.concat(matchTmeLinks(text));
 
 	const urls = R.uniq(rawUrls)

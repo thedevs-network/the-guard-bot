@@ -1,5 +1,7 @@
 'use strict';
 
+const XRegExp = require('xregexp');
+
 const strip = ({ id, username }) =>
 	id ? { id } : { username: username.toLowerCase() };
 
@@ -17,14 +19,27 @@ const botReply = ({ from, entities = [] }) => {
 	return from.is_bot && textMentions.length === 2 && [ textMentions[1].user ];
 };
 
-const parse = message => {
-	// eslint-disable-next-line no-empty-character-class
-	const regex = /^\/\w+(?:@\w+)?((?:@\w+|\d+|\s+)*)(.*)$/s;
+const flagsRegex = /\s+(?:--?|—)(\w+)(?:=(\S*))?/g;
 
+function *extractFlags(flagS) {
+	for (const [ , name, value ] of flagS.matchAll(flagsRegex)) {
+		yield [ name.toLowerCase(), value ];
+	}
+}
+
+const regex = XRegExp.tag('snx')`^
+	\/\w+(@\w+)?
+	(?<flagS> ${flagsRegex}*)
+	(?<ids> (\s+@\w+|\s+\d+)*)
+	(?:\s+(?<reason>.*))?
+$`;
+
+const parse = message => {
 	const textMentions = message.entities.filter(isTextMention);
 	const noTextMentions = textMentions.reduceRight(spliceOut, message.text);
 
-	const [ , ids, reason ] = regex.exec(noTextMentions);
+	const { flagS, ids, reason = '' } = XRegExp.exec(noTextMentions, regex);
+	const flags = new Map(extractFlags(flagS));
 	const users = textMentions.concat(ids.match(/@\w+|\d+/g) || []);
 	const { reply_to_message } = message;
 	const targets = users.length
@@ -33,7 +48,7 @@ const parse = message => {
 			? botReply(reply_to_message) || [ reply_to_message.from ]
 			: [];
 
-	return { reason, targets };
+	return { flags, reason, targets };
 };
 
 module.exports = {
