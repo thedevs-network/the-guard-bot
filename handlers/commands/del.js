@@ -1,8 +1,10 @@
 'use strict';
 
-const { parse } = require('../../utils/parse');
+const html = require('tg-html');
+const R = require('ramda');
 
-const { scheduleDeletion } = require('../../utils/tg');
+const { parse } = require('../../utils/parse');
+const { link, scheduleDeletion } = require('../../utils/tg');
 
 module.exports = async (ctx) => {
 	if (ctx.from.status !== 'admin') return;
@@ -21,6 +23,11 @@ module.exports = async (ctx) => {
 	);
 
 	if (reason) {
-		await ctx.reply(`🗑 ${reason}`);
+		const emoji = link({
+			id: R.path([ 'message', 'reply_to_message', 'from', 'id' ], ctx),
+			first_name: '🗑',
+		});
+		await ctx.replyWithHTML(html`${emoji} ${reason}`)
+			.then(scheduleDeletion());
 	}
 };
