@@ -52,7 +52,7 @@ Command                 | Role       | Available at | Description
 `/leave <name\|id>`     | _Master_   | _Everywhere_ | Make the bot to leave the group cleanly.
 `/hidegroup`            | _Master_   | _Groups_     | Revoke invite link and hide the group from `/groups` list.
 `/showgroup`            | _Master_   | _Groups_     | Make the group accessible via `/groups` list.
-`/del [reason]`         | _Admin_    | _Everywhere_ | Deletes replied-to message.
+`/del <reason>`         | _Admin_    | _Everywhere_ | Deletes replied-to message.
 `/warn <reason>`        | _Admin_    | _Groups_     | Warns the user.
 `/unwarn`               | _Admin_    | _Everywhere_ | Removes the last warn from the user.
 `/nowarns`              | _Admin_    | _Everywhere_ | Clears warns for the user.

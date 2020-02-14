@@ -21,7 +21,7 @@ const masterCommands = `\
 
 const adminCommands = `\
 <b>Admin commands</b>:
-<code>/del [reason]</code> - Deletes replied-to message.
+<code>/del &lt;reason&gt;</code> - Deletes replied-to message.
 <code>/warn &lt;reason&gt;</code> - Warns the user.
 <code>/unwarn</code> - Removes the last warn from the user.
 <code>/nowarns</code> - Clears warns for the user.
