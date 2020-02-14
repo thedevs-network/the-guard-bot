@@ -3,6 +3,7 @@
 const millisecond = require('millisecond');
 const { telegram } = require('../bot');
 
+const html = require('tg-html');
 const R = require('ramda');
 
 const isCommand = R.pipe(
@@ -22,17 +23,17 @@ const msgLink = msg =>
 	`https://t.me/c/${msg.chat.id.toString().slice(4)}/${msg.message_id}`;
 
 const link = ({ id, first_name }) =>
-	`<a href="tg://user?id=${id}">${escapeHtml(first_name)}</a>`;
+	html`<a href="tg://user?id=${id}">${first_name}</a>`;
 
 const quietLink = (user) =>
 	user.username
-		? `<a href="t.me/${user.username}">${escapeHtml(user.first_name)}</a>`
+		? html`<a href="t.me/${user.username}">${user.first_name}</a>`
 		: link(user);
 
 const displayUser = user =>
 	user.first_name
 		? link(user)
-		: `an user with id <code>${user.id}</code>`;
+		: html`an user with id <code>${user.id}</code>`;
 
 /**
  * @param {number} ms
@@ -40,7 +41,9 @@ const displayUser = user =>
  * @returns {undefined}
  */
 const deleteAfter = ms => (ctx, next) => {
-	setTimeout(ctx.deleteMessage, ms);
+	if (ms !== false) {
+		setTimeout(ctx.deleteMessage, millisecond(ms));
+	}
 	next();
 };
 

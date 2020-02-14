@@ -262,6 +262,7 @@
 			}
 		],
 		"symbol-description": "error",
-		"template-curly-spacing": "error"
+		"template-curly-spacing": "error",
+		"require-atomic-updates": "warn"
 	}
 }

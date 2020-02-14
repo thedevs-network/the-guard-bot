@@ -1,7 +1,5 @@
 'use strict';
 
-/* eslint-disable sort-keys */
-
 /*
  * Create `config.js` by running `cp example.config.js config.js`
  * in the project folder, then edit it.
@@ -35,6 +33,13 @@ module.exports = {
 
 
 	chats: {
+
+		/**
+		 * @type {(number | false)}
+		 * Chat to send member join/leave notifications to.
+		 * Pass false to disable this feature.
+		 */
+		presenceLog: false,
 
 		/**
 		 * @type {(number | false)}

@@ -14,6 +14,8 @@ const ban = require('./ban');
 
 const isNewerThan = date => warning => warning.date >= date;
 
+const cmp = (a, b) => Math.sign(a - b);
+
 module.exports = async ({ admin, amend, reason, userToWarn }) => {
 	const by_id = admin.id;
 	const date = new Date();
@@ -26,10 +28,11 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 
 	const recentWarns = warns.filter(isNewerThan(date - ms(expireWarnsAfter)));
 
-	const isLastWarn = ', <b>last warning!</b>'
-		.repeat(recentWarns.length === numberOfWarnsToBan - 1);
-
-	const count = `${recentWarns.length}/${numberOfWarnsToBan}${isLastWarn}`;
+	const count = {
+		'-1': recentWarns.length + '/' + numberOfWarnsToBan,
+		0: `${recentWarns.length}/${numberOfWarnsToBan}, <b>last warning!</b>`,
+		1: `<b>banned</b> for receiving ${numberOfWarnsToBan} warnings!`
+	}[cmp(recentWarns.length + 1, numberOfWarnsToBan)];
 
 	const warnMessage = dedent(`
 		⚠️ ${link(admin)} <b>warned</b> ${link(userToWarn)} <b>for</b>:
@@ -42,10 +45,6 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 			reason: 'Reached max number of warnings',
 			userToBan: userToWarn,
 		});
-		return warnMessage +
-			'\n\n' +
-			'🚫 The user was <b>banned</b> ' +
-			`for receiving ${numberOfWarnsToBan} warnings!`;
 	}
 
 	return warnMessage;

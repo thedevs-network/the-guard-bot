@@ -22,15 +22,6 @@ const reportHandler = async ctx => {
 			replyOptions
 		).then(scheduleDeletion());
 	}
-	if (chats.report) {
-		ctx.tg.sendMessage(
-			chats.report,
-			`❗️ Report in <a href="${msgLink(msg.reply_to_message)}">` +
-				escapeHtml(msg.chat.title) +
-				'</a>!',
-			replyOptions
-		);
-	}
 	const admins = (await ctx.getChatAdministrators())
 		.filter(member =>
 			member.status === 'creator' ||
@@ -45,9 +36,24 @@ const reportHandler = async ctx => {
 	const adminsMention = adminObjects.map(link).join('');
 	const s = `❗️${link(ctx.from)} <b>reported the message to the admins.</b>` +
 		`${adminsMention}`;
-	return ctx.replyWithHTML(s, {
+	const report = await ctx.replyWithHTML(s, {
 		reply_to_message_id: msg.reply_to_message.message_id
 	});
+	if (chats.report) {
+		await ctx.tg.sendMessage(
+			chats.report,
+			`❗️ Report in <a href="${msgLink(msg.reply_to_message)}">` +
+				escapeHtml(msg.chat.title) +
+				'</a>!',
+			{ ...replyOptions,
+				reply_markup: { inline_keyboard: [ [ {
+					text: '✔️ Handled',
+					// eslint-disable-next-line max-len
+					callback_data: `/del -chat_id=${report.chat.id} -msg_id=${report.message_id} Report handled`
+				} ] ] } }
+		);
+	}
+	return null;
 };
 
 module.exports = reportHandler;
