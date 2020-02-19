@@ -5,24 +5,16 @@ const XRegExp = require('xregexp');
 
 const { managesGroup } = require.main.require('./stores/group');
 
+const { replyId } = require('../../utils/tg');
+
 const regex = XRegExp.tag('ix')`^
-	(?:ple?a?[sz]e?,?\s)?
-	(?:(?:Can|Could)\s(?:you\s|(?:some|any)(?:one|body)\s))?
-	(?:(?:
-		Any
-		|Link\sto
-		|Go\s*to
-		|Ask\sin
-		|Move\sthis\sto
-		|(?:Give|tell|dm|pm|send|share)(?:\sme)?
-		|(?:Do\swe\shave|Is\sthere)(?:\san?y?)?
-	)\s+)?
 	(?<groupName>.+?)
 	\s(?:chat|gro?u?p)(?:\slink)?
-	(?:\sexists?)?
 	(?:,?\sple?a?[sz]e?)?
 	\s*\?*
 $`;
+
+const noop = Function.prototype;
 
 const handler = async (ctx, next) => {
 	let [ , groupName ] = ctx.match;
@@ -31,14 +23,17 @@ const handler = async (ctx, next) => {
 		groupName = ctx.chat.title;
 	}
 
-	const $regex = XRegExp.tag('ni')`^(the\s)?${groupName}(\sgroup|\schat)?$`;
+	const $regex = XRegExp.tag('nix')`(^|/\s?)
+		(the\s)?${groupName}(\sgroup|\schat)?
+	($|\s?/)`;
 
 	const group = await managesGroup({ title: { $regex } });
 	const { link } = group || {};
 
 	if (!link) return next();
 
-	return ctx.reply(link, { reply_to_message_id: ctx.message.message_id });
+	ctx.deleteMessage().then(noop);
+	return ctx.reply(link, { reply_to_message_id: replyId(ctx.message) });
 };
 
 module.exports = hears(regex, handler);

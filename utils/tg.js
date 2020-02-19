@@ -6,6 +6,8 @@ const { telegram } = require('../bot');
 const html = require('tg-html');
 const R = require('ramda');
 
+const replyId = R.path([ 'reply_to_message', 'message_id' ]);
+
 const isCommand = R.pipe(
 	R.defaultTo({}),
 	R.path([ 'entities', 0 ]),
@@ -72,5 +74,6 @@ module.exports = {
 	link,
 	msgLink,
 	quietLink,
+	replyId,
 	scheduleDeletion,
 };
