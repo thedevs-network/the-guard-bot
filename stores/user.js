@@ -1,7 +1,6 @@
 'use strict';
 
 // Utils
-const { logError } = require('../utils/log');
 const { strip } = require('../utils/parse');
 
 const Datastore = require('nedb-promise');
@@ -36,24 +35,6 @@ const normalizeTgUser = R.pipe(
 );
 
 const getUpdatedDocument = R.prop(1);
-
-const addUser = ({ id, first_name = '', last_name = '', username = '' }) =>
-	User.update(
-		{ id },
-		{
-			first_name,
-			id,
-			last_name,
-			status: 'member',
-			username: username.toLowerCase(),
-			warns: []
-		},
-		{ upsert: true }
-	)
-		.catch(logError);
-
-const isUser = ({ id }) =>
-	User.findOne({ id });
 
 const getUser = user =>
 	User.findOne(user);
@@ -135,10 +116,6 @@ const unban = ({ id }) =>
 		}
 	);
 
-const isBanned = ({ id }) =>
-	User.findOne({ id, status: 'banned' })
-		.then(user => user ? user.ban_reason : null);
-
 const warn = ({ id }, reason, { amend }) =>
 	User.update(
 		{ id, $not: { status: 'admin' } },
@@ -158,24 +135,14 @@ const unwarn = ({ id }, warnQuery) =>
 
 const nowarns = query => unwarn(query, {});
 
-const getWarns = ({ id }) =>
-	User.findOne({ id })
-		.then(user => user && user.warns.length > 0
-			? user.warns
-			: null);
-
 module.exports = {
-	addUser,
 	admin,
 	ban,
 	batchBan,
 	ensureExists,
 	getAdmins,
 	getUser,
-	getWarns,
 	isAdmin,
-	isBanned,
-	isUser,
 	nowarns,
 	unadmin,
 	unban,

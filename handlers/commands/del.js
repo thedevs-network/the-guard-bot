@@ -23,10 +23,8 @@ module.exports = async (ctx) => {
 	);
 
 	if (reason) {
-		const emoji = link({
-			id: R.path([ 'message', 'reply_to_message', 'from', 'id' ], ctx),
-			first_name: '🗑',
-		});
+		const id = R.path([ 'message', 'reply_to_message', 'from', 'id' ], ctx);
+		const emoji = id ? link({ id, first_name: '🗑' }) : '🗑';
 		await ctx.replyWithHTML(html`${emoji} ${reason}`)
 			.then(scheduleDeletion());
 	}
