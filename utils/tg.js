@@ -19,6 +19,9 @@ const escapeHtml = s => s
 	.replace(/'/g, '&#39;')
 	.replace(/</g, '&lt;');
 
+const inlineKeyboard = (...inline_keyboard) =>
+	({ reply_markup: { inline_keyboard } });
+
 const msgLink = msg =>
 	`https://t.me/c/${msg.chat.id.toString().slice(4)}/${msg.message_id}`;
 
@@ -64,6 +67,7 @@ module.exports = {
 	deleteAfter,
 	displayUser,
 	escapeHtml,
+	inlineKeyboard,
 	isCommand,
 	link,
 	msgLink,

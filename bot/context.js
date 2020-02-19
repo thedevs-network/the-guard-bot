@@ -33,4 +33,8 @@ module.exports = {
 		return this.replyWithHTML(warnMessage, { reply_markup })
 			.then(scheduleDeletion(normalisedDeleteWarnsAfter[mode]));
 	},
+
+	replyWithCopy(content, options) {
+		return this.tg.sendCopy(this.chat.id, content, options);
+	},
 };

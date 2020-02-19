@@ -7,13 +7,44 @@ const { addCommand, getCommand } = require('../../stores/command');
 const { Markup } = require('telegraf');
 const { replyOptions } = require('../../bot/options');
 
+const Cmd = require('../../utils/cmd');
 const { isMaster } = require('../../utils/config');
+const { inlineKeyboard } = require('../../utils/tg');
 
 const preserved = require('../commands').handlers;
 
+const roleBtn = (btRole, { newCommand, currentRole }) => {
+	const noop = btRole.toLowerCase() === currentRole.toLowerCase();
+	return {
+		text: '✅ '.repeat(noop) + btRole,
+		callback_data: Cmd.stringify({
+			command: 'addcommand',
+			flags: {
+				noop,
+				role: btRole,
+				replace: 'soft',
+			},
+			reason: newCommand,
+		})
+	};
+};
+
+const roleKbRow = (cmdData) => [
+	roleBtn('Admins', cmdData),
+	roleBtn('Everyone', cmdData),
+];
+
+const normalizeRole = (role = '') => {
+	const lower = role.toLowerCase();
+	return lower === 'master' || lower === 'admins'
+		? lower
+		: 'everyone';
+};
+
 const addCommandHandler = async (ctx) => {
 	const { chat, message, reply } = ctx;
-	if (chat.type !== 'private') return null;
+	if (chat.type !== 'private' && !message.reply_to_message) return null;
+	if (chat.type === 'channel') return null;
 	const { id } = ctx.from;
 
 	if (ctx.from.status !== 'admin') {
@@ -23,7 +54,9 @@ const addCommandHandler = async (ctx) => {
 		);
 	}
 
-	const [ slashCommand, commandName = '' ] = message.text.split(' ');
+	const { flags, reason: commandName } = Cmd.parse(message);
+	if (flags.has('noop')) return null;
+
 	const isValidName = /^!?(\w+)$/.exec(commandName);
 	if (!isValidName) {
 		return reply(
@@ -38,7 +71,8 @@ const addCommandHandler = async (ctx) => {
 			'Try another one.');
 	}
 
-	const replaceCmd = slashCommand.toLowerCase() === '/replacecommand';
+	const replaceCmd = flags.has('replace');
+	const content = message.reply_to_message;
 
 	const cmdExists = await getCommand({ isActive: true, name: newCommand });
 
@@ -49,7 +83,7 @@ const addCommandHandler = async (ctx) => {
 			'/addcommand <code>&lt;name&gt;</code> - to add a command.\n' +
 			'/removecommand <code>&lt;name&gt;</code>' +
 			' - to remove a command.',
-			Markup.keyboard([ [ `/replacecommand ${newCommand}` ] ])
+			Markup.keyboard([ [ `/addcommand -replace ${newCommand}` ] ])
 				.oneTime()
 				.resize()
 				.extra()
@@ -61,6 +95,26 @@ const addCommandHandler = async (ctx) => {
 			replyOptions
 		);
 	}
+
+	const softReplace = flags.get('replace') === 'soft';
+	if (content || softReplace) {
+		const role = normalizeRole(flags.get('role'));
+		await addCommand({
+			id,
+			role,
+			type: 'copy',
+			caption: null,
+			isActive: true,
+			name: newCommand,
+			...softReplace || { content },
+		});
+		return ctx.replyWithHTML(
+			`✅ <b>Successfully added <code>!${commandName}</code></b>.\n` +
+			'Who should be able to use it?',
+			inlineKeyboard(roleKbRow({ currentRole: role, newCommand }))
+		);
+	}
+
 	await addCommand({ id, name: newCommand, state: 'role' });
 	return reply('Who can use this command?', Markup.keyboard([
 		[ 'Master', 'Admins', 'Everyone' ]
