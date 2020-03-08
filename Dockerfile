@@ -3,7 +3,7 @@ FROM node:alpine
 COPY . /app
 WORKDIR /app
 
-RUN npm install
+RUN apk add git && npm install
 
 CMD npm start
 
