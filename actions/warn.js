@@ -8,7 +8,7 @@ const { escapeHtml, link } = require('../utils/tg');
 const {
 	expireWarnsAfter = Infinity,
 	numberOfWarnsToBan,
-} = require('../config');
+} = require('../utils/config').config;
 const { warn } = require('../stores/user');
 const ban = require('./ban');
 

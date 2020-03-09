@@ -9,7 +9,7 @@ const {
 	warnInlineKeyboard,
 	deleteWarnsAfter = false,
 	deleteBansAfter = false,
-} = require('../config');
+} = require('../utils/config').config;
 
 const normalisedDeleteWarnsAfter = typeof deleteWarnsAfter === 'object'
 	? { auto: false, manual: false, ...deleteWarnsAfter }

@@ -3,7 +3,7 @@
 const R = require('ramda');
 const { optional, passThru } = require('telegraf');
 
-const { excludeLinks = [] } = require('../../config');
+const { excludeLinks = [] } = require('../../utils/config').config;
 
 if (excludeLinks === false || excludeLinks === '*') {
 	module.exports = passThru();

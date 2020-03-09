@@ -16,7 +16,7 @@ const {
 	excludeLinks = [],
 	blacklistedDomains = [],
 	notifyBrokenLink,
-} = require('../../config');
+} = require('../../utils/config').config;
 
 if (excludeLinks === false || excludeLinks === '*') {
 	module.exports = (ctx, next) => next();

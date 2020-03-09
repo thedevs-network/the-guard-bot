@@ -8,7 +8,7 @@ const { escapeHtml, link, scheduleDeletion } = require('../../utils/tg');
 const { parse, strip } = require('../../utils/parse');
 
 // Config
-const { numberOfWarnsToBan } = require('../../config');
+const { numberOfWarnsToBan } = require('../../utils/config').config;
 
 // Bot
 const { replyOptions } = require('../../bot/options');

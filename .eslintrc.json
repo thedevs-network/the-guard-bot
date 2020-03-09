@@ -1,6 +1,7 @@
 {
 	"parserOptions": {
-		"ecmaVersion": 2018
+		"ecmaVersion": 2018,
+		"sourceType": "script"
 	},
 	"env": {
 		"browser": true,
@@ -31,7 +32,6 @@
 		"no-await-in-loop": "error",
 		"no-extra-parens": "error",
 		"no-template-curly-in-string": "error",
-		"valid-jsdoc": "error",
 		"accessor-pairs": "error",
 		"array-callback-return": "error",
 		"block-scoped-var": "error",

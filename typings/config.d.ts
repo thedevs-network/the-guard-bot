@@ -1,147 +1,114 @@
-// @ts-check
-'use strict';
+import type { InlineKeyboardMarkup } from 'telegraf/typings/telegram-types';
+
+export type InlineKeyboard = InlineKeyboardMarkup['inline_keyboard'];
 
 /**
- * @typedef { import('./typings/config').Config } Config
- * @typedef { import('./typings/config').InlineKeyboard } InlineKeyboard
- */
-
-/*
- * Create `config.js` by running `cp example.config.js config.js`
- * in the project folder, then edit it.
- *
- * Config file in JSON format (`config.json`) is also supported.
- * For backwards compatibility, and because why not, it needs no extra code.
- */
-
-/**
- * Millisecond
  * String to be parsed by https://npmjs.com/millisecond,
- * or number of milliseconds. Pass 0 to remove immediately.
- * @typedef {( number | string )} ms
+ * or number of milliseconds.
  */
+type ms = number | string;
 
-/**
- * @type {Config}
- */
-const config = {
+export interface Config {
 
 	/**
-	 * @type {!( number | string | (number|string)[] )}
 	 * ID (number) or username (string) of master,
 	 * the person who can promote and demote admins,
 	 * and add the bot to groups.
 	 */
-	master: 123456789,
+	master: number | string | (number|string)[];
 
 	/**
-	 * @type {!string}
 	 * Telegram Bot token obtained from https://t.me/BotFather.
 	 */
-	token: '',
+	token: string;
 
-
-	chats: {
+	chats?: {
 
 		/**
-		 * @type {(number | false)}
 		 * Chat to send member join/leave notifications to.
 		 * Pass false to disable this feature.
 		 */
-		presenceLog: false,
+		presenceLog?: number | false;
 
 		/**
-		 * @type {(number | false)}
 		 * Chat to send report notifications to.
 		 * Pass false to disable this feature.
 		 */
-		report: -1001148607297,
+		report?: number | false;
 	},
 
 	/**
-	 * @type {( 'all' | 'own' | 'none' )}
 	 * Which messages with commands should be deleted?
 	 * Defaults to 'own' -- don't delete commands meant for other bots.
 	 */
-	deleteCommands: 'own',
+	deleteCommands?: 'all' | 'own' | 'none';
 
-	deleteCustom: {
-		longerThan: 450, // UTF-16 characters
-		after: '20 minutes'
+	deleteCustom?: {
+		longerThan: number; // UTF-16 characters
+		after: ms;
 	},
 
 	/**
-	 * @type {(ms | false)} Millisecond
 	 * Timeout before removing join and leave messages.
 	 * [Look at typedef above for details.]
 	 * Pass false to disable this feature.
 	 */
-	deleteJoinsAfter: '2 minutes',
+	deleteJoinsAfter?: ms | false;
 
 	/**
-	 * @type {(ms | { auto: (ms | false), manual: (ms | false) } | false)}
 	 * Timeout before removing auto-warn messages.
 	 * [Look at typedef above for details.]
 	 * Pass an object with { auto, manual } for more granular control
 	 * over which messages get deleted
 	 * Pass false to disable this feature.
 	 */
-	deleteWarnsAfter: false,
+	deleteWarnsAfter?: ms | { auto: (ms | false), manual: (ms | false) } | false;
 
 	/**
-	 * @type {(ms | false)}
 	 * Timeout before removing ban messages.
 	 * [Look at typedef above for details.]
 	 * Pass false to disable this feature.
 	 */
-	deleteBansAfter: false,
+	deleteBansAfter?: ms | false;
 
 	/**
-	 * @type {string[]}
 	 * List of blacklisted domains.
 	 * Messages containing blacklisted domains will automatically be warned.
 	 * If the link is shortened, an attempt will be made to resolve it.
 	 * If resolved link is blacklisted, it will be warned for.
 	 */
-	blacklistedDomains: [],
+	blacklistedDomains?: string[];
 
 	/**
-	 * @type {( string[] | false )}
 	 * List of whitelisted links and usernames,
 	 * For channels and groups to stop warning users for them.
 	 * Pass false to whitelist all links and channels.
 	 */
-	excludeLinks: [],
+	excludeLinks?: string[] | false;
 
 	/**
-	 * @type {ms}
 	 * Don't count warns older than this value towards automatic ban.
 	 * [Look at typedef above for details.]
 	 */
-	expireWarnsAfter: Infinity,
+	expireWarnsAfter?: ms;
 
 	/**
-	 * @type {InlineKeyboard}
 	 * Inline keyboard to be added to reply to /groups.
 	 * We use it to display button opening our webpage.
 	 */
-	groupsInlineKeyboard: [],
+	groupsInlineKeyboard?: InlineKeyboard;
 
-	numberOfWarnsToBan: 3,
+	numberOfWarnsToBan: number;
 
 	/**
-	 * @type {string[]}
 	 * List of plugin names to be loaded.
 	 * See Readme in plugins directory for more details.
 	 */
-	plugins: [],
+	plugins?: string[];
 
 	/**
-	 * @type {InlineKeyboard}
 	 * Inline keyboard to be added to warn message.
 	 * We use it to display button showing our rules.
 	 */
-	warnInlineKeyboard: [],
-};
-
-module.exports = Object.freeze(config);
+	warnInlineKeyboard?: InlineKeyboard;
+}

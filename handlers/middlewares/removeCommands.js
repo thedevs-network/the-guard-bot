@@ -1,6 +1,6 @@
 'use strict';
 
-const { deleteCommands } = require('../../config');
+const { deleteCommands = 'own' } = require('../../utils/config').config;
 const { isCommand } = require('../../utils/tg.js');
 const { unmatched } = require('../unmatched');
 

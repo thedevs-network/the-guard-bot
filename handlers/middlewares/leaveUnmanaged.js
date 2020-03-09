@@ -5,7 +5,7 @@ const { logError } = require('../../utils/log');
 
 const { managesGroup } = require('../../stores/group');
 
-const { chats = {} } = require('../../config');
+const { chats = {} } = require('../../utils/config').config;
 
 const pkg = require('../../package.json');
 

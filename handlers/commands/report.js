@@ -11,7 +11,7 @@ const {
 // Bot
 const { replyOptions } = require('../../bot/options');
 
-const { chats = {} } = require('../../config');
+const { chats = {} } = require('../../utils/config').config;
 
 const reportHandler = async ctx => {
 	if (!ctx.chat.type.endsWith('group')) return null;

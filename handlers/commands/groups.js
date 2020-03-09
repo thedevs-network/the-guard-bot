@@ -8,7 +8,7 @@ const { escapeHtml, scheduleDeletion } = require('../../utils/tg');
 // DB
 const { listVisibleGroups } = require('../../stores/group');
 
-const config = require('../../config');
+const { config } = require('../../utils/config');
 
 const inline_keyboard = config.groupsInlineKeyboard;
 

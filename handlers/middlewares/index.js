@@ -5,7 +5,7 @@ const { Composer } = require('telegraf');
 const composer = new Composer();
 
 const { deleteAfter } = require('../../utils/tg');
-const { deleteJoinsAfter = '2 minutes' } = require('../../config');
+const { deleteJoinsAfter = '2 minutes' } = require('../../utils/config').config;
 
 const addedToGroupHandler = require('./addedToGroup');
 const antibotHandler = require('./antibot');
@@ -27,6 +27,7 @@ composer.on('left_chat_member', kickedFromGroupHandler);
 composer.use(leaveUnmanagedHandler);
 composer.use(monkeyPatchHandler);
 composer.use(updateUserDataHandler);
+
 composer.on('new_chat_members', syncStatusHandler, antibotHandler);
 composer.on('message', kickBannedHandler);
 composer.use(removeChannelForwardsHandler);
