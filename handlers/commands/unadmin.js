@@ -29,6 +29,7 @@ const tgUnadmin = async (userToUnadmin) => {
 	}
 };
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const unAdminHandler = async ({ from, message, reply }) => {
 	if (!isMaster(from)) return null;
 

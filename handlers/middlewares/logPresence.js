@@ -13,6 +13,7 @@ function getId(user) {
 	return user.id;
 }
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 function log(ctx, next) {
 	if (!chats.presenceLog) return next();
 	if (ctx.updateSubTypes[0] === 'new_chat_members') {

@@ -6,6 +6,7 @@ const { getCommand, removeCommand } = require('../../stores/command');
 // Bot
 const { replyOptions } = require('../../bot/options');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const removeCommandHandler = async ({ chat, message, reply, state }) => {
 	const { isAdmin, isMaster } = state;
 	const { text } = message;

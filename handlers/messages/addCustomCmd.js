@@ -13,6 +13,7 @@ const {
 	updateCommand
 } = require('../../stores/command');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const createNewCommand = ctx => {
 	const { message } = ctx;
 	const { caption, text, photo } = message;
@@ -31,6 +32,7 @@ const createNewCommand = ctx => {
 	return { caption, content: message[type].file_id, type };
 };
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const addCustomCmdHandler = async (ctx, next) => {
 	if (ctx.chat.type !== 'private') return next();
 

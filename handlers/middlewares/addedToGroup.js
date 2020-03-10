@@ -7,6 +7,7 @@ const { admin } = require('../../stores/user');
 const { addGroup } = require('../../stores/group');
 const { isMaster } = require('../../utils/config');
 
+/** @param { import('telegraf').ContextMessageUpdate } ctx */
 const addedToGroupHandler = async (ctx, next) => {
 	const msg = ctx.message;
 

@@ -17,6 +17,7 @@ const noop = Function.prototype;
 // This handler is very similiar to commands/unban.
 // When adding a feature here, please consider adding it there too.
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const nowarnsHandler = async ({ from, message, reply, telegram }) => {
 	if (!from || from.status !== 'admin') return null;
 

@@ -6,6 +6,7 @@ const { scheduleDeletion } = require('../../utils/tg');
 // DB
 const { managesGroup } = require('../../stores/group');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const linkHandler = async ({ chat, replyWithHTML }, next) => {
 	if (chat.type === 'private') {
 		return next();

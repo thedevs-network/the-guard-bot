@@ -45,6 +45,7 @@ const hasRole = (role, from) => {
 	}
 };
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const runCustomCmdHandler = async (ctx, next) => {
 	const commandName = ctx.match[1].toLowerCase();
 	const command = await getCommand({ isActive: true, name: commandName });

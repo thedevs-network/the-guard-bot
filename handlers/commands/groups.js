@@ -27,6 +27,7 @@ const emojiRegex = XRegExp.tag('gx')`
 
 const stripEmoji = s => s.replace(emojiRegex, '');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const groupsHandler = async ({ replyWithHTML }) => {
 	if (config.groupsString) {
 		return replyWithHTML(config.groupsString);

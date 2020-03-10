@@ -8,6 +8,7 @@ const { isAdmin } = require('../../stores/user');
 
 const link = user => '@' + user.username;
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const antibotHandler = async (ctx, next) => {
 	const msg = ctx.message;
 

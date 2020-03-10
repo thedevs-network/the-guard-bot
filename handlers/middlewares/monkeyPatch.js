@@ -2,6 +2,7 @@
 
 const msgAlreadyDeleted = 'Bad Request: message to delete not found';
 
+/** @param { import('telegraf').ContextMessageUpdate } ctx */
 module.exports = (ctx, next) => {
 	ctx.tg.deleteMessage = async (chat_id, message_id) => {
 		try {

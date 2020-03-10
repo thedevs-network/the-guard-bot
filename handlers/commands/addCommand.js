@@ -41,6 +41,7 @@ const normalizeRole = (role = '') => {
 		: 'everyone';
 };
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const addCommandHandler = async (ctx) => {
 	const { chat, message, reply } = ctx;
 	if (chat.type !== 'private' && !message.reply_to_message) return null;

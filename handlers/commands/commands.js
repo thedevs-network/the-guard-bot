@@ -41,6 +41,7 @@ const userCommands = `\
 const role = R.prop('role');
 const name = R.prop('name');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const commandReferenceHandler = async (ctx) => {
 	const customCommands = await listCommands();
 

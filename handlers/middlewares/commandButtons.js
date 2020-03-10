@@ -1,8 +1,11 @@
 'use strict';
 
 const TelegrafContext = require('telegraf/core/context');
+
+/** @type { import('../../typings/context').ContextExtensions } */
 const contextCustomizations = require('../../bot/context');
 
+/** @param { import('telegraf').ContextMessageUpdate } ctx */
 module.exports = (ctx, next) => {
 	if (!ctx.callbackQuery) return next();
 	if (!ctx.callbackQuery.data.startsWith('/')) return next();
@@ -16,6 +19,7 @@ module.exports = (ctx, next) => {
 		}
 	};
 
+	/** @type { import('../../typings/context').ExtendedContext } */
 	const cbCtx = new TelegrafContext(cbUpdate, ctx.tg, ctx.options);
 	Object.assign(cbCtx, contextCustomizations);
 	cbCtx.botInfo = ctx.botInfo;

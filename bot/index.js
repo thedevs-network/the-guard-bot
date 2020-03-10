@@ -3,6 +3,9 @@
 const Telegraf = require('telegraf');
 const { config } = require('../utils/config');
 
+/** @typedef { import('../typings/context').ExtendedContext } ExtendedContext */
+
+/** @type { import('telegraf/typings').Telegraf<ExtendedContext> } */
 const bot = new Telegraf(config.token);
 
 if (process.env.NODE_ENV === 'development') {

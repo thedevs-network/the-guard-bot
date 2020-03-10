@@ -17,6 +17,7 @@ if (!(deleteCommands in shouldDelete)) {
 
 const noop = Function.prototype;
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const removeCommandsHandler = async (ctx, next) => {
 	await next();
 	if (

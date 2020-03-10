@@ -10,6 +10,7 @@ const { replyOptions } = require('../../bot/options');
 // DB
 const { getUser } = require('../../stores/user');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const warnHandler = async (ctx) => {
 	const { message, reply } = ctx;
 

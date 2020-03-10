@@ -30,6 +30,7 @@ const dateRegex = XRegExp.tag('nix')`^
 	)?)?)?)?)?
 $`;
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const unwarnHandler = async ({ from, message, reply, telegram }) => {
 	if (!from || from.status !== 'admin') return null;
 

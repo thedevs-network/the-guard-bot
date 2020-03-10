@@ -13,6 +13,7 @@ const { replyOptions } = require('../../bot/options');
 
 const { chats = {} } = require('../../utils/config').config;
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const reportHandler = async ctx => {
 	if (!ctx.chat.type.endsWith('group')) return null;
 	const msg = ctx.message;

@@ -17,6 +17,7 @@ const normalisedDeleteWarnsAfter = typeof deleteWarnsAfter === 'object'
 
 const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
+/** @type { import('../typings/context').ContextExtensions } */
 module.exports = {
 	async ban({ admin, reason, userToBan }) {
 		const banMessage = await ban({ admin, reason, userToBan });

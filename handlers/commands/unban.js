@@ -14,6 +14,7 @@ const { getUser, unban } = require('../../stores/user');
 
 const noop = Function.prototype;
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const unbanHandler = async ({ from, message, reply, telegram }) => {
 	if (!from || from.status !== 'admin') return null;
 

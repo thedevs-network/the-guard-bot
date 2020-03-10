@@ -30,6 +30,7 @@ const optional = (header, content) =>
 		? header + content + '\n'
 		: '';
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const getWarnsHandler = async ({ from, message, reply }) => {
 	if (!from) {
 		return reply(

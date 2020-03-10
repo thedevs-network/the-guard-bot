@@ -43,11 +43,7 @@ const gifs = gifIds.map(x => `https://media.giphy.com/media/${x}/giphy.gif`);
 const randomChoice = arr => arr[Math.floor(Math.random() * arr.length)];
 
 
-/**
- * @param {TelegrafContext} ctx - Telegraf context object
- * @param {Function} next - method for returning next object
- * @returns {Promise.<*>} - returns next object
- */
+/** @param { import('telegraf').ContextMessageUpdate } ctx */
 const leaveUnmanagedHandler = async (ctx, next) => {
 	if (
 		ctx.chat.type === 'private' ||

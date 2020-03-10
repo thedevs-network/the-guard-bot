@@ -18,6 +18,7 @@ So if you don't wish to self-host, @MissRose_bot \
 might be a better choice for you.
 `;
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const helpHandler = ({ chat, replyWithHTML }) => {
 	if (chat.type !== 'private') return null;
 

@@ -6,6 +6,7 @@ const R = require('ramda');
 const { parse } = require('../../utils/parse');
 const { link, scheduleDeletion } = require('../../utils/tg');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 module.exports = async (ctx) => {
 	if (ctx.from.status !== 'admin') return;
 

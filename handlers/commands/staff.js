@@ -6,6 +6,7 @@ const { quietLink, scheduleDeletion } = require('../../utils/tg');
 // DB
 const { getAdmins } = require('../../stores/user');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const staffHandler = async ctx => {
 	const admins = await getAdmins();
 	admins.sort((a, b) => a.first_name > b.first_name ? 1 : -1);

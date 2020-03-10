@@ -164,6 +164,7 @@ const buttonUrls = R.pipe(
 	R.chain(maybeProp('url'))
 );
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const classifyCtx = (ctx) => {
 	if (!ctx.chat.type.endsWith('group')) return Action.Nothing;
 
@@ -187,6 +188,7 @@ const classifyCtx = (ctx) => {
 	return classifyList(urls);
 };
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 module.exports = async (ctx, next) =>
 	(await classifyCtx(ctx)).cata({
 		Nothing: next,

@@ -2,6 +2,7 @@
 
 const { managesGroup, removeGroup } = require('../../stores/group');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const leaveCommandHandler = async ctx => {
 	const { chat, message, telegram, state, replyWithHTML } = ctx;
 	const { isMaster } = state;

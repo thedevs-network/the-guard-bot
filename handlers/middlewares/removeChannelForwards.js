@@ -43,6 +43,7 @@ const pred = R.allPass([
 	R.complement(fromWhitelisted),
 ]);
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const handler = ctx => {
 	ctx.deleteMessage();
 	return ctx.warn({

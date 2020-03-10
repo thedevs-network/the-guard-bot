@@ -16,6 +16,7 @@ $`;
 
 const noop = Function.prototype;
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const handler = async (ctx, next) => {
 	let [ , groupName ] = ctx.match;
 	if (groupName.toLowerCase() === 'this') {

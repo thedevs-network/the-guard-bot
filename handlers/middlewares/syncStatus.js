@@ -2,6 +2,7 @@
 
 const { getUser } = require('../../stores/user');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const syncStatusHandler = (ctx, next) => {
 	const { message } = ctx;
 	const { new_chat_members } = message;

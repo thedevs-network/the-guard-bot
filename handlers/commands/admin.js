@@ -15,6 +15,7 @@ const {
 	getUser,
 } = require('../../stores/user');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const adminHandler = async ({ from, message, reply }) => {
 	if (!isMaster(from)) return null;
 
