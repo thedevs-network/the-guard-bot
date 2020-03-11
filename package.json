@@ -33,6 +33,7 @@
   "dependencies": {
     "daggy": "^1.3.0",
     "dedent-js": "^1.0.1",
+    "inquirer": "^7.1.0",
     "millisecond": "^0.1.2",
     "nedb-promise": "^2.0.1",
     "node-fetch": "^2.2.0",
