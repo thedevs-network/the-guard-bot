@@ -1,6 +1,6 @@
 'use strict';
 
-const TelegrafContext = require('telegraf/core/context');
+const { Context } = require('telegraf');
 
 /** @type { import('../../typings/context').ContextExtensions } */
 const contextCustomizations = require('../../bot/context');
@@ -20,7 +20,7 @@ module.exports = (ctx, next) => {
 	};
 
 	/** @type { import('../../typings/context').ExtendedContext } */
-	const cbCtx = new TelegrafContext(cbUpdate, ctx.tg, ctx.options);
+	const cbCtx = new Context(cbUpdate, ctx.tg, ctx.options);
 	Object.assign(cbCtx, contextCustomizations);
 	cbCtx.botInfo = ctx.botInfo;
 
