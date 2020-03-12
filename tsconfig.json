@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"module": "CommonJS",
+		"noImplicitAny": false,
+		"noEmit": true,
+		"resolveJsonModule": true,
+		"strict": true,
+		"target": "ES2020"
+	}
+}
