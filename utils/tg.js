@@ -1,3 +1,4 @@
+// @ts-check
 'use strict';
 
 const millisecond = require('millisecond');
@@ -40,11 +41,7 @@ const displayUser = user =>
 		? link(user)
 		: html`an user with id <code>${user.id}</code>`;
 
-/**
- * @param {number} ms
- * Deletes messages after (ms) milliseconds
- * @returns {undefined}
- */
+/** @param {number | string | false} ms */
 const deleteAfter = ms => (ctx, next) => {
 	if (ms !== false) {
 		setTimeout(ctx.deleteMessage, millisecond(ms));
@@ -52,6 +49,7 @@ const deleteAfter = ms => (ctx, next) => {
 	next();
 };
 
+/** @param {number | string | false} ms */
 const scheduleDeletion = (ms = 5 * 60 * 1000) => message => {
 	const { chat, message_id } = message;
 

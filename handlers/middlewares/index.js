@@ -1,7 +1,12 @@
+// @ts-check
 'use strict';
 
 const { Composer } = require('telegraf');
 
+/**
+ * @typedef {import('../../typings/context').ExtendedContext} ExtendedContext
+ * @type {import('telegraf').Composer<ExtendedContext>}
+ */
 const composer = new Composer();
 
 const { deleteAfter } = require('../../utils/tg');

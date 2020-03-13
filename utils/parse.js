@@ -1,3 +1,4 @@
+// @ts-check
 'use strict';
 
 const XRegExp = require('xregexp');
@@ -21,6 +22,7 @@ const botReply = ({ from, entities = [] }) => {
 
 const flagsRegex = /\s+(?:--?|—)(\w+)(?:=(\S*))?/g;
 
+/** @returns {Generator<[string, string | undefined]>} */
 function *extractFlags(flagS) {
 	for (const [ , name, value ] of flagS.matchAll(flagsRegex)) {
 		yield [ name.toLowerCase(), value ];

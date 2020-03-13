@@ -1,3 +1,4 @@
+// @ts-check
 'use strict';
 
 const dedent = require('dedent-js');
@@ -26,6 +27,7 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 		{ amend }
 	);
 
+	// @ts-ignore
 	const recentWarns = warns.filter(isNewerThan(date - ms(expireWarnsAfter)));
 
 	const count = {
