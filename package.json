@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "eslint": "^6.0.1",
+    "eslint-fix": "github:GingerPlusPlus/eslint-fix",
     "husky": "^0.14.3",
     "typescript": "^3.8.3"
   }
