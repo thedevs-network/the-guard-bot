@@ -207,6 +207,7 @@ module.exports = async (ctx, next) =>
 			const admin = ctx.botInfo;
 			const userToWarn = ctx.from;
 
+			if (userToWarn.id === 777000) return next();
 			if (await isAdmin(userToWarn)) return next();
 
 			ctx.deleteMessage();
