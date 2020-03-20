@@ -14,8 +14,6 @@ const regex = XRegExp.tag('ix')`^
 	\s*\?*
 $`;
 
-const noop = Function.prototype;
-
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const handler = async (ctx, next) => {
 	let [ , groupName ] = ctx.match;
@@ -33,7 +31,6 @@ const handler = async (ctx, next) => {
 
 	if (!link) return next();
 
-	ctx.deleteMessage().then(noop);
 	return ctx.reply(link, { reply_to_message_id: replyId(ctx.message) });
 };
 
