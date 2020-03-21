@@ -33,6 +33,7 @@ const regex = XRegExp.tag('snx')`^
 	\/\w+(@\w+)?
 	(?<flagS> ${flagsRegex}*)
 	(?<ids> (\s+@\w+|\s+\d+)*)
+	(?:\s+--|\s+—)?
 	(?:\s+(?<reason>.*))?
 $`;
 
