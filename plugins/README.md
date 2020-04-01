@@ -26,7 +26,7 @@ Plugins are similar to [micro-bot] bots.
 
 ## Known plugins ##
 
-- https://gist.github.com/GingerPlusPlus/ef6273e4155bc5db89e4db8b3bdc14a8
+- https://gist.github.com/wojpawlik/ef6273e4155bc5db89e4db8b3bdc14a8
 
 
 [micro-bot]: https://github.com/telegraf/micro-bot
