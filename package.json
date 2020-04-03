@@ -37,6 +37,7 @@
     "node-fetch": "^2.2.0",
     "ramda": "^0.25.0",
     "require-directory": "^2.1.1",
+    "spamwatch": "^0.2.0",
     "telegraf": "^3.36.0",
     "tg-html": "gist:f9e184b78bbfc4419bc1ee70c238ca6f",
     "xregexp": "^4.2.0"
