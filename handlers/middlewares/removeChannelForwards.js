@@ -6,6 +6,8 @@ const { optional, passThru } = require('telegraf');
 const { excludeLinks = [] } = require('../../utils/config').config;
 
 if (excludeLinks === false || excludeLinks === '*') {
+
+	/** @type { import('../../typings/context').GuardMiddlewareFn } */
 	module.exports = passThru();
 	return;
 }

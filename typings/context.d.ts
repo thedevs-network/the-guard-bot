@@ -1,4 +1,4 @@
-import type { ContextMessageUpdate } from 'telegraf';
+import type { Context, MiddlewareFn } from 'telegraf';
 import type {
 	User,
 	Message,
@@ -33,6 +33,8 @@ export interface ContextExtensions {
 	): Promise<Message>;
 }
 
-export type ExtendedContext = ContextExtensions & ContextMessageUpdate & {
+export type ExtendedContext = ContextExtensions & Context & {
 	from?: DbUser,
 };
+
+export type GuardMiddlewareFn = MiddlewareFn<ExtendedContext>;
