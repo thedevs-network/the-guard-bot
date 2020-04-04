@@ -1,3 +1,4 @@
+// @ts-check
 'use strict';
 
 // Bot
@@ -7,7 +8,7 @@ const { admin } = require('../../stores/user');
 const { addGroup } = require('../../stores/group');
 const { isMaster } = require('../../utils/config');
 
-/** @param { import('telegraf').ContextMessageUpdate } ctx */
+/** @param { import('telegraf').Context } ctx */
 const addedToGroupHandler = async (ctx, next) => {
 	const msg = ctx.message;
 
@@ -19,14 +20,14 @@ const addedToGroupHandler = async (ctx, next) => {
 			? `https://t.me/${ctx.chat.username.toLowerCase()}`
 			: await ctx.exportChatInviteLink().catch(() => '');
 		if (!link) {
-			// eslint-disable-next-line function-paren-newline
 			await ctx.replyWithHTML(
 				'⚠️ <b>Failed to export chat invite link.</b>\n' +
 				'Group won\'t be visible in /groups list.\n' +
 				'\n' +
 				'If this isn\'t your intention, ' +
 				'make sure I am permitted to export chat invite link, ' +
-				'and then run /showgroup.');
+				'and then run /showgroup.'
+			);
 		}
 		const { id, title, type } = ctx.chat;
 		await addGroup({ id, link, title, type });

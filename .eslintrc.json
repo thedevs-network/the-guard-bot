@@ -146,7 +146,8 @@
 				"allowArrowFunctions": true
 			}
 		],
-		"function-paren-newline": ["error", "multiline"],
+		"function-paren-newline": ["error", "multiline-arguments"],
+		"comma-dangle": ["warn", "always-multiline"],
 		"key-spacing": "error",
 		"keyword-spacing": "error",
 		"lines-around-comment": "error",
