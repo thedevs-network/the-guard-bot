@@ -9,7 +9,6 @@ const bot = require('./bot');
 
 bot.use(
 	require('./handlers/middlewares'),
-	require('./handlers/messages'),
 	require('./plugins'),
 	require('./handlers/commands'),
 	require('./handlers/regex'),

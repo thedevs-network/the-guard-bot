@@ -25,7 +25,7 @@ const roleBtn = (btRole, { newCommand, currentRole }) => {
 				replace: 'soft',
 			},
 			reason: newCommand,
-		})
+		}),
 	};
 };
 
@@ -44,7 +44,6 @@ const normalizeRole = (role = '') => {
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const addCommandHandler = async (ctx) => {
 	const { chat, message, reply } = ctx;
-	if (chat.type !== 'private' && !message.reply_to_message) return null;
 	if (chat.type === 'channel') return null;
 	const { id } = ctx.from;
 
@@ -110,19 +109,14 @@ const addCommandHandler = async (ctx) => {
 			...softReplace || { content },
 		});
 		return ctx.replyWithHTML(
-			`✅ <b>Successfully added <code>!${commandName}</code></b>.\n` +
+			`✅ <b>Successfully added <code>!${isValidName[1]}</code></b>.\n` +
 			'Who should be able to use it?',
 			inlineKeyboard(roleKbRow({ currentRole: role, newCommand }))
 		);
 	}
 
-	await addCommand({ id, name: newCommand, state: 'role' });
-	return reply('Who can use this command?', Markup.keyboard([
-		[ 'Master', 'Admins', 'Everyone' ]
-	])
-		.oneTime()
-		.resize()
-		.extra());
+	// eslint-disable-next-line max-len
+	return ctx.replyWithHTML('ℹ️ <b>Reply to a message you\'d like to save</b>');
 };
 
 module.exports = addCommandHandler;
