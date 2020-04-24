@@ -1,4 +1,4 @@
-import type { Context, MiddlewareFn } from 'telegraf';
+import type { Context } from 'telegraf';
 import type {
 	User,
 	Message,
@@ -36,5 +36,3 @@ export interface ContextExtensions {
 export type ExtendedContext = ContextExtensions & Context & {
 	from?: DbUser,
 };
-
-export type GuardMiddlewareFn = MiddlewareFn<ExtendedContext>;
