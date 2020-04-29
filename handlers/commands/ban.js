@@ -23,7 +23,7 @@ const banHandler = async (ctx) => {
 
 	if (ctx.from.status !== 'admin') return null;
 
-	const { targets, reason } = parse(message);
+	const { flags, targets, reason } = parse(message);
 
 	if (targets.length === 0) {
 		return reply(
@@ -61,7 +61,7 @@ const banHandler = async (ctx) => {
 		ctx.deleteMessage(message.reply_to_message.message_id);
 	}
 
-	if (userToBan.status === 'banned') {
+	if (!flags.has('amend') && userToBan.status === 'banned') {
 		return reply(
 			`🚫 ${displayUser(userToBan)} <b>is already banned.</b>`,
 			replyOptions
