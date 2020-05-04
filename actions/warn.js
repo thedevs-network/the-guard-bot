@@ -27,13 +27,14 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 		{ amend }
 	);
 
-	// @ts-ignore
-	const recentWarns = warns.filter(isNewerThan(date - ms(expireWarnsAfter)));
+	const recentWarns = warns.filter(
+		isNewerThan(date.getTime() - ms(expireWarnsAfter))
+	);
 
 	const count = {
 		'-1': recentWarns.length + '/' + numberOfWarnsToBan,
 		0: `${recentWarns.length}/${numberOfWarnsToBan}, <b>last warning!</b>`,
-		1: `<b>banned</b> for receiving ${numberOfWarnsToBan} warnings!`
+		1: `<b>banned</b> for receiving ${numberOfWarnsToBan} warnings!`,
 	}[cmp(recentWarns.length + 1, numberOfWarnsToBan)];
 
 	const warnMessage = dedent(`

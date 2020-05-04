@@ -4,12 +4,27 @@
 		"sourceType": "script"
 	},
 	"env": {
-		"browser": true,
-		"commonjs": true,
 		"es6": true,
 		"node": true
 	},
 	"extends": "eslint:recommended",
+	"overrides": [
+		{
+			"files": "*.ts",
+			"plugins": ["@typescript-eslint"],
+			"parser": "@typescript-eslint/parser",
+			"extends": [
+				"plugin:@typescript-eslint/eslint-recommended",
+				"plugin:@typescript-eslint/recommended",
+				"plugin:prettier/recommended",
+				"prettier/@typescript-eslint"
+			],
+			"rules": {
+				"@typescript-eslint/camelcase": "off",
+				"@typescript-eslint/explicit-function-return-type": "off"
+			}
+		}
+	],
 	"rules": {
 		"indent": [
 			"error",

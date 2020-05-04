@@ -1,6 +1,6 @@
-import type { InlineKeyboardMarkup } from 'telegraf/typings/telegram-types';
+import type { InlineKeyboardMarkup } from "telegraf/typings/telegram-types";
 
-export type InlineKeyboard = InlineKeyboardMarkup['inline_keyboard'];
+export type InlineKeyboard = InlineKeyboardMarkup["inline_keyboard"];
 
 /**
  * String to be parsed by https://npmjs.com/millisecond,
@@ -9,13 +9,12 @@ export type InlineKeyboard = InlineKeyboardMarkup['inline_keyboard'];
 type ms = number | string;
 
 export interface Config {
-
 	/**
 	 * ID (number) or username (string) of master,
 	 * the person who can promote and demote admins,
 	 * and add the bot to groups.
 	 */
-	master: number | string | (number|string)[];
+	master: number | string | (number | string)[];
 
 	/**
 	 * Telegram Bot token obtained from https://t.me/BotFather.
@@ -23,7 +22,6 @@ export interface Config {
 	token: string;
 
 	chats?: {
-
 		/**
 		 * Chat to send member join/leave notifications to.
 		 * Pass false to disable this feature.
@@ -35,18 +33,18 @@ export interface Config {
 		 * Pass false to disable this feature.
 		 */
 		report?: number | false;
-	},
+	};
 
 	/**
 	 * Which messages with commands should be deleted?
 	 * Defaults to 'own' -- don't delete commands meant for other bots.
 	 */
-	deleteCommands?: 'all' | 'own' | 'none';
+	deleteCommands?: "all" | "own" | "none";
 
 	deleteCustom?: {
 		longerThan: number; // UTF-16 characters
 		after: ms;
-	},
+	};
 
 	/**
 	 * Timeout before removing join and leave messages.
@@ -62,7 +60,7 @@ export interface Config {
 	 * over which messages get deleted
 	 * Pass false to disable this feature.
 	 */
-	deleteWarnsAfter?: ms | { auto: (ms | false), manual: (ms | false) } | false;
+	deleteWarnsAfter?: ms | { auto: ms | false; manual: ms | false } | false;
 
 	/**
 	 * Timeout before removing ban messages.
@@ -109,7 +107,7 @@ export interface Config {
 	spamwatch?: {
 		token: string;
 		host?: string;
-	}
+	};
 
 	/**
 	 * Inline keyboard to be added to warn message.
