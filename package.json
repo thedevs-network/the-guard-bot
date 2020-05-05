@@ -7,7 +7,7 @@
     "postversion": "git push --atomic --follow-tags origin develop develop:master",
     "start": "node index",
     "lint": "eslint --ext .ts --ext .js .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",

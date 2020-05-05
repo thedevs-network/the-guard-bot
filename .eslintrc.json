@@ -1,6 +1,7 @@
 {
 	"parserOptions": {
 		"ecmaVersion": 2018,
+		"project": "tsconfig.json",
 		"sourceType": "script"
 	},
 	"env": {
@@ -14,6 +15,7 @@
 			"plugins": ["@typescript-eslint"],
 			"parser": "@typescript-eslint/parser",
 			"extends": [
+				"plugin:@typescript-eslint/recommended-requiring-type-checking",
 				"plugin:@typescript-eslint/eslint-recommended",
 				"plugin:@typescript-eslint/recommended",
 				"plugin:prettier/recommended",
