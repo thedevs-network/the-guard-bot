@@ -1,8 +1,10 @@
+// @ts-check
 'use strict';
 
 // Utils
-const { parse, strip } = require('../../utils/parse');
-const { scheduleDeletion } = require('../../utils/tg');
+const { displayUser, scheduleDeletion } = require('../../utils/tg');
+const { isMaster, isWarnNotExpired } = require('../../utils/config');
+const { parse, strip } = require('../../utils/cmd');
 
 // Bot
 const { replyOptions } = require('../../bot/options');
@@ -23,19 +25,30 @@ const formatEntry = async (entry, defaultVal) => {
 };
 
 const formatWarn = async (warn, i) =>
-	html`${i + 1}. ${await formatEntry(warn, warn)}`;
+	isWarnNotExpired(new Date())(warn)
+		? html`${i + 1}. ${await formatEntry(warn, warn)}`
+		: html`<del>${i + 1}. ${await formatEntry(warn, warn)}</del>`;
 
 const optional = (header, content) =>
 	content
 		? header + content + '\n'
 		: '';
 
+const title = user => {
+	if (isMaster(user)) {
+		return html`🕴️ <b>Bot master</b>`;
+	} else if (user.status === 'admin') {
+		return html`⭐️ <b>Admin</b>`;
+	}
+	return html`👤 <b>User</b>`;
+};
+
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const getWarnsHandler = async ({ from, message, reply }) => {
 	if (!from) {
 		return reply(
 			'ℹ️ <b>This command is not available in channels.</b>',
-			replyOptions
+			replyOptions,
 		).then(scheduleDeletion());
 	}
 
@@ -44,7 +57,7 @@ const getWarnsHandler = async ({ from, message, reply }) => {
 	if (targets.length > 1) {
 		return reply(
 			'ℹ️ <b>Specify one user.</b>',
-			replyOptions
+			replyOptions,
 		).then(scheduleDeletion());
 	}
 
@@ -55,31 +68,26 @@ const getWarnsHandler = async ({ from, message, reply }) => {
 	if (!theUser) {
 		return reply(
 			'❓ <b>User unknown.</b>',
-			replyOptions
+			replyOptions,
 		).then(scheduleDeletion());
 	}
 
-	const { id, first_name, last_name } = theUser;
-
-	const userName = html`<b>Name:</b> ${first_name} ${last_name}\n`;
-	const userId = `<b>ID:</b> <code>${id}</code>\n`;
-	const userUsername = optional('<b>Username:</b> @', theUser.username);
+	const header = html`${title(theUser)} ${displayUser(theUser)}\n`;
 	const banReason = optional(
 		'\n🚫 <b>Ban reason:</b> ',
-		await formatEntry(theUser.ban_details, theUser.ban_reason)
+		await formatEntry(theUser.ban_details, theUser.ban_reason),
 	);
+	const { warns = [] } = theUser;
 	const userWarns = optional(
 		'\n<b>⚠️ Warns:</b>\n',
-		(await Promise.all(theUser.warns.map(formatWarn))).join('\n')
+		(await Promise.all(warns.map(formatWarn))).join('\n'),
 	);
 
 	return reply(
-		userName +
-		userId +
-		userUsername +
+		header +
 		userWarns +
 		banReason,
-		replyOptions
+		replyOptions,
 	).then(scheduleDeletion());
 };
 

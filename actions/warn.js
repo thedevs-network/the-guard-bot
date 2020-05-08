@@ -2,18 +2,14 @@
 'use strict';
 
 const dedent = require('dedent-js');
-const ms = require('millisecond');
 
 const { context } = require('../bot');
 const { escapeHtml, link } = require('../utils/tg');
-const {
-	expireWarnsAfter = Infinity,
-	numberOfWarnsToBan,
-} = require('../utils/config').config;
+const { isWarnNotExpired } = require('../utils/config');
+const { numberOfWarnsToBan } = require('../utils/config').config;
 const { warn } = require('../stores/user');
 const ban = require('./ban');
 
-const isNewerThan = date => warning => warning.date >= date;
 
 const cmp = (a, b) => Math.sign(a - b);
 
@@ -27,9 +23,7 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 		{ amend },
 	);
 
-	const recentWarns = warns.filter(
-		isNewerThan(date.getTime() - ms(expireWarnsAfter)),
-	);
+	const recentWarns = warns.filter(isWarnNotExpired(date));
 
 	const count = {
 		'-1': recentWarns.length + '/' + numberOfWarnsToBan,

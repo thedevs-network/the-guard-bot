@@ -6,6 +6,16 @@
 const config = require('../config');
 const eq = require('./eq');
 
+const ms = require('millisecond');
+
+const { expireWarnsAfter = Infinity } = config;
+
+const isNewerThan = date => warning => warning.date >= date;
+
+/** @param {Date} date */
+const isWarnNotExpired = date =>
+	isNewerThan(date.getTime() - ms(expireWarnsAfter));
+
 const stringOrNumber = x => [ 'string', 'number' ].includes(typeof x);
 
 // @ts-ignore
@@ -24,4 +34,5 @@ const isMaster = user =>
 module.exports = {
 	config,
 	isMaster,
+	isWarnNotExpired,
 };
