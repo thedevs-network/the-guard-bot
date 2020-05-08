@@ -1,3 +1,4 @@
+// @ts-check
 'use strict';
 
 const { last } = require('ramda');
@@ -5,6 +6,7 @@ const XRegExp = require('xregexp');
 
 // Utils
 const { escapeHtml, link, scheduleDeletion } = require('../../utils/tg');
+const { isWarnNotExpired } = require('../../utils/config');
 const { parse, strip } = require('../../utils/parse');
 
 // Config
@@ -16,8 +18,6 @@ const { replyOptions } = require('../../bot/options');
 // DB
 const { listGroups } = require('../../stores/group');
 const { getUser, unwarn } = require('../../stores/user');
-
-const noop = Function.prototype;
 
 const dateRegex = XRegExp.tag('nix')`^
 	\d{4}       # year
@@ -52,7 +52,7 @@ const unwarnHandler = async ({ from, message, reply, telegram }) => {
 		).then(scheduleDeletion());
 	}
 
-	const allWarns = userToUnwarn.warns;
+	const allWarns = userToUnwarn.warns.filter(isWarnNotExpired(new Date()));
 
 	if (allWarns.length === 0) {
 		return reply(
@@ -95,7 +95,7 @@ const unwarnHandler = async ({ from, message, reply, telegram }) => {
 		telegram.sendMessage(
 			userToUnwarn.id,
 			'♻️ You were unbanned from all of the /groups!',
-		).catch(noop);
+		).catch(() => null);
 		// it's likely that the banned person haven't PMed the bot,
 		// which will cause the sendMessage to fail,
 		// hance .catch(noop)
