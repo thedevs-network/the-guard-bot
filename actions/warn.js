@@ -24,11 +24,11 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 	const { warns } = await warn(
 		userToWarn,
 		{ by_id, date, reason },
-		{ amend }
+		{ amend },
 	);
 
 	const recentWarns = warns.filter(
-		isNewerThan(date.getTime() - ms(expireWarnsAfter))
+		isNewerThan(date.getTime() - ms(expireWarnsAfter)),
 	);
 
 	const count = {
@@ -38,7 +38,7 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 	}[cmp(recentWarns.length + 1, numberOfWarnsToBan)];
 
 	const warnMessage = dedent(`
-		⚠️ ${link(admin)} <b>warned</b> ${link(userToWarn)} <b>for</b>:
+		⚠️ ${admin.first_name} <b>warned</b> ${link(userToWarn)} <b>for</b>:
 
 		${escapeHtml(reason)} (${count})`);
 

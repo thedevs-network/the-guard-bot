@@ -1,7 +1,7 @@
 'use strict';
 
 // Utils
-const { displayUser, link, scheduleDeletion } = require('../../utils/tg');
+const { displayUser, scheduleDeletion } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 const { parse, strip } = require('../../utils/parse');
 
@@ -23,7 +23,7 @@ const unbanHandler = async ({ from, message, reply, telegram }) => {
 	if (targets.length !== 1) {
 		return reply(
 			'ℹ️ <b>Specify one user to unban.</b>',
-			replyOptions
+			replyOptions,
 		).then(scheduleDeletion());
 	}
 
@@ -32,7 +32,7 @@ const unbanHandler = async ({ from, message, reply, telegram }) => {
 	if (!userToUnban) {
 		return reply(
 			'❓ <b>User unknown.</b>',
-			replyOptions
+			replyOptions,
 		).then(scheduleDeletion());
 	}
 
@@ -60,7 +60,7 @@ const unbanHandler = async ({ from, message, reply, telegram }) => {
 
 	telegram.sendMessage(
 		userToUnban.id,
-		'♻️ You were unbanned from all of the /groups!'
+		'♻️ You were unbanned from all of the /groups!',
 	).catch(noop);
 	// it's likely that the banned person haven't PMed the bot,
 	// which will cause the sendMessage to fail,
@@ -68,7 +68,7 @@ const unbanHandler = async ({ from, message, reply, telegram }) => {
 	// (it's an expected, non-critical failure)
 
 
-	return reply(`♻️ ${link(from)} <b>unbanned</b> ` +
+	return reply(`♻️ ${from.first_name} <b>unbanned</b> ` +
 		`${displayUser(userToUnban)}.`, replyOptions);
 };
 

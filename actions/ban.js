@@ -2,7 +2,7 @@
 
 const dedent = require('dedent-js');
 
-const { escapeHtml, displayUser, link } = require('../utils/tg');
+const { escapeHtml, displayUser } = require('../utils/tg');
 const { telegram } = require('../bot');
 
 const { listVisibleGroups } = require('../stores/group');
@@ -21,8 +21,9 @@ module.exports = async ({ admin, reason, userToBan }) => {
 	groups.forEach(group =>
 		telegram.kickChatMember(group.id, userToBan.id));
 
+	/* eslint max-len: "warn" */
 	return dedent(`
-		🚫 ${link(admin)} <b>banned</b> ${displayUser(userToBan)} <b>for:</b>
+		🚫 ${admin.first_name} <b>banned</b> ${displayUser(userToBan)} <b>for:</b>
 
 		${escapeHtml(reason)}`);
 };

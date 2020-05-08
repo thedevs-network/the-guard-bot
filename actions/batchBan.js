@@ -12,7 +12,7 @@ module.exports = async ({ admin, reason, targets }) => {
 	const banned = await batchBan(targets, { by_id, date, reason });
 	const bannedString = banned.map(displayUser).join(', ');
 
-	return `${displayUser(admin)} <b>banned</b> ${bannedString} <b>for:</b>
+	return `${admin.first_name} <b>banned</b> ${bannedString} <b>for:</b>
 
 ${escapeHtml(reason)}`;
 };

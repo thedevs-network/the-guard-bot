@@ -39,7 +39,7 @@ const unwarnHandler = async ({ from, message, reply, telegram }) => {
 	if (targets.length !== 1) {
 		return reply(
 			'ℹ️ <b>Specify one user to unwarn.</b>',
-			replyOptions
+			replyOptions,
 		).then(scheduleDeletion());
 	}
 
@@ -48,7 +48,7 @@ const unwarnHandler = async ({ from, message, reply, telegram }) => {
 	if (!userToUnwarn) {
 		return reply(
 			'❓ <b>User unknown</b>',
-			replyOptions
+			replyOptions,
 		).then(scheduleDeletion());
 	}
 
@@ -57,7 +57,7 @@ const unwarnHandler = async ({ from, message, reply, telegram }) => {
 	if (allWarns.length === 0) {
 		return reply(
 			`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
-			replyOptions
+			replyOptions,
 		);
 	}
 
@@ -78,14 +78,14 @@ const unwarnHandler = async ({ from, message, reply, telegram }) => {
 	} else {
 		return reply(
 			'⚠ <b>Invalid date</b>',
-			replyOptions
+			replyOptions,
 		).then(scheduleDeletion());
 	}
 
 	if (!lastWarn) {
 		return reply(
 			'❓ <b>404: Warn not found</b>',
-			replyOptions
+			replyOptions,
 		).then(scheduleDeletion());
 	}
 
@@ -94,7 +94,7 @@ const unwarnHandler = async ({ from, message, reply, telegram }) => {
 	if (userToUnwarn.status === 'banned') {
 		telegram.sendMessage(
 			userToUnwarn.id,
-			'♻️ You were unbanned from all of the /groups!'
+			'♻️ You were unbanned from all of the /groups!',
 		).catch(noop);
 		// it's likely that the banned person haven't PMed the bot,
 		// which will cause the sendMessage to fail,
@@ -103,10 +103,10 @@ const unwarnHandler = async ({ from, message, reply, telegram }) => {
 	}
 
 	return reply(
-		`❎ ${link(from)} <b>pardoned</b> ${link(userToUnwarn)} ` +
+		`❎ ${from.first_name} <b>pardoned</b> ${link(userToUnwarn)} ` +
 		`<b>for:</b>\n\n${escapeHtml(lastWarn.reason || lastWarn)}` +
 		` (${allWarns.length - 1}/${numberOfWarnsToBan})`,
-		replyOptions
+		replyOptions,
 	);
 };
 

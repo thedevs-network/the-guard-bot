@@ -29,7 +29,7 @@ const msgLink = msg =>
 	`https://t.me/c/${msg.chat.id.toString().slice(4)}/${msg.message_id}`;
 
 const link = ({ id, first_name }) =>
-	html`<a href="tg://user?id=${id}">${first_name}</a>`;
+	html`<a href="tg://user?id=${id}">${first_name}</a> [<code>${id}</code>]`;
 
 const quietLink = (user) =>
 	user.username
@@ -39,7 +39,7 @@ const quietLink = (user) =>
 const displayUser = user =>
 	user.first_name
 		? link(user)
-		: html`an user with id <code>${user.id}</code>`;
+		: html`[<code>${user.id}</code>]`;
 
 /** @param {number | string | false} ms */
 const deleteAfter = ms => (ctx, next) => {
@@ -56,7 +56,7 @@ const scheduleDeletion = (ms = 5 * 60 * 1000) => message => {
 	if (chat.type !== 'private' && ms !== false) {
 		message.timeout = setTimeout(
 			() => telegram.deleteMessage(chat.id, message_id),
-			millisecond(ms)
+			millisecond(ms),
 		);
 	}
 

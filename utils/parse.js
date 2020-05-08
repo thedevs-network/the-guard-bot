@@ -17,7 +17,7 @@ const spliceOut = (s, { offset, length }) =>
 const botReply = ({ from, entities = [] }) => {
 	const textMentions = entities.filter(isTextMention);
 
-	return from.is_bot && textMentions.length === 2 && [ textMentions[1].user ];
+	return from.is_bot && textMentions.length === 1 && [ textMentions[0].user ];
 };
 
 const flagsRegex = /\s+(?:--?|—)(\w+)(?:=(\S*))?/g;
