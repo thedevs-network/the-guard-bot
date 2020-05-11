@@ -31,7 +31,10 @@ const handler = async (ctx, next) => {
 
 	if (!link) return next();
 
-	return ctx.reply(link, { reply_to_message_id: replyId(ctx.message) });
+	return ctx.reply(link, {
+		disable_web_page_preview: false,
+		reply_to_message_id: replyId(ctx.message),
+	});
 };
 
 module.exports = hears(regex, handler);
