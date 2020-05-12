@@ -1,9 +1,14 @@
 FROM node:alpine
 
-COPY . /app
+
+RUN apk add git
+
 WORKDIR /app
 
-RUN apk add git && npm install
+COPY package*.json ./
+
+RUN npm ci --only=production
+
+COPY . .
 
 CMD npm start
-
