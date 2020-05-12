@@ -1,7 +1,7 @@
 import { managesGroup, removeGroup } from "../../stores/group";
 import { ExtendedContext } from "../../typings/context";
+import { html } from "../../utils/html";
 import { isMaster } from "../../utils/config";
-import html = require("tg-html");
 
 const leaveCommandHandler = async (ctx: ExtendedContext) => {
 	if (!isMaster(ctx.from)) return null;

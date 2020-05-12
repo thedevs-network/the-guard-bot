@@ -1,9 +1,9 @@
 'use strict';
 
-const html = require('tg-html');
 const R = require('ramda');
 
-const { parse } = require('../../utils/parse');
+const { html } = require('../../utils/html');
+const { parse } = require('../../utils/cmd');
 const { link, scheduleDeletion } = require('../../utils/tg');
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
@@ -20,7 +20,7 @@ module.exports = async (ctx) => {
 
 	await ctx.tg.deleteMessage(
 		flags.get('chat_id') || ctx.chat.id,
-		flags.get('msg_id') || ctx.message.reply_to_message.message_id
+		flags.get('msg_id') || ctx.message.reply_to_message.message_id,
 	);
 
 	if (reason) {

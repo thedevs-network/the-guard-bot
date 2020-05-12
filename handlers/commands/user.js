@@ -3,16 +3,12 @@
 
 // Utils
 const { displayUser, scheduleDeletion } = require('../../utils/tg');
+const { html, TgHtml } = require('../../utils/html');
 const { isMaster, isWarnNotExpired } = require('../../utils/config');
 const { parse, strip } = require('../../utils/cmd');
 
-// Bot
-const { replyOptions } = require('../../bot/options');
-
 // DB
 const { getUser } = require('../../stores/user');
-
-const html = require('tg-html');
 
 const formatDate = date =>
 	date && date.toISOString().slice(0, -5).replace('T', ' ');
@@ -31,7 +27,7 @@ const formatWarn = async (warn, i) =>
 
 const optional = (header, content) =>
 	content
-		? header + content + '\n'
+		? html`${header}${content}`
 		: '';
 
 const title = user => {
@@ -44,20 +40,18 @@ const title = user => {
 };
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
-const getWarnsHandler = async ({ from, message, reply }) => {
+const getWarnsHandler = async ({ from, message, replyWithHTML }) => {
 	if (!from) {
-		return reply(
+		return replyWithHTML(
 			'ℹ️ <b>This command is not available in channels.</b>',
-			replyOptions,
 		).then(scheduleDeletion());
 	}
 
 	const { targets } = parse(message);
 
 	if (targets.length > 1) {
-		return reply(
+		return replyWithHTML(
 			'ℹ️ <b>Specify one user.</b>',
-			replyOptions,
 		).then(scheduleDeletion());
 	}
 
@@ -66,29 +60,27 @@ const getWarnsHandler = async ({ from, message, reply }) => {
 		: from;
 
 	if (!theUser) {
-		return reply(
+		return replyWithHTML(
 			'❓ <b>User unknown.</b>',
-			replyOptions,
 		).then(scheduleDeletion());
 	}
 
-	const header = html`${title(theUser)} ${displayUser(theUser)}\n`;
+	const header = html`${title(theUser)} ${displayUser(theUser)}`;
 	const banReason = optional(
-		'\n🚫 <b>Ban reason:</b> ',
+		html`🚫 <b>Ban reason:</b> `,
 		await formatEntry(theUser.ban_details, theUser.ban_reason),
 	);
 	const { warns = [] } = theUser;
 	const userWarns = optional(
-		'\n<b>⚠️ Warns:</b>\n',
-		(await Promise.all(warns.map(formatWarn))).join('\n'),
+		html`<b>⚠️ Warns:</b>\n`,
+		TgHtml.join('\n', await Promise.all(warns.map(formatWarn))),
 	);
 
-	return reply(
-		header +
-		userWarns +
+	return replyWithHTML(TgHtml.join('\n\n', [
+		header,
+		userWarns,
 		banReason,
-		replyOptions,
-	).then(scheduleDeletion());
+	])).then(scheduleDeletion());
 };
 
 module.exports = getWarnsHandler;
