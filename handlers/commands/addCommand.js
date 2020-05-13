@@ -5,7 +5,6 @@ const { addCommand, getCommand } = require('../../stores/command');
 
 // Bot
 const { Markup } = require('telegraf');
-const { replyOptions } = require('../../bot/options');
 
 const Cmd = require('../../utils/cmd');
 const { isMaster } = require('../../utils/config');
@@ -48,9 +47,8 @@ const addCommandHandler = async (ctx) => {
 	const { id } = ctx.from;
 
 	if (ctx.from.status !== 'admin') {
-		return reply(
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Sorry, only admins access this command.</b>',
-			replyOptions
 		);
 	}
 
@@ -59,10 +57,9 @@ const addCommandHandler = async (ctx) => {
 
 	const isValidName = /^!?(\w+)$/.exec(commandName);
 	if (!isValidName) {
-		return reply(
+		return ctx.replyWithHTML(
 			'<b>Send a valid command.</b>\n\nExample:\n' +
 			'<code>/addcommand rules</code>',
-			replyOptions
 		);
 	}
 	const newCommand = isValidName[1].toLowerCase();
@@ -86,13 +83,12 @@ const addCommandHandler = async (ctx) => {
 			Markup.keyboard([ [ `/addcommand -replace ${newCommand}` ] ])
 				.oneTime()
 				.resize()
-				.extra()
+				.extra(),
 		);
 	}
 	if (cmdExists && cmdExists.role === 'master' && !isMaster(ctx.from)) {
-		return ctx.reply(
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Sorry, only master can replace this command.</b>',
-			replyOptions
 		);
 	}
 
@@ -111,7 +107,7 @@ const addCommandHandler = async (ctx) => {
 		return ctx.replyWithHTML(
 			`✅ <b>Successfully added <code>!${isValidName[1]}</code></b>.\n` +
 			'Who should be able to use it?',
-			inlineKeyboard(roleKbRow({ currentRole: role, newCommand }))
+			inlineKeyboard(roleKbRow({ currentRole: role, newCommand })),
 		);
 	}
 
