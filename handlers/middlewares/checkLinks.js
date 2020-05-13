@@ -15,7 +15,6 @@ const { telegram } = require('../../bot');
 const {
 	excludeLinks = [],
 	blacklistedDomains = [],
-	notifyBrokenLink,
 } = require('../../utils/config').config;
 
 if (excludeLinks === false || excludeLinks === '*') {
@@ -27,7 +26,7 @@ const normalizeTme = R.replace(
 	/^(?:@|(?:https?:\/\/)?(?:t\.me|telegram\.(?:me|dog))\/)(\w+)(\/.+)?/i,
 	(_match, username, rest) => /^\/\d+$/.test(rest)
 		? `https://t.me/${username.toLowerCase()}`
-		: `https://t.me/${username.toLowerCase()}${rest || ''}`
+		: `https://t.me/${username.toLowerCase()}${rest || ''}`,
 );
 
 const stripQuery = s => s.split('?', 1)[0];
@@ -58,7 +57,7 @@ const constructAbsUrl = R.constructN(1, URL);
 const isHttp = R.propSatisfies(R.test(/^https?:$/i), 'protocol');
 const isLink = R.propSatisfies(
 	conatained([ 'url', 'text_link', 'mention' ]),
-	'type'
+	'type',
 );
 const memoize = R.memoizeWith(R.identity);
 
@@ -106,7 +105,7 @@ const domainHandlers = new Map([
 	[ 't.me', dh.tme ],
 	[ 'telegram.dog', dh.tme ],
 	[ 'telegram.me', dh.tme ],
-	...blacklistedDomains.map(domain => [ domain, dh.blacklistedDomain ])
+	...blacklistedDomains.map(domain => [ domain, dh.blacklistedDomain ]),
 ]);
 
 const isWhitelisted = (url) => customWhitelist.has(stripQuery(url.toString()));
@@ -161,7 +160,7 @@ const buttonUrls = R.pipe(
 	R.path([ 'reply_markup', 'inline_keyboard' ]),
 	R.defaultTo([]),
 	R.unnest,
-	R.chain(maybeProp('url'))
+	R.chain(maybeProp('url')),
 );
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
@@ -192,15 +191,7 @@ const classifyCtx = (ctx) => {
 module.exports = async (ctx, next) =>
 	(await classifyCtx(ctx)).cata({
 		Nothing: next,
-		Notify(error) {
-			const message = ctx.message || ctx.editedMessage;
-			const reply_to_message_id = message.message_id;
-			if (notifyBrokenLink) {
-				ctx.reply(
-					`️ℹ️ Link ${error.url} seems to be broken (${error.code}).`,
-					{ reply_to_message_id }
-				);
-			}
+		Notify() {
 			return next();
 		},
 		Warn: async (reason) => {
@@ -210,7 +201,7 @@ module.exports = async (ctx, next) =>
 			if (userToWarn.id === 777000) return next();
 			if (await isAdmin(userToWarn)) return next();
 
-			ctx.deleteMessage();
+			ctx.deleteMessage().catch(() => null);
 			return ctx.warn({
 				admin,
 				reason,

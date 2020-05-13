@@ -1,10 +1,12 @@
 'use strict';
 
 /** @param { import('../typings/context').ExtendedContext } ctx */
-const unmatchedHandler = ctx => {
+const unmatchedHandler = async ctx => {
 	ctx.state[unmatchedHandler.unmatched] = true;
 	if (ctx.chat && ctx.chat.type === 'private') {
-		ctx.reply('Sorry, I couldn\'t understand that, do you need /help?');
+		await ctx.reply(
+			'Sorry, I couldn\'t understand that, do you need /help?',
+		);
 	}
 };
 

@@ -14,7 +14,7 @@ if (excludeLinks === false || excludeLinks === '*') {
 
 const isChannelForward = R.pathEq(
 	[ 'message', 'forward_from_chat', 'type' ],
-	'channel'
+	'channel',
 );
 const fromAdmin = R.pathEq([ 'from', 'status' ], 'admin');
 
@@ -24,7 +24,7 @@ const capturingGroups = R.tail;
 
 const toUsername = R.compose(
 	capturingGroups,
-	R.match(/^(?:@|(?:https?:\/\/)?(?:t\.me|telegram\.(?:me|dog))\/)(\w+)/i)
+	R.match(/^(?:@|(?:https?:\/\/)?(?:t\.me|telegram\.(?:me|dog))\/)(\w+)/i),
 );
 
 const customWhitelist = R.pipe(
@@ -47,7 +47,7 @@ const pred = R.allPass([
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const handler = ctx => {
-	ctx.deleteMessage();
+	ctx.deleteMessage().catch(() => null);
 	return ctx.warn({
 		admin: ctx.botInfo,
 		reason: 'Channel forward',

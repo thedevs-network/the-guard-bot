@@ -22,19 +22,13 @@ function log(ctx, next) {
 			ctx.message.new_chat_members.map(getUsername).join(', ') +
 				' #joined ' + ctx.chat.title,
 			{ reply_markup: { inline_keyboard: [ [ {
-				text: '🚫 Ban all',
+				text: `🚫 Ban ${ctx.message.new_chat_members.length}`,
 				callback_data: `/ban ${
 					ctx.message.new_chat_members
 						.map(getId)
-						.join(' ')} [joining]`
-			} ] ] } }
-		);
-	} else if (ctx.updateSubTypes[0] === 'left_chat_member') {
-		ctx.telegram.sendMessage(
-			chats.presenceLog,
-			getUsername(ctx.message.left_chat_member) +
-				' #left ' + ctx.chat.title
-		);
+						.join(' ')} [joining]`,
+			} ] ] } },
+		).catch(() => null);
 	}
 	return next();
 }

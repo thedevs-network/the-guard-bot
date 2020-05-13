@@ -1,3 +1,4 @@
+// @ts-check
 'use strict';
 
 process.chdir(__dirname);
@@ -18,4 +19,5 @@ bot.use(
 
 bot.catch(logError);
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 bot.launch();
