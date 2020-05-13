@@ -4,7 +4,6 @@
 const { html } = require('../../utils/html');
 const { isMaster } = require('../../utils/config');
 const { link, scheduleDeletion } = require('../../utils/tg');
-const { logError } = require('../../utils/log');
 const { parse, strip } = require('../../utils/cmd');
 
 // Bot
@@ -57,11 +56,7 @@ const unAdminHandler = async ({ from, message, replyWithHTML }) => {
 
 	await tgUnadmin(userToUnadmin);
 
-	try {
-		await unadmin(userToUnadmin);
-	} catch (err) {
-		logError(err);
-	}
+	await unadmin(userToUnadmin);
 
 	return replyWithHTML(
 		html`❗️ ${link(userToUnadmin)} <b>is no longer admin.</b>`,

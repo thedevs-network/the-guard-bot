@@ -3,8 +3,8 @@
 // Utils
 const { displayUser, scheduleDeletion } = require('../../utils/tg');
 const { html } = require('../../utils/html');
-const { logError } = require('../../utils/log');
 const { parse, strip } = require('../../utils/cmd');
+const { pMap } = require('../../utils/promise');
 
 // DB
 const { listGroups } = require('../../stores/group');
@@ -37,22 +37,10 @@ const unbanHandler = async ({ from, message, replyWithHTML, telegram }) => {
 		return replyWithHTML('ℹ️ <b>User is not banned.</b>');
 	}
 
-	const groups = await listGroups();
-
-	const unbans = groups.map(group =>
+	await pMap(await listGroups(), group =>
 		telegram.unbanChatMember(group.id, userToUnban.id));
 
-	try {
-		await Promise.all(unbans);
-	} catch (err) {
-		logError(err);
-	}
-
-	try {
-		await unban(userToUnban);
-	} catch (err) {
-		logError(err);
-	}
+	await unban(userToUnban);
 
 	telegram.sendMessage(
 		userToUnban.id,

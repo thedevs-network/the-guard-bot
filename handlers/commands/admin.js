@@ -4,7 +4,6 @@
 const { html } = require('../../utils/html');
 const { isMaster } = require('../../utils/config');
 const { link, scheduleDeletion } = require('../../utils/tg');
-const { logError } = require('../../utils/log');
 const { parse, strip } = require('../../utils/cmd');
 
 // DB
@@ -46,11 +45,7 @@ const adminHandler = async ({ from, message, replyWithHTML }) => {
 		);
 	}
 
-	try {
-		await admin(userToAdmin);
-	} catch (err) {
-		logError(err);
-	}
+	await admin(userToAdmin);
 
 	return replyWithHTML(html`⭐️ ${link(userToAdmin)} <b>is now admin.</b>`);
 };

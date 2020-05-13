@@ -1,8 +1,5 @@
 'use strict';
 
-// Utils
-const { logError } = require('../../utils/log');
-
 const { managesGroup } = require('../../stores/group');
 
 const { chats = {} } = require('../../utils/config').config;
@@ -30,7 +27,7 @@ const gifIds = [
 	'l2Sqc3POpzkj5r8SQ',
 	'StaMzjNkq5PqM',
 	'fjYDN5flDJ756',
-	'3XiQswSmbjBiU'
+	'3XiQswSmbjBiU',
 ];
 
 const gifs = gifIds.map(x => `https://media.giphy.com/media/${x}/giphy.gif`);
@@ -55,7 +52,7 @@ const leaveUnmanagedHandler = async (ctx, next) => {
 	try {
 		await ctx.replyWithVideo(randomChoice(gifs), { caption, reply_markup });
 	} catch (err) {
-		logError(err);
+		// do nothing
 	}
 	await ctx.telegram.leaveChat(ctx.chat.id);
 	return next();

@@ -3,7 +3,6 @@
 // Utils
 const { html } = require('../../utils/html');
 const { link, scheduleDeletion } = require('../../utils/tg');
-const { logError } = require('../../utils/log');
 const { parse, strip } = require('../../utils/cmd');
 const { pMap } = require('../../utils/promise');
 
@@ -49,11 +48,7 @@ const nowarnsHandler = async ({ from, message, replyWithHTML, telegram }) => {
 			telegram.unbanChatMember(group.id, userToUnwarn.id));
 	}
 
-	try {
-		await nowarns(userToUnwarn);
-	} catch (err) {
-		logError(err);
-	}
+	await nowarns(userToUnwarn);
 
 	if (userToUnwarn.status === 'banned') {
 		telegram.sendMessage(
