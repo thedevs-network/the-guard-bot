@@ -5,7 +5,7 @@ const { Context } = require('telegraf');
 /** @type { import('../../typings/context').ContextExtensions } */
 const contextCustomizations = require('../../bot/context');
 
-/** @param { import('telegraf').ContextMessageUpdate } ctx */
+/** @param { import('telegraf').Context } ctx */
 module.exports = (ctx, next) => {
 	if (!ctx.callbackQuery) return next();
 	if (!ctx.callbackQuery.data.startsWith('/')) return next();
@@ -16,7 +16,7 @@ module.exports = (ctx, next) => {
 			chat: ctx.chat,
 			text: ctx.callbackQuery.data,
 			entities: [ { offset: 0, type: 'bot_command' } ],
-		}
+		},
 	};
 
 	/** @type { import('../../typings/context').ExtendedContext } */
@@ -24,10 +24,7 @@ module.exports = (ctx, next) => {
 	Object.assign(cbCtx, contextCustomizations);
 	cbCtx.botInfo = ctx.botInfo;
 
-	cbCtx.reply = (text, options = {}) => {
-		ctx.deleteMessage();
-		return ctx.reply(text, options);
-	};
+	cbCtx.reply = ctx.editMessageText;
 
 	return next(cbCtx);
 };
