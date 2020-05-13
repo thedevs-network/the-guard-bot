@@ -1,12 +1,10 @@
 'use strict';
 
 // Utils
+const { html } = require('../../utils/html');
 const { link, scheduleDeletion } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
-const { parse, strip } = require('../../utils/parse');
-
-// Bot
-const { replyOptions } = require('../../bot/options');
+const { parse, strip } = require('../../utils/cmd');
 
 // DB
 const { getUser, nowarns } = require('../../stores/user');
@@ -18,33 +16,30 @@ const noop = Function.prototype;
 // When adding a feature here, please consider adding it there too.
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
-const nowarnsHandler = async ({ from, message, reply, telegram }) => {
+const nowarnsHandler = async ({ from, message, replyWithHTML, telegram }) => {
 	if (!from || from.status !== 'admin') return null;
 
 	const { targets } = parse(message);
 
 	if (targets.length !== 1) {
-		return reply(
+		return replyWithHTML(
 			'ℹ️ <b>Specify one user to pardon.</b>',
-			replyOptions,
 		).then(scheduleDeletion());
 	}
 
 	const userToUnwarn = await getUser(strip(targets[0]));
 
 	if (!userToUnwarn) {
-		return reply(
+		return replyWithHTML(
 			'❓ <b>User unknown.</b>',
-			replyOptions,
 		).then(scheduleDeletion());
 	}
 
 	const { warns } = userToUnwarn;
 
 	if (warns.length === 0) {
-		return reply(
-			`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
-			replyOptions,
+		return replyWithHTML(
+			html`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
 		);
 	}
 
@@ -72,11 +67,10 @@ const nowarnsHandler = async ({ from, message, reply, telegram }) => {
 		// (it's an expected, non-critical failure)
 	}
 
-	return reply(
-		`♻️ ${from.first_name} <b>pardoned</b> ${link(userToUnwarn)} ` +
-		'<b>for all of their warnings.</b>',
-		replyOptions,
-	);
+	return replyWithHTML(html`
+		♻️ ${from.first_name} <b>pardoned</b> ${link(userToUnwarn)}
+		for all of their warnings.
+	`);
 };
 
 

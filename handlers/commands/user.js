@@ -13,8 +13,11 @@ const { getUser } = require('../../stores/user');
 const formatDate = date =>
 	date && date.toISOString().slice(0, -5).replace('T', ' ');
 
+/**
+ * @param {string} defaultVal
+ */
 const formatEntry = async (entry, defaultVal) => {
-	if (!entry || !entry.by_id) return defaultVal;
+	if (!entry || !entry.by_id) return html`${defaultVal}`;
 	const { first_name } = await getUser({ id: entry.by_id }) || {};
 	if (!first_name) return html`${entry.reason} (${formatDate(entry.date)})`;
 	return html`${entry.reason} (${first_name}, ${formatDate(entry.date)})`;
@@ -25,10 +28,18 @@ const formatWarn = async (warn, i) =>
 		? html`${i + 1}. ${await formatEntry(warn, warn)}`
 		: html`<del>${i + 1}. ${await formatEntry(warn, warn)}</del>`;
 
-const optional = (header, content) =>
-	content
-		? html`${header}${content}`
-		: '';
+/**
+ * @param {TgHtml} content
+ */
+const isNotEmpty = content => !!content.toJSON();
+
+/**
+ * @param {TgHtml} content
+ */
+const optional = (header, sep, content) =>
+	isNotEmpty(content)
+		? html`${header}${sep}${content}`
+		: html``;
 
 const title = user => {
 	if (isMaster(user)) {
@@ -67,12 +78,14 @@ const getWarnsHandler = async ({ from, message, replyWithHTML }) => {
 
 	const header = html`${title(theUser)} ${displayUser(theUser)}`;
 	const banReason = optional(
-		html`🚫 <b>Ban reason:</b> `,
-		await formatEntry(theUser.ban_details, theUser.ban_reason),
+		html`🚫 <b>Ban reason:</b>`,
+		' ',
+		await formatEntry(theUser.ban_details, theUser.ban_reason || ''),
 	);
 	const { warns = [] } = theUser;
 	const userWarns = optional(
-		html`<b>⚠️ Warns:</b>\n`,
+		html`<b>⚠️ Warns:</b>`,
+		'\n',
 		TgHtml.join('\n', await Promise.all(warns.map(formatWarn))),
 	);
 
@@ -80,7 +93,7 @@ const getWarnsHandler = async ({ from, message, replyWithHTML }) => {
 		header,
 		userWarns,
 		banReason,
-	])).then(scheduleDeletion());
+	].filter(isNotEmpty))).then(scheduleDeletion());
 };
 
 module.exports = getWarnsHandler;

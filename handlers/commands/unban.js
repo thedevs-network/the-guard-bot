@@ -2,11 +2,9 @@
 
 // Utils
 const { displayUser, scheduleDeletion } = require('../../utils/tg');
+const { html } = require('../../utils/html');
 const { logError } = require('../../utils/log');
-const { parse, strip } = require('../../utils/parse');
-
-// Bot
-const { replyOptions } = require('../../bot/options');
+const { parse, strip } = require('../../utils/cmd');
 
 // DB
 const { listGroups } = require('../../stores/group');
@@ -15,30 +13,28 @@ const { getUser, unban } = require('../../stores/user');
 const noop = Function.prototype;
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
-const unbanHandler = async ({ from, message, reply, telegram }) => {
+const unbanHandler = async ({ from, message, replyWithHTML, telegram }) => {
 	if (!from || from.status !== 'admin') return null;
 
 	const { targets } = parse(message);
 
 	if (targets.length !== 1) {
-		return reply(
+		return replyWithHTML(
 			'ℹ️ <b>Specify one user to unban.</b>',
-			replyOptions,
 		).then(scheduleDeletion());
 	}
 
 	const userToUnban = await getUser(strip(targets[0]));
 
 	if (!userToUnban) {
-		return reply(
+		return replyWithHTML(
 			'❓ <b>User unknown.</b>',
-			replyOptions,
 		).then(scheduleDeletion());
 	}
 
 
 	if (userToUnban.status !== 'banned') {
-		return reply('ℹ️ <b>User is not banned.</b>', replyOptions);
+		return replyWithHTML('ℹ️ <b>User is not banned.</b>');
 	}
 
 	const groups = await listGroups();
@@ -68,8 +64,9 @@ const unbanHandler = async ({ from, message, reply, telegram }) => {
 	// (it's an expected, non-critical failure)
 
 
-	return reply(`♻️ ${from.first_name} <b>unbanned</b> ` +
-		`${displayUser(userToUnban)}.`, replyOptions);
+	return replyWithHTML(html`
+		♻️ ${from.first_name} <b>unbanned</b> ${displayUser(userToUnban)}.
+	`);
 };
 
 module.exports = unbanHandler;

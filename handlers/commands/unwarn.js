@@ -5,15 +5,13 @@ const { last } = require('ramda');
 const XRegExp = require('xregexp');
 
 // Utils
-const { escapeHtml, link, scheduleDeletion } = require('../../utils/tg');
+const { html } = require('../../utils/html');
+const { link, scheduleDeletion } = require('../../utils/tg');
 const { isWarnNotExpired } = require('../../utils/config');
-const { parse, strip } = require('../../utils/parse');
+const { parse, strip } = require('../../utils/cmd');
 
 // Config
 const { numberOfWarnsToBan } = require('../../utils/config').config;
-
-// Bot
-const { replyOptions } = require('../../bot/options');
 
 // DB
 const { listGroups } = require('../../stores/group');
@@ -31,33 +29,30 @@ const dateRegex = XRegExp.tag('nix')`^
 $`;
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
-const unwarnHandler = async ({ from, message, reply, telegram }) => {
+const unwarnHandler = async ({ from, message, replyWithHTML, telegram }) => {
 	if (!from || from.status !== 'admin') return null;
 
 	const { reason, targets } = parse(message);
 
 	if (targets.length !== 1) {
-		return reply(
+		return replyWithHTML(
 			'ℹ️ <b>Specify one user to unwarn.</b>',
-			replyOptions,
 		).then(scheduleDeletion());
 	}
 
 	const userToUnwarn = await getUser(strip(targets[0]));
 
 	if (!userToUnwarn) {
-		return reply(
+		return replyWithHTML(
 			'❓ <b>User unknown</b>',
-			replyOptions,
 		).then(scheduleDeletion());
 	}
 
 	const allWarns = userToUnwarn.warns.filter(isWarnNotExpired(new Date()));
 
 	if (allWarns.length === 0) {
-		return reply(
-			`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
-			replyOptions,
+		return replyWithHTML(
+			html`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
 		);
 	}
 
@@ -76,16 +71,14 @@ const unwarnHandler = async ({ from, message, reply, telegram }) => {
 		lastWarn = allWarns.find(({ date }) =>
 			date && date.toISOString().startsWith(normalized));
 	} else {
-		return reply(
+		return replyWithHTML(
 			'⚠ <b>Invalid date</b>',
-			replyOptions,
 		).then(scheduleDeletion());
 	}
 
 	if (!lastWarn) {
-		return reply(
+		return replyWithHTML(
 			'❓ <b>404: Warn not found</b>',
-			replyOptions,
 		).then(scheduleDeletion());
 	}
 
@@ -102,12 +95,12 @@ const unwarnHandler = async ({ from, message, reply, telegram }) => {
 		// (it's an expected, non-critical failure)
 	}
 
-	return reply(
-		`❎ ${from.first_name} <b>pardoned</b> ${link(userToUnwarn)} ` +
-		`<b>for:</b>\n\n${escapeHtml(lastWarn.reason || lastWarn)}` +
-		` (${allWarns.length - 1}/${numberOfWarnsToBan})`,
-		replyOptions,
-	);
+	const count = html`<b>${allWarns.length}</b>/${numberOfWarnsToBan}`;
+
+	return replyWithHTML(html`
+		❎ ${from.first_name} <b>pardoned</b> ${link(userToUnwarn)} for
+		${count}: ${lastWarn.reason || lastWarn}
+	`);
 };
 
 

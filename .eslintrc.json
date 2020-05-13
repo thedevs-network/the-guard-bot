@@ -4,6 +4,8 @@
 		"project": "tsconfig.json",
 		"sourceType": "script"
 	},
+	"parser": "@typescript-eslint/parser",
+	"plugins": ["@typescript-eslint"],
 	"env": {
 		"es6": true,
 		"node": true
@@ -12,8 +14,6 @@
 	"overrides": [
 		{
 			"files": "*.ts",
-			"plugins": ["@typescript-eslint"],
-			"parser": "@typescript-eslint/parser",
 			"extends": [
 				"plugin:@typescript-eslint/recommended-requiring-type-checking",
 				"plugin:@typescript-eslint/eslint-recommended",
@@ -46,6 +46,8 @@
 			"error",
 			"always"
 		],
+		"@typescript-eslint/no-base-to-string": "error",
+		"@typescript-eslint/no-floating-promises": "warn",
 		"no-console": [ "error", { "allow": [ "assert" ] } ],
 		"for-direction": "error",
 		"no-await-in-loop": "error",

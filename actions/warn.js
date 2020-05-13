@@ -1,10 +1,9 @@
 // @ts-check
 'use strict';
 
-const dedent = require('dedent-js');
-
 const { context } = require('../bot');
-const { escapeHtml, link } = require('../utils/tg');
+const { html } = require('../utils/html');
+const { link } = require('../utils/tg');
 const { isWarnNotExpired } = require('../utils/config');
 const { numberOfWarnsToBan } = require('../utils/config').config;
 const { warn } = require('../stores/user');
@@ -26,15 +25,16 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 	const recentWarns = warns.filter(isWarnNotExpired(date));
 
 	const count = {
-		'-1': recentWarns.length + '/' + numberOfWarnsToBan,
-		0: `${recentWarns.length}/${numberOfWarnsToBan}, <b>last warning!</b>`,
-		1: `<b>banned</b> for receiving ${numberOfWarnsToBan} warnings!`,
+		'-1': html`<b>${recentWarns.length}</b>/${numberOfWarnsToBan}`,
+		0: html`<b>Final warning</b>`,
+		// eslint-disable-next-line max-len
+		1: html`<b>${recentWarns.length}</b>/${numberOfWarnsToBan} (🚫 <b>banned</b>)`,
 	}[cmp(recentWarns.length + 1, numberOfWarnsToBan)];
 
-	const warnMessage = dedent(`
-		⚠️ ${admin.first_name} <b>warned</b> ${link(userToWarn)} <b>for</b>:
-
-		${escapeHtml(reason)} (${count})`);
+	const warnMessage = html`
+		⚠️ ${admin.first_name} <b>warned</b> ${link(userToWarn)}.
+		${count}: ${reason}
+	`;
 
 	if (recentWarns.length >= numberOfWarnsToBan) {
 		await ban({

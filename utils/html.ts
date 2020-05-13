@@ -1,5 +1,7 @@
 // from https://gist.github.com/f9e184b78bbfc4419bc1ee70c238ca6f
 
+import dedent = require("dedent-js");
+
 const symbol = Symbol("TgHtml.symbol");
 
 type Escapable = bigint | boolean | Error | null | number | string | undefined;
@@ -26,7 +28,7 @@ export class TgHtml {
 	}
 
 	static tag(raw: TemplateStringsArray, ...subs: Sub[]) {
-		return new TgHtml(String.raw({ raw } as any, ...subs.map(toHtml)));
+		return new TgHtml(dedent(raw, ...subs.map(toHtml)));
 	}
 	static join(sep: Sub, s: Sub[]) {
 		return new TgHtml(s.map(toHtml).join(toHtml(sep)));
