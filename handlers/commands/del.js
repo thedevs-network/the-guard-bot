@@ -4,7 +4,10 @@ const R = require('ramda');
 
 const { html } = require('../../utils/html');
 const { parse } = require('../../utils/cmd');
-const { link, scheduleDeletion } = require('../../utils/tg');
+const { scheduleDeletion } = require('../../utils/tg');
+
+const link = ({ id, first_name }) =>
+	html`<a href="tg://user?id=${id}">${first_name}</a>`;
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 module.exports = async (ctx) => {
