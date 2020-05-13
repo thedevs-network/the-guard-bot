@@ -1,57 +1,58 @@
 'use strict';
 
 // Utils
+const Cmd = require('../../utils/cmd');
+const { TgHtml } = require('../../utils/html');
 const {
-	escapeHtml,
 	link,
 	msgLink,
 	scheduleDeletion,
 } = require('../../utils/tg');
 
-// Bot
-const { replyOptions } = require('../../bot/options');
-
 const { chats = {} } = require('../../utils/config').config;
+
+const isQualified = member => member.status === 'creator' ||
+	member.can_delete_messages &&
+	member.can_restrict_members;
+
+const adminMention = ({ user }) =>
+	TgHtml.tag`<a href="tg://user?id=${user.id}">&#8203;</a>`;
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const reportHandler = async ctx => {
 	if (!ctx.chat.type.endsWith('group')) return null;
-	const msg = ctx.message;
-	if (!msg.reply_to_message) {
-		return ctx.reply(
+	if (!ctx.message.reply_to_message) {
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Reply to message you\'d like to report</b>',
-			replyOptions
 		).then(scheduleDeletion());
 	}
 	const admins = (await ctx.getChatAdministrators())
-		.filter(member =>
-			member.status === 'creator' ||
-			member.can_delete_messages &&
-			member.can_restrict_members
-		// eslint-disable-next-line function-paren-newline
-		).map(member => member.user);
-	const adminObjects = admins.map(user => ({
-		first_name: '​', // small hack to be able to use link function
-		id: user.id,
-	}));
-	const adminsMention = adminObjects.map(link).join('');
-	const s = `❗️${link(ctx.from)} <b>reported the message to the admins.</b>` +
-		`${adminsMention}`;
+		.filter(isQualified)
+		.map(adminMention);
+	// eslint-disable-next-line max-len
+	const s = TgHtml.tag`❗️ ${link(ctx.from)} <b>reported the message to the admins</b>.${TgHtml.join('', admins)}`;
 	const report = await ctx.replyWithHTML(s, {
-		reply_to_message_id: msg.reply_to_message.message_id
+		reply_to_message_id: ctx.message.reply_to_message.message_id,
 	});
 	if (chats.report) {
 		await ctx.tg.sendMessage(
 			chats.report,
-			`❗️ Report in <a href="${msgLink(msg.reply_to_message)}">` +
-				escapeHtml(msg.chat.title) +
-				'</a>!',
-			{ ...replyOptions,
+			TgHtml.tag`❗️ ${link(ctx.from)} reported <a href="${msgLink(
+				ctx.message.reply_to_message,
+			)}">a message</a> in ${ctx.chat.title}!`,
+			{
+				parse_mode: 'HTML',
 				reply_markup: { inline_keyboard: [ [ {
 					text: '✔️ Handled',
-					// eslint-disable-next-line max-len
-					callback_data: `/del -chat_id=${report.chat.id} -msg_id=${report.message_id} Report handled`
-				} ] ] } }
+					callback_data: Cmd.stringify({
+						command: 'del',
+						flags: {
+							chat_id: report.chat.id,
+							msg_id: report.message_id,
+						},
+						reason: 'Report handled',
+					}),
+				} ] ] } },
 		);
 	}
 	return null;
