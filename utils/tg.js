@@ -4,7 +4,7 @@
 const millisecond = require('millisecond');
 const { telegram } = require('../bot');
 
-const { escapeHtml, html } = require('./html');
+const { html } = require('./html');
 const R = require('ramda');
 
 const replyId = R.path([ 'reply_to_message', 'message_id' ]);
@@ -60,7 +60,6 @@ const scheduleDeletion = (ms = 5 * 60 * 1000) => message => {
 module.exports = {
 	deleteAfter,
 	displayUser,
-	escapeHtml,
 	inlineKeyboard,
 	isCommand,
 	link,

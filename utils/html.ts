@@ -7,7 +7,7 @@ const symbol = Symbol("TgHtml.symbol");
 type Escapable = bigint | boolean | Error | null | number | string | undefined;
 type Sub = Escapable | TgHtml;
 
-export const escapeHtml = (s: Escapable) =>
+const escapeHtml = (s: Escapable) =>
 	String(s)
 		.replace(/&/g, "&amp;")
 		.replace(/"/g, "&quot;")
