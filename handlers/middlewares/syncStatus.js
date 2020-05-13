@@ -3,6 +3,7 @@
 const ms = require('millisecond');
 const spamwatch = require('../../utils/spamwatch');
 const { getUser } = require('../../stores/user');
+const { pMap } = require('../../utils/promise');
 
 /**
  * @param { import('../../typings/context').ExtendedContext } ctx
@@ -19,10 +20,7 @@ const handleNewMember = async (ctx, newMember) => {
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const syncStatusHandler = (ctx, next) => {
-	const { message } = ctx;
-	const { new_chat_members } = message;
-
-	new_chat_members.forEach(async newMember => {
+	pMap(ctx.message.new_chat_members, async newMember => {
 		if (newMember.is_bot) {
 			return null;
 		}
@@ -47,7 +45,7 @@ const syncStatusHandler = (ctx, next) => {
 		default:
 			throw new Error(`Unexpected member status: ${dbUser.status}`);
 		}
-	});
+	}).catch(() => null);
 
 	return next();
 };

@@ -5,6 +5,7 @@ const { html } = require('../../utils/html');
 const { link, scheduleDeletion } = require('../../utils/tg');
 const { logError } = require('../../utils/log');
 const { parse, strip } = require('../../utils/cmd');
+const { pMap } = require('../../utils/promise');
 
 // DB
 const { getUser, nowarns } = require('../../stores/user');
@@ -44,9 +45,7 @@ const nowarnsHandler = async ({ from, message, replyWithHTML, telegram }) => {
 	}
 
 	if (userToUnwarn.status === 'banned') {
-		const groups = await listGroups();
-
-		groups.forEach(group =>
+		await pMap(await listGroups(), group =>
 			telegram.unbanChatMember(group.id, userToUnwarn.id));
 	}
 

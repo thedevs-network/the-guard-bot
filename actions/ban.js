@@ -2,6 +2,7 @@
 
 const { displayUser } = require('../utils/tg');
 const { html } = require('../utils/html');
+const { pMap } = require('../utils/promise');
 const { telegram } = require('../bot');
 
 const { listVisibleGroups } = require('../stores/group');
@@ -15,9 +16,7 @@ module.exports = async ({ admin, reason, userToBan }) => {
 
 	await ban(userToBan, { by_id, date, reason });
 
-	const groups = await listVisibleGroups();
-
-	groups.forEach(group =>
+	await pMap(await listVisibleGroups(), group =>
 		telegram.kickChatMember(group.id, userToBan.id));
 
 	return html`
