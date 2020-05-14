@@ -37,6 +37,12 @@ export interface ContextExtensions {
 			mode: "auto" | "manual";
 		}
 	): Promise<Message>;
+
+	loggedReply(
+		this: ExtendedContext,
+		html: TgHtml,
+		extra?: ExtraReplyMessage
+	): Promise<Message>;
 	replyWithHTML(
 		this: void,
 		html: string | TgHtml,

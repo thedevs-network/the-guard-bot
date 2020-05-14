@@ -1,3 +1,4 @@
+// @ts-check
 'use strict';
 
 // Utils
@@ -10,16 +11,14 @@ const { pMap } = require('../../utils/promise');
 const { listGroups } = require('../../stores/group');
 const { getUser, unban } = require('../../stores/user');
 
-const noop = Function.prototype;
-
 /** @param { import('../../typings/context').ExtendedContext } ctx */
-const unbanHandler = async ({ from, message, replyWithHTML, telegram }) => {
-	if (!from || from.status !== 'admin') return null;
+const unbanHandler = async (ctx) => {
+	if (ctx.from?.status !== 'admin') return null;
 
-	const { targets } = parse(message);
+	const { targets } = parse(ctx.message);
 
 	if (targets.length !== 1) {
-		return replyWithHTML(
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Specify one user to unban.</b>',
 		).then(scheduleDeletion());
 	}
@@ -27,33 +26,33 @@ const unbanHandler = async ({ from, message, replyWithHTML, telegram }) => {
 	const userToUnban = await getUser(strip(targets[0]));
 
 	if (!userToUnban) {
-		return replyWithHTML(
+		return ctx.replyWithHTML(
 			'❓ <b>User unknown.</b>',
 		).then(scheduleDeletion());
 	}
 
 
 	if (userToUnban.status !== 'banned') {
-		return replyWithHTML('ℹ️ <b>User is not banned.</b>');
+		return ctx.replyWithHTML('ℹ️ <b>User is not banned.</b>');
 	}
 
 	await pMap(await listGroups(), group =>
-		telegram.unbanChatMember(group.id, userToUnban.id));
+		ctx.tg.unbanChatMember(group.id, userToUnban.id));
 
 	await unban(userToUnban);
 
-	telegram.sendMessage(
+	ctx.tg.sendMessage(
 		userToUnban.id,
 		'♻️ You were unbanned from all of the /groups!',
-	).catch(noop);
+	).catch(() => null);
 	// it's likely that the banned person haven't PMed the bot,
 	// which will cause the sendMessage to fail,
 	// hance .catch(noop)
 	// (it's an expected, non-critical failure)
 
 
-	return replyWithHTML(html`
-		♻️ ${from.first_name} <b>unbanned</b> ${displayUser(userToUnban)}.
+	return ctx.loggedReply(html`
+		♻️ ${ctx.from.first_name} <b>unbanned</b> ${displayUser(userToUnban)}.
 	`);
 };
 

@@ -23,6 +23,11 @@ export interface Config {
 
 	chats?: {
 		/**
+		 * Chat to log all admin actions to.
+		 */
+		adminLog?: number;
+
+		/**
 		 * Chat to send member join/leave notifications to.
 		 * Pass false to disable this feature.
 		 */

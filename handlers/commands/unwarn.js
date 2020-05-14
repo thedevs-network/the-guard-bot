@@ -30,13 +30,13 @@ const dateRegex = XRegExp.tag('nix')`^
 $`;
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
-const unwarnHandler = async ({ from, message, replyWithHTML, telegram }) => {
-	if (!from || from.status !== 'admin') return null;
+const unwarnHandler = async (ctx) => {
+	if (ctx.from?.status !== 'admin') return null;
 
-	const { reason, targets } = parse(message);
+	const { reason, targets } = parse(ctx.message);
 
 	if (targets.length !== 1) {
-		return replyWithHTML(
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Specify one user to unwarn.</b>',
 		).then(scheduleDeletion());
 	}
@@ -44,7 +44,7 @@ const unwarnHandler = async ({ from, message, replyWithHTML, telegram }) => {
 	const userToUnwarn = await getUser(strip(targets[0]));
 
 	if (!userToUnwarn) {
-		return replyWithHTML(
+		return ctx.replyWithHTML(
 			'❓ <b>User unknown</b>',
 		).then(scheduleDeletion());
 	}
@@ -52,14 +52,14 @@ const unwarnHandler = async ({ from, message, replyWithHTML, telegram }) => {
 	const allWarns = userToUnwarn.warns.filter(isWarnNotExpired(new Date()));
 
 	if (allWarns.length === 0) {
-		return replyWithHTML(
+		return ctx.replyWithHTML(
 			html`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
 		);
 	}
 
 	if (userToUnwarn.status === 'banned') {
 		await pMap(await listGroups(), group =>
-			telegram.unbanChatMember(group.id, userToUnwarn.id));
+			ctx.tg.unbanChatMember(group.id, userToUnwarn.id));
 	}
 
 	let lastWarn;
@@ -70,13 +70,13 @@ const unwarnHandler = async ({ from, message, replyWithHTML, telegram }) => {
 		lastWarn = allWarns.find(({ date }) =>
 			date && date.toISOString().startsWith(normalized));
 	} else {
-		return replyWithHTML(
+		return ctx.replyWithHTML(
 			'⚠ <b>Invalid date</b>',
 		).then(scheduleDeletion());
 	}
 
 	if (!lastWarn) {
-		return replyWithHTML(
+		return ctx.replyWithHTML(
 			'❓ <b>404: Warn not found</b>',
 		).then(scheduleDeletion());
 	}
@@ -84,7 +84,7 @@ const unwarnHandler = async ({ from, message, replyWithHTML, telegram }) => {
 	await unwarn(userToUnwarn, lastWarn);
 
 	if (userToUnwarn.status === 'banned') {
-		telegram.sendMessage(
+		ctx.tg.sendMessage(
 			userToUnwarn.id,
 			'♻️ You were unbanned from all of the /groups!',
 		).catch(() => null);
@@ -96,8 +96,8 @@ const unwarnHandler = async ({ from, message, replyWithHTML, telegram }) => {
 
 	const count = html`<b>${allWarns.length}</b>/${numberOfWarnsToBan}`;
 
-	return replyWithHTML(html`
-		❎ ${from.first_name} <b>pardoned</b> ${link(userToUnwarn)} for
+	return ctx.loggedReply(html`
+		❎ ${ctx.from.first_name} <b>pardoned</b> ${link(userToUnwarn)} for
 		${count}: ${lastWarn.reason || lastWarn}
 	`);
 };
