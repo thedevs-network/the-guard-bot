@@ -1,5 +1,7 @@
 'use strict';
 
+const { telegram } = require('../../bot');
+
 const msgAlreadyDeleted = 'Bad Request: message to delete not found';
 
 /** @param { import('telegraf').Context } ctx */
@@ -17,6 +19,7 @@ module.exports = (ctx, next) => {
 			throw err;
 		}
 	};
+	telegram.deleteMessage = ctx.tg.deleteMessage;
 	ctx.tg.sendMessage = (chat_id, text, extra) =>
 		ctx.tg.callApi('sendMessage', {
 			disable_web_page_preview: true,

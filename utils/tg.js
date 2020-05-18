@@ -28,7 +28,7 @@ const link = ({ id, first_name }) =>
 const quietLink = (user) =>
 	user.username
 		? html`<a href="t.me/${user.username}">${user.first_name}</a>`
-		: link(user);
+		: html`<a href="tg://user?id=${user.id}">${user.first_name}</a>`;
 
 const displayUser = user =>
 	user.first_name

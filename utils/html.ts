@@ -4,7 +4,7 @@ import dedent = require("dedent-js");
 
 const symbol = Symbol("TgHtml.symbol");
 
-type Escapable = bigint | boolean | Error | null | number | string | undefined;
+type Escapable = bigint | boolean | Error | number | string;
 type Sub = Escapable | TgHtml;
 
 const escapeHtml = (s: Escapable) =>
