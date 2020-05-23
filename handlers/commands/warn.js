@@ -1,7 +1,7 @@
 'use strict';
 
 // Utils
-const { parse, strip } = require('../../utils/cmd');
+const { parse, strip, substom } = require('../../utils/cmd');
 const { scheduleDeletion } = require('../../utils/tg');
 
 // DB
@@ -53,7 +53,7 @@ const warnHandler = async (ctx) => {
 	return ctx.warn({
 		admin: ctx.from,
 		amend: flags.has('amend'),
-		reason,
+		reason: await substom(reason),
 		userToWarn,
 		mode: 'manual',
 	});

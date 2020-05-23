@@ -3,7 +3,7 @@
 // Utils
 const { displayUser, scheduleDeletion } = require('../../utils/tg');
 const { html } = require('../../utils/html');
-const { parse, strip } = require('../../utils/cmd');
+const { parse, strip, substom } = require('../../utils/cmd');
 
 // Bot
 
@@ -63,7 +63,11 @@ const banHandler = async (ctx) => {
 		);
 	}
 
-	return ctx.ban({ admin: ctx.from, reason, userToBan });
+	return ctx.ban({
+		admin: ctx.from,
+		reason: await substom(reason),
+		userToBan,
+	});
 };
 
 module.exports = banHandler;
