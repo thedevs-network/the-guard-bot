@@ -23,6 +23,7 @@ const monkeyPatchHandler = require('./monkeyPatch');
 const presenceLogHandler = require('./logPresence');
 const removeChannelForwardsHandler = require('./removeChannelForwards');
 const removeCommandsHandler = require('./removeCommands');
+const reportHandled = require('./reportHandled');
 const syncStatusHandler = require('./syncStatus');
 const updateUserDataHandler = require('./updateUserData');
 const updateGroupTitleHandler = require('./updateGroupTitle');
@@ -43,6 +44,10 @@ composer.on(
 	[ 'new_chat_members', 'left_chat_member' ],
 	deleteAfter(deleteJoinsAfter),
 	presenceLogHandler,
+);
+composer.action(
+	/^\/del -chat_id=(-\d+) -msg_id=(\d+) Report handled/,
+	reportHandled,
 );
 composer.on('callback_query', commandButtons);
 
