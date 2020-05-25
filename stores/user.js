@@ -8,12 +8,13 @@ const R = require('ramda');
 
 const User = new Datastore({
 	autoload: true,
-	filename: 'data/User.db'
+	filename: 'data/User.db',
+	timestampData: true,
 });
 
 User.ensureIndex({
 	fieldName: 'id',
-	unique: true
+	unique: true,
 });
 
 User.ensureIndex({
@@ -24,7 +25,7 @@ User.ensureIndex({
 User.update(
 	{ username: '' },
 	{ $unset: { username: true } },
-	{ multi: true }
+	{ multi: true },
 ).then(() =>
 	User.ensureIndex({ fieldName: 'username', sparse: true, unique: true }));
 
@@ -53,7 +54,7 @@ const updateUser = async (rawTgUser) => {
 		return User.update(
 			{ id },
 			{ status: 'member', warns: [], ...tgUser },
-			{ returnUpdatedDocs: true, upsert: true }
+			{ returnUpdatedDocs: true, upsert: true },
 		).then(getUpdatedDocument);
 	}
 
@@ -63,7 +64,7 @@ const updateUser = async (rawTgUser) => {
 		return User.update(
 			{ id },
 			{ $set: tgUser },
-			{ returnUpdatedDocs: true }
+			{ returnUpdatedDocs: true },
 		).then(getUpdatedDocument);
 	}
 
@@ -73,7 +74,7 @@ const updateUser = async (rawTgUser) => {
 const admin = ({ id }) =>
 	User.update(
 		{ id },
-		{ $set: { status: 'admin', warns: [] } }
+		{ $set: { status: 'admin', warns: [] } },
 	);
 
 const getAdmins = () =>
@@ -94,14 +95,14 @@ const ban = ({ id }, ban_details) =>
 	User.update(
 		{ id, $not: { status: 'admin' } },
 		{ $set: { ban_details, status: 'banned' } },
-		{ upsert: true }
+		{ upsert: true },
 	);
 
 const batchBan = (users, ban_details) =>
 	User.update(
 		{ $or: users.map(strip), $not: { status: 'admin' } },
 		{ $set: { ban_details, status: 'banned' } },
-		{ multi: true, returnUpdatedDocs: true }
+		{ multi: true, returnUpdatedDocs: true },
 	).then(getUpdatedDocument);
 
 const ensureExists = ({ id }) =>
@@ -113,14 +114,14 @@ const unban = ({ id }) =>
 		{
 			$set: { status: 'member' },
 			$unset: { ban_details: true, ban_reason: true },
-		}
+		},
 	);
 
 const warn = ({ id }, reason, { amend }) =>
 	User.update(
 		{ id, $not: { status: 'admin' } },
 		{ $pop: { warns: +!!amend }, $push: { warns: reason } },
-		{ returnUpdatedDocs: true }
+		{ returnUpdatedDocs: true },
 	).then(getUpdatedDocument);
 
 const unwarn = ({ id }, warnQuery) =>
@@ -130,7 +131,7 @@ const unwarn = ({ id }, warnQuery) =>
 			$pull: { warns: warnQuery },
 			$set: { status: 'member' },
 			$unset: { ban_details: true, ban_reason: true },
-		}
+		},
 	);
 
 const nowarns = query => unwarn(query, {});
@@ -148,5 +149,5 @@ module.exports = {
 	unban,
 	unwarn,
 	updateUser,
-	warn
+	warn,
 };

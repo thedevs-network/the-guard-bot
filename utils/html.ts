@@ -26,6 +26,9 @@ export class TgHtml {
 	toJSON() {
 		return this[symbol];
 	}
+	get length() {
+		return this[symbol].length;
+	}
 
 	static tag(raw: TemplateStringsArray, ...subs: Sub[]) {
 		return new TgHtml(dedent(raw, ...subs.map(toHtml)));

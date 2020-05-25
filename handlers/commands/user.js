@@ -10,6 +10,7 @@ const { parse, strip } = require('../../utils/cmd');
 // DB
 const { getUser } = require('../../stores/user');
 
+/** @param {Date} date */
 const formatDate = date =>
 	date && date.toISOString().slice(0, -5).replace('T', ' ');
 
@@ -29,13 +30,10 @@ const formatWarn = async (warn, i) =>
 		: html`<del>${i + 1}. ${await formatEntry(warn, warn)}</del>`;
 
 /**
- * @param {TgHtml} content
+ * @param {string | TgHtml | undefined } content
  */
-const isNotEmpty = content => !!content.toJSON();
+const isNotEmpty = content => content?.length;
 
-/**
- * @param {TgHtml} content
- */
 const optional = (header, sep, content) =>
 	isNotEmpty(content)
 		? html`${header}${sep}${content}`
@@ -89,8 +87,15 @@ const getWarnsHandler = async ({ from, message, replyWithHTML }) => {
 		TgHtml.join('\n', await Promise.all(warns.map(formatWarn))),
 	);
 
+	const firstSeen = optional(
+		html`👀 <b>First seen:</b>`,
+		' ',
+		formatDate(theUser.createdAt),
+	);
+
 	return replyWithHTML(TgHtml.join('\n\n', [
 		header,
+		firstSeen,
 		userWarns,
 		banReason,
 	].filter(isNotEmpty))).then(scheduleDeletion());
