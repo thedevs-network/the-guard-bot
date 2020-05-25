@@ -6,7 +6,7 @@ export const substom = (reason: string): Promise<string> =>
 		if (!name) return match;
 		const command = await getCommand({
 			name: name.toLowerCase(),
-			role: "admins",
+			role: { $ne: "master" },
 			type: "copy",
 		});
 		if (!command) return match;
