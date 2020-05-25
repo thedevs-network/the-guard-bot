@@ -43,7 +43,7 @@ const nowarnsHandler = async (ctx) => {
 	}
 
 	if (userToUnwarn.status === 'banned') {
-		await pMap(await listGroups(), group =>
+		await pMap(await listGroups({ type: 'supergroup' }), (group) =>
 			ctx.tg.unbanChatMember(group.id, userToUnwarn.id));
 	}
 

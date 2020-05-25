@@ -21,8 +21,8 @@ const hideGroup = ({ id }) =>
 const updateGroup = group =>
 	Group.update({ id: group.id }, { $set: group });
 
-const listGroups = () =>
-	Group.find({});
+const listGroups = (query = {}) =>
+	Group.find(query);
 
 const listVisibleGroups = () =>
 	Group.find({ $not: { link: '' } });

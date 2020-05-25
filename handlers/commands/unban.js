@@ -36,7 +36,7 @@ const unbanHandler = async (ctx) => {
 		return ctx.replyWithHTML('ℹ️ <b>User is not banned.</b>');
 	}
 
-	await pMap(await listGroups(), group =>
+	await pMap(await listGroups({ type: 'supergroup' }), (group) =>
 		ctx.tg.unbanChatMember(group.id, userToUnban.id));
 
 	await unban(userToUnban);
