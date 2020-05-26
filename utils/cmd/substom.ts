@@ -9,6 +9,7 @@ export const substom = (reason: string): Promise<string> =>
 			role: { $ne: "master" },
 			type: "copy",
 		});
-		if (!command) return match;
-		return command.content.text + " ";
+		const text = command?.content.text || command?.content.caption;
+		if (!text) return match;
+		return text + " ";
 	});
