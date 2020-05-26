@@ -30,6 +30,12 @@ const listVisibleGroups = () =>
 const managesGroup = group =>
 	Group.findOne(group);
 
+const migrateGroup = (oldId, newId) =>
+	Group.update(
+		{ id: oldId, type: 'group' },
+		{ $set: { id: newId, type: 'supergroup' } },
+	);
+
 const removeGroup = ({ id }) =>
 	Group.remove({ id });
 
@@ -39,6 +45,7 @@ module.exports = {
 	listGroups,
 	listVisibleGroups,
 	managesGroup,
+	migrateGroup,
 	removeGroup,
 	updateGroup,
 };

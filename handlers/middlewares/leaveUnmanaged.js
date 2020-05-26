@@ -1,6 +1,6 @@
 'use strict';
 
-const { managesGroup } = require('../../stores/group');
+const { managesGroup, migrateGroup } = require('../../stores/group');
 
 const { chats = {} } = require('../../utils/config').config;
 
@@ -34,14 +34,19 @@ const gifs = gifIds.map(x => `https://media.giphy.com/media/${x}/giphy.gif`);
 
 
 /**
- * @param {Array} arr An anonymous array
- * @returns {Number} A random number
+ * @template T
+ * @param {Array<T>} arr
  */
 const randomChoice = arr => arr[Math.floor(Math.random() * arr.length)];
 
 
-/** @param { import('telegraf').ContextMessageUpdate } ctx */
+/** @param { import('telegraf').Context } ctx */
 const leaveUnmanagedHandler = async (ctx, next) => {
+	if (!ctx.message) return next();
+	if (ctx.message.migrate_from_chat_id) {
+		return migrateGroup(ctx.message.migrate_from_chat_id, ctx.chat.id);
+	}
+
 	if (
 		ctx.chat.type === 'private' ||
 		Object.values(chats).includes(ctx.chat.id) ||
