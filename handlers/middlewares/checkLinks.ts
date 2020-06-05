@@ -11,6 +11,7 @@ import type { MessageEntity } from "telegraf/typings/telegram-types";
 import { pMap } from "../../utils/promise";
 import { telegram } from "../../bot";
 import { URL } from "url";
+import XRegExp = require("xregexp");
 
 const { excludeLinks = [], blacklistedDomains = [] } = config;
 
@@ -20,8 +21,12 @@ if (excludeLinks === false) {
 	return;
 }
 
+const tmeDomains = ["t.me", "telega.one", "telegram.dog", "telegram.me"];
+
+const tmeDomainRegex = XRegExp.union(tmeDomains);
+
 const normalizeTme = R.replace(
-	/^(?:@|(?:https?:\/\/)?(?:t\.me|telegram\.(?:me|dog))\/)(\w+)(\/.+)?/i,
+	XRegExp.tag("i")`^(?:@|(?:https?:\/\/)?${tmeDomainRegex}\/)(\w+)(\/.+)?`,
 	(_match, username, rest) =>
 		/^\/\d+$/.test(rest)
 			? `https://t.me/${username.toLowerCase()}`
@@ -122,10 +127,7 @@ const dh = {
 };
 
 const domainHandlers = new Map([
-	["t.me", dh.tme],
-	["telega.one", dh.tme],
-	["telegram.dog", dh.tme],
-	["telegram.me", dh.tme],
+	...tmeDomains.map((domain) => [domain, dh.tme] as const),
 	...blacklistedDomains.map(
 		(domain) => [domain, dh.blacklistedDomain] as const
 	),
@@ -175,7 +177,7 @@ const classifyAsync = R.memoize(async (url: URL) => {
 const classifyList = (urls: URL[]) =>
 	pMap(urls, classifyAsync).then(highestPriorityAction);
 
-const matchTmeLinks = R.match(/\b(?:t\.me|telegram\.(?:me|dog))\/[\w-/]+/gi);
+const matchTmeLinks = R.match(XRegExp.tag("gi")`\b${tmeDomainRegex}\/[\w-/]+`);
 
 const maybeProp = (prop) => (o) => (R.has(prop, o) ? [o[prop]] : []);
 
