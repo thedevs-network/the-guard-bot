@@ -7,6 +7,7 @@ const { URL } = require('url');
 const { taggedSum } = require('daggy');
 const fetch = require('node-fetch');
 const R = require('ramda');
+const { jspack } = require('jspack');
 
 const { isAdmin } = require('../../stores/user');
 const { managesGroup } = require('../../stores/group');
@@ -84,6 +85,26 @@ const isPublic = async username => {
 	}
 };
 
+const inviteLinkToGroupID = url => {
+	if (url.pathname.toLowerCase().startsWith('/joinchat/')) {
+		const [ , groupID ] =
+			jspack.Unpack(
+				'>LLC',
+				Buffer.from(url.pathname.split('/')[2], 'base64'),
+			);
+		return groupID;
+	}
+	throw new Error(`${url.toString()} is not an invite link`);
+};
+
+const inviteLinkIsManagedGroup = link => {
+	try {
+		return managesGroup({ id: inviteLinkToGroupID(link) });
+	} catch (err) {
+		return false;
+	}
+};
+
 const dh = {
 	blacklistedDomain: R.always(Action.Warn('Link to a blacklisted domain')),
 	nothing: R.always(Action.Nothing),
@@ -94,7 +115,7 @@ const dh = {
 			return Action.Nothing;
 		}
 		if (url.searchParams.has('start')) return Action.Warn('Bot reflink');
-		if (await managesGroup({ link: url.toString() })) return Action.Nothing;
+		if (await inviteLinkIsManagedGroup(url)) return Action.Nothing;
 		const [ , username ] = R.match(/^\/(\w+)(?:\/\d*)?$/, url.pathname);
 		if (username && !await isPublic('@' + username)) return Action.Nothing;
 		return Action.Warn('Link to a Telegram group or channel');
