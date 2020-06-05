@@ -1,161 +1,164 @@
-'use strict';
+/* eslint new-cap: ["error", {"capIsNewExceptionPattern": "^(?:Action|jspack)\."}] */
 
-/* eslint new-cap: ["error", {"capIsNewExceptionPattern": "^Action.\w+$"}] */
+import * as R from "ramda";
+import { config } from "../../utils/config";
+import type { ExtendedContext } from "../../typings/context";
+import fetch from "node-fetch";
+import { isAdmin } from "../../stores/user";
+import { jspack } from "jspack";
+import { managesGroup } from "../../stores/group";
+import type { MessageEntity } from "telegraf/typings/telegram-types";
+import { pMap } from "../../utils/promise";
+import { telegram } from "../../bot";
+import { URL } from "url";
 
-const { URL } = require('url');
+const { excludeLinks = [], blacklistedDomains = [] } = config;
 
-const { taggedSum } = require('daggy');
-const fetch = require('node-fetch');
-const R = require('ramda');
-const { jspack } = require('jspack');
-
-const { isAdmin } = require('../../stores/user');
-const { managesGroup } = require('../../stores/group');
-const { telegram } = require('../../bot');
-
-const {
-	excludeLinks = [],
-	blacklistedDomains = [],
-} = require('../../utils/config').config;
-
-if (excludeLinks === false || excludeLinks === '*') {
+if (excludeLinks === false) {
 	module.exports = (ctx, next) => next();
+	// @ts-ignore
 	return;
 }
 
 const normalizeTme = R.replace(
 	/^(?:@|(?:https?:\/\/)?(?:t\.me|telegram\.(?:me|dog))\/)(\w+)(\/.+)?/i,
-	(_match, username, rest) => /^\/\d+$/.test(rest)
-		? `https://t.me/${username.toLowerCase()}`
-		: `https://t.me/${username.toLowerCase()}${rest || ''}`,
+	(_match, username, rest) =>
+		/^\/\d+$/.test(rest)
+			? `https://t.me/${username.toLowerCase()}`
+			: `https://t.me/${username.toLowerCase()}${rest || ""}`
 );
 
-const stripQuery = s => s.split('?', 1)[0];
+const stripQuery = (s: string) => s.split("?", 1)[0];
 
-const customWhitelist = new Set(excludeLinks
-	.map(normalizeTme)
-	.map(stripQuery));
+const customWhitelist = new Set(excludeLinks.map(normalizeTme).map(stripQuery));
 
-const Action = taggedSum('Action', {
-	Nothing: [],
-	Notify: [ 'errorMsg' ],
-	Warn: [ 'reason' ],
-});
+// eslint-disable-next-line @typescript-eslint/no-namespace
+namespace Action {
+	export enum Type {
+		Nothing,
+		Notify,
+		Warn,
+	}
 
-const cata = R.invoker(1, 'cata');
-const actionPriority = cata({
-	// Numbers are relative to each other
-	Nothing: () => 0,
-	Notify: () => 10,
-	Warn: () => 20,
-});
+	export type Nothing = { type: Type.Nothing };
+	export type Notify = { type: Type.Notify; errorMsg: CodeError };
+	export type Warn = { type: Type.Warn; reason: string };
+
+	export const Nothing: Nothing = { type: Type.Nothing };
+	export const Notify = (errorMsg: CodeError): Notify => ({
+		type: Type.Notify,
+		errorMsg,
+	});
+	export const Warn = (reason: string): Warn => ({
+		type: Type.Warn,
+		reason,
+	});
+}
+
+type Action = Action.Nothing | Action.Notify | Action.Warn;
+
+const actionPriority = (action: Action) => action.type;
 const maxByActionPriority = R.maxBy(actionPriority);
 const highestPriorityAction = R.reduce(maxByActionPriority, Action.Nothing);
 
-const assumeProtocol = R.unless(R.contains('://'), R.concat('http://'));
-const conatained = R.flip(R.contains);
-const constructAbsUrl = R.constructN(1, URL);
-const isHttp = R.propSatisfies(R.test(/^https?:$/i), 'protocol');
-const isLink = R.propSatisfies(
-	conatained([ 'url', 'text_link', 'mention' ]),
-	'type',
-);
-const memoize = R.memoizeWith(R.identity);
+const assumeProtocol = R.unless(R.contains("://"), R.concat("http://"));
+const isHttp = R.propSatisfies(R.test(/^https?:$/i), "protocol");
+const isLink = (entity: MessageEntity) =>
+	["url", "text_link", "mention"].includes(entity.type);
 
-const domainContainedIn = R.curry((domains, url) =>
-	domains.has(url.host.toLowerCase()));
-
-const obtainUrlFromText = text => ({ length, offset, url }) =>
-	url
-		? url
-		: text.slice(offset, length + offset);
-
+const obtainUrlFromText = (text: string) => ({ length, offset, url = "" }) =>
+	url ? url : text.slice(offset, length + offset);
 
 const blacklisted = {
-	protocol: url =>
-		url.protocol === 'tg:' && url.host.toLowerCase() === 'resolve',
+	protocol: (url: URL) =>
+		url.protocol === "tg:" && url.host.toLowerCase() === "resolve",
 };
 
-const isPublic = async username => {
+const isPublic = async (username: string) => {
 	try {
 		const chat = await telegram.getChat(username);
-		return chat.type !== 'private';
+		return chat.type !== "private";
 	} catch (err) {
 		return false;
 	}
 };
 
-const inviteLinkToGroupID = url => {
-	if (url.pathname.toLowerCase().startsWith('/joinchat/')) {
-		const [ , groupID ] =
-			jspack.Unpack(
-				'>LLC',
-				Buffer.from(url.pathname.split('/')[2], 'base64'),
-			);
+const inviteLinkToGroupID = (url: URL) => {
+	if (url.pathname.toLowerCase().startsWith("/joinchat/")) {
+		const [, groupID] = jspack.Unpack(
+			">LLC",
+			Buffer.from(url.pathname.split("/")[2], "base64")
+		);
 		return groupID;
 	}
 	throw new Error(`${url.toString()} is not an invite link`);
 };
 
-const inviteLinkIsManagedGroup = link => {
+const inviteLinkIsManagedGroup = (url: URL) => {
 	try {
-		return managesGroup({ id: inviteLinkToGroupID(link) });
+		return managesGroup({ id: inviteLinkToGroupID(url) });
 	} catch (err) {
 		return false;
 	}
 };
 
 const dh = {
-	blacklistedDomain: R.always(Action.Warn('Link to a blacklisted domain')),
-	nothing: R.always(Action.Nothing),
-	tme: async url => {
-		if (url.pathname === '/') return Action.Nothing;
-		if (url.pathname.toLowerCase().startsWith('/c/')) return Action.Nothing;
-		if (url.pathname.toLowerCase().startsWith('/addstickers/')) {
+	blacklistedDomain: R.always(
+		Promise.resolve(Action.Warn("Link to a blacklisted domain"))
+	),
+	nothing: R.always(Promise.resolve(Action.Nothing)),
+	tme: async (url: URL) => {
+		if (url.pathname === "/") return Action.Nothing;
+		if (url.pathname.toLowerCase().startsWith("/c/")) return Action.Nothing;
+		if (url.pathname.toLowerCase().startsWith("/addstickers/")) {
 			return Action.Nothing;
 		}
-		if (url.searchParams.has('start')) return Action.Warn('Bot reflink');
+		if (url.searchParams.has("start")) return Action.Warn("Bot reflink");
 		if (await inviteLinkIsManagedGroup(url)) return Action.Nothing;
-		const [ , username ] = R.match(/^\/(\w+)(?:\/\d*)?$/, url.pathname);
-		if (username && !await isPublic('@' + username)) return Action.Nothing;
-		return Action.Warn('Link to a Telegram group or channel');
+		const [, username] = R.match(/^\/(\w+)(?:\/\d*)?$/, url.pathname);
+		if (username && !(await isPublic("@" + username))) return Action.Nothing;
+		return Action.Warn("Link to a Telegram group or channel");
 	},
 };
 
 const domainHandlers = new Map([
-	[ 't.me', dh.tme ],
-	[ 'telegram.dog', dh.tme ],
-	[ 'telegram.me', dh.tme ],
-	...blacklistedDomains.map(domain => [ domain, dh.blacklistedDomain ]),
+	["t.me", dh.tme],
+	["telega.one", dh.tme],
+	["telegram.dog", dh.tme],
+	["telegram.me", dh.tme],
+	...blacklistedDomains.map(
+		(domain) => [domain, dh.blacklistedDomain] as const
+	),
 ]);
 
-const isWhitelisted = (url) => customWhitelist.has(stripQuery(url.toString()));
+const isWhitelisted = (url: URL) =>
+	customWhitelist.has(stripQuery(url.toString()));
 
 class CodeError extends Error {
-	constructor(code) {
+	constructor(readonly code: string) {
 		super(code);
-		this.code = code;
 	}
 }
 
-const unshorten = url =>
-	fetch(url, { redirect: 'follow' }).then(res =>
+const unshorten = (url: URL | string) =>
+	fetch(url, { redirect: "follow" }).then((res) =>
 		res.ok
 			? new URL(normalizeTme(res.url))
-			: Promise.reject(new CodeError(`${res.status} ${res.statusText}`)));
+			: Promise.reject(new CodeError(`${res.status} ${res.statusText}`))
+	);
 
-const checkLinkByDomain = url => {
+const checkLinkByDomain = (url: URL) => {
 	const domain = url.host.toLowerCase();
 	const handler = domainHandlers.get(domain) || dh.nothing;
 	return handler(url);
 };
 
-const classifyAsync = memoize(async url => {
+const classifyAsync = R.memoize(async (url: URL) => {
 	if (isWhitelisted(url)) return Action.Nothing;
 
-	if (blacklisted.protocol(url)) return Action.Warn('Link using tg protocol');
+	if (blacklisted.protocol(url)) return Action.Warn("Link using tg protocol");
 
-	if (domainContainedIn(domainHandlers, url)) return checkLinkByDomain(url);
+	if (domainHandlers.has(url.host.toLowerCase())) return checkLinkByDomain(url);
 
 	if (!isHttp(url)) return Action.Nothing;
 
@@ -169,30 +172,32 @@ const classifyAsync = memoize(async url => {
 	}
 });
 
-const classifyList = (urls) =>
-	Promise.all(urls.map(classifyAsync))
-		.then(highestPriorityAction);
+const classifyList = (urls: URL[]) =>
+	pMap(urls, classifyAsync).then(highestPriorityAction);
 
 const matchTmeLinks = R.match(/\b(?:t\.me|telegram\.(?:me|dog))\/[\w-/]+/gi);
 
-const maybeProp = prop => o => R.has(prop, o) ? [ o[prop] ] : [];
+const maybeProp = (prop) => (o) => (R.has(prop, o) ? [o[prop]] : []);
 
 const buttonUrls = R.pipe(
-	R.path([ 'reply_markup', 'inline_keyboard' ]),
+	R.path(["reply_markup", "inline_keyboard"]),
 	R.defaultTo([]),
+	// @ts-ignore
+	// eslint-disable-next-line @typescript-eslint/unbound-method
 	R.unnest,
-	R.chain(maybeProp('url')),
+	R.chain(maybeProp("url"))
 );
 
-/** @param { import('../../typings/context').ExtendedContext } ctx */
-const classifyCtx = (ctx) => {
-	if (!ctx.chat.type.endsWith('group')) return Action.Nothing;
+const classifyCtx = (ctx: ExtendedContext) => {
+	if (!ctx.chat?.type.endsWith("group")) return Action.Nothing;
 
 	const message = ctx.message || ctx.editedMessage;
 
+	if (!message) return Action.Nothing;
+
 	const entities = message.entities || message.caption_entities || [];
 
-	const text = message.text || message.caption || '';
+	const text = message.text || message.caption || "";
 
 	const rawUrls = entities
 		.filter(isLink)
@@ -203,31 +208,28 @@ const classifyCtx = (ctx) => {
 	const urls = R.uniq(rawUrls)
 		.map(normalizeTme)
 		.map(assumeProtocol)
-		.map(constructAbsUrl);
+		.map((url) => new URL(url));
 
 	return classifyList(urls);
 };
 
-/** @param { import('../../typings/context').ExtendedContext } ctx */
-module.exports = async (ctx, next) =>
-	(await classifyCtx(ctx)).cata({
-		Nothing: next,
-		Notify() {
-			return next();
-		},
-		Warn: async (reason) => {
-			const admin = ctx.botInfo;
-			const userToWarn = ctx.from;
+module.exports = async (ctx: ExtendedContext, next) => {
+	const action = await classifyCtx(ctx);
 
-			if (userToWarn.id === 777000) return next();
-			if (await isAdmin(userToWarn)) return next();
+	if (action.type === Action.Type.Warn) {
+		const userToWarn = ctx.from!;
 
-			ctx.deleteMessage().catch(() => null);
-			return ctx.warn({
-				admin,
-				reason,
-				userToWarn,
-				mode: 'auto',
-			});
-		},
-	});
+		if (userToWarn.id === 777000) return next();
+		if (await isAdmin(userToWarn)) return next();
+
+		ctx.deleteMessage().catch(() => null);
+		return ctx.warn({
+			admin: ctx.botInfo!,
+			reason: action.reason,
+			userToWarn,
+			mode: "auto",
+		});
+	}
+
+	return next();
+};

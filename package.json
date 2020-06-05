@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/TheDevs-Network/the-guard-bot/",
   "dependencies": {
-    "daggy": "^1.3.0",
     "dedent-js": "^1.0.1",
     "jspack": "0.0.4",
     "millisecond": "^0.1.2",
@@ -50,6 +49,8 @@
   },
   "devDependencies": {
     "@types/node": "^13.13.2",
+    "@types/node-fetch": "^2.5.7",
+    "@types/ramda": "^0.25.51",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "eslint": "^6.8.0",
