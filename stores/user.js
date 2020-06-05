@@ -1,7 +1,7 @@
 'use strict';
 
 // Utils
-const { strip } = require('../utils/parse');
+const { strip } = require('../utils/cmd');
 
 const Datastore = require('nedb-promise');
 const R = require('ramda');
