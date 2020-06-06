@@ -8,9 +8,7 @@ const { config } = require('../utils/config');
 /** @type { import('telegraf/typings').Telegraf<ExtendedContext> } */
 const bot = new Telegraf(config.token);
 
-if (process.env.NODE_ENV === 'development') {
-	bot.polling.offset = -1;
-}
+bot.polling.offset = -1;
 
 module.exports = bot;
 

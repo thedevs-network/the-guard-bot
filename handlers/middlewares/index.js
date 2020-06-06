@@ -14,6 +14,7 @@ const { deleteJoinsAfter = '2 minutes' } = require('../../utils/config').config;
 
 const addedToGroupHandler = require('./addedToGroup');
 const antibotHandler = require('./antibot');
+const antifloodHandler = require('./antiflood');
 const checkLinksHandler = require('./checkLinks');
 const commandButtons = require('./commandButtons');
 const kickBannedHandler = require('./kickBanned');
@@ -45,6 +46,7 @@ composer.on(
 	deleteAfter(deleteJoinsAfter),
 	presenceLogHandler,
 );
+composer.use(antifloodHandler);
 composer.action(
 	/^\/del -chat_id=(-\d+) -msg_id=(\d+) Report handled/,
 	reportHandled,
