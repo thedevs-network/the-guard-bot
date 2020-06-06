@@ -9,12 +9,7 @@ const R = require('ramda');
 
 const replyId = R.path([ 'reply_to_message', 'message_id' ]);
 
-const isCommand = R.pipe(
-	R.defaultTo({}),
-	R.path([ 'entities', 0 ]),
-	R.defaultTo({}),
-	R.whereEq({ offset: 0, type: 'bot_command' }),
-);
+const { isCommand } = require('../utils/cmd');
 
 const inlineKeyboard = (...inline_keyboard) =>
 	({ reply_markup: { inline_keyboard } });

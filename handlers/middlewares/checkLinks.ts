@@ -215,7 +215,7 @@ const classifyCtx = (ctx: ExtendedContext) => {
 	return classifyList(urls);
 };
 
-module.exports = async (ctx: ExtendedContext, next) => {
+export = async (ctx: ExtendedContext, next) => {
 	const action = await classifyCtx(ctx);
 
 	if (action.type === Action.Type.Warn) {
