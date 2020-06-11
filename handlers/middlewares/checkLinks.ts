@@ -91,7 +91,7 @@ const isPublic = async (username: string) => {
 const inviteLinkToGroupID = (url: URL) => {
 	if (url.pathname.toLowerCase().startsWith("/joinchat/")) {
 		const [, groupID] = jspack.Unpack(
-			">LLC",
+			">LLQ",
 			Buffer.from(url.pathname.split("/")[2], "base64")
 		);
 		return groupID;
