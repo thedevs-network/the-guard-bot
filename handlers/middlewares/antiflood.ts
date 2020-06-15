@@ -1,5 +1,4 @@
 import ms = require("millisecond");
-import rateLimit = require("telegraf-ratelimit");
 import type { ExtendedContext } from "../../typings/context";
 
 function keyGenerator(ctx: ExtendedContext) {
@@ -16,4 +15,14 @@ async function onLimitExceeded(ctx: ExtendedContext) {
 	await ctx.restrictChatMember(ctx.from!.id, { permissions, until_date });
 }
 
-export = rateLimit({ keyGenerator, onLimitExceeded });
+const timestamps = new Map<string, number>();
+
+setInterval(() => timestamps.clear(), ms("10m")).unref();
+
+export = (ctx: ExtendedContext, next) => {
+	const key = keyGenerator(ctx);
+	if (!key) return next();
+	if (timestamps.get(key) === ctx.message!.date) return onLimitExceeded(ctx);
+	timestamps.set(key, ctx.message!.date);
+	return next();
+};
