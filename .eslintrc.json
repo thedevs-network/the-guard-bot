@@ -173,7 +173,7 @@
 		"key-spacing": "error",
 		"keyword-spacing": "error",
 		"lines-around-comment": "error",
-		"max-len": "error",
+		"max-len": ["error", {"ignoreTemplateLiterals": true}],
 		"max-nested-callbacks": "error",
 		"max-params": "error",
 		"max-statements": "off",

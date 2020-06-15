@@ -3,7 +3,7 @@
 
 // Utils
 const { displayUser, scheduleDeletion } = require('../../utils/tg');
-const { html } = require('../../utils/html');
+const { html, lrm } = require('../../utils/html');
 const { parse, strip } = require('../../utils/cmd');
 const { pMap } = require('../../utils/promise');
 
@@ -52,7 +52,7 @@ const unbanHandler = async (ctx) => {
 
 
 	return ctx.loggedReply(html`
-		♻️ ${ctx.from.first_name} <b>unbanned</b> ${displayUser(userToUnban)}.
+		♻️ ${lrm}${ctx.from.first_name} <b>unbanned</b> ${displayUser(userToUnban)}.
 	`);
 };
 

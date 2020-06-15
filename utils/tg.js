@@ -4,7 +4,7 @@
 const millisecond = require('millisecond');
 const { telegram } = require('../bot');
 
-const { html } = require('./html');
+const { html, lrm } = require('./html');
 const R = require('ramda');
 
 const replyId = R.path([ 'reply_to_message', 'message_id' ]);
@@ -18,7 +18,7 @@ const msgLink = msg =>
 	`https://t.me/c/${msg.chat.id.toString().slice(4)}/${msg.message_id}`;
 
 const link = ({ id, first_name }) =>
-	html`<a href="tg://user?id=${id}">${first_name}</a> [<code>${id}</code>]`;
+	html`${lrm}<a href="tg://user?id=${id}">${first_name}</a> [<code>${id}</code>]`;
 
 const quietLink = (user) =>
 	user.username

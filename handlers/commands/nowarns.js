@@ -2,7 +2,7 @@
 'use strict';
 
 // Utils
-const { html } = require('../../utils/html');
+const { html, lrm } = require('../../utils/html');
 const { link, scheduleDeletion } = require('../../utils/tg');
 const { parse, strip } = require('../../utils/cmd');
 const { pMap } = require('../../utils/promise');
@@ -61,7 +61,7 @@ const nowarnsHandler = async (ctx) => {
 	}
 
 	return ctx.loggedReply(html`
-		♻️ ${ctx.from.first_name} <b>pardoned</b> ${link(userToUnwarn)}
+		♻️ ${lrm}${ctx.from.first_name} <b>pardoned</b> ${link(userToUnwarn)}
 		for all of their warnings.
 	`);
 };

@@ -3,7 +3,7 @@
 
 // Utils
 const { displayUser, scheduleDeletion } = require('../../utils/tg');
-const { html, TgHtml } = require('../../utils/html');
+const { html, lrm, TgHtml } = require('../../utils/html');
 const { isMaster, isWarnNotExpired } = require('../../utils/config');
 const { parse, strip } = require('../../utils/cmd');
 
@@ -20,8 +20,8 @@ const formatDate = date =>
 const formatEntry = async (entry, defaultVal) => {
 	if (!entry || !entry.by_id) return html`${defaultVal}`;
 	const { first_name } = await getUser({ id: entry.by_id }) || {};
-	if (!first_name) return html`${entry.reason} (${formatDate(entry.date)})`;
-	return html`${entry.reason} (${first_name}, ${formatDate(entry.date)})`;
+	if (!first_name) return html`${lrm}${entry.reason} (${formatDate(entry.date)})`;
+	return html`${lrm};${entry.reason} (${first_name}, ${formatDate(entry.date)})`;
 };
 
 const formatWarn = async (warn, i) =>

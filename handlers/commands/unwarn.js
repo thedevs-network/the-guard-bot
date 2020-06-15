@@ -5,7 +5,7 @@ const { last } = require('ramda');
 const XRegExp = require('xregexp');
 
 // Utils
-const { html } = require('../../utils/html');
+const { html, lrm } = require('../../utils/html');
 const { link, scheduleDeletion } = require('../../utils/tg');
 const { isWarnNotExpired } = require('../../utils/config');
 const { parse, strip } = require('../../utils/cmd');
@@ -97,8 +97,8 @@ const unwarnHandler = async (ctx) => {
 	const count = html`<b>${allWarns.length}</b>/${numberOfWarnsToBan}`;
 
 	return ctx.loggedReply(html`
-		❎ ${ctx.from.first_name} <b>pardoned</b> ${link(userToUnwarn)} for
-		${count}: ${lastWarn.reason || lastWarn}
+		❎ ${lrm}${ctx.from.first_name} <b>pardoned</b> ${link(userToUnwarn)} for
+		${count}: ${lrm}${lastWarn.reason || lastWarn}
 	`);
 };
 

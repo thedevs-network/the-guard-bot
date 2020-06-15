@@ -2,7 +2,7 @@
 'use strict';
 
 const { context } = require('../bot');
-const { html } = require('../utils/html');
+const { html, lrm } = require('../utils/html');
 const { link } = require('../utils/tg');
 const { isWarnNotExpired } = require('../utils/config');
 const { numberOfWarnsToBan } = require('../utils/config').config;
@@ -32,8 +32,8 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 	}[cmp(recentWarns.length + 1, numberOfWarnsToBan)];
 
 	const warnMessage = html`
-		⚠️ ${admin.first_name} <b>warned</b> ${link(userToWarn)}.
-		${count}: ${reason}
+		⚠️ ${lrm}${admin.first_name} <b>warned</b> ${link(userToWarn)}.
+		${count}: ${lrm}${reason}
 	`;
 
 	if (recentWarns.length >= numberOfWarnsToBan) {

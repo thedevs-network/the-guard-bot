@@ -2,7 +2,7 @@
 
 const { batchBan, ensureExists } = require('../stores/user');
 const { displayUser } = require('../utils/tg');
-const { TgHtml } = require('../utils/html');
+const { TgHtml, lrm } = require('../utils/html');
 
 module.exports = async ({ admin, reason, targets }) => {
 	const by_id = admin.id;
@@ -14,7 +14,7 @@ module.exports = async ({ admin, reason, targets }) => {
 	const bannedString = TgHtml.join(', ', banned.map(displayUser));
 
 	return TgHtml.tag`
-		${admin.first_name} <b>banned</b> ${bannedString}.
-		<b>Reason</b>: ${reason}
+		${lrm}${admin.first_name} <b>banned</b> ${bannedString}.
+		<b>Reason</b>: ${lrm}${reason}
 	`;
 };

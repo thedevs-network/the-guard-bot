@@ -1,7 +1,7 @@
 'use strict';
 
 const { displayUser } = require('../utils/tg');
-const { html } = require('../utils/html');
+const { html, lrm } = require('../utils/html');
 const { pMap } = require('../utils/promise');
 const { telegram } = require('../bot');
 
@@ -20,7 +20,7 @@ module.exports = async ({ admin, reason, userToBan }) => {
 		telegram.kickChatMember(group.id, userToBan.id));
 
 	return html`
-		🚫 ${admin.first_name} <b>banned</b> ${displayUser(userToBan)}.
-		<b>Reason</b>: ${reason}
+		🚫 ${lrm}${admin.first_name} <b>banned</b> ${displayUser(userToBan)}.
+		<b>Reason</b>: ${lrm}${reason}
 	`;
 };
