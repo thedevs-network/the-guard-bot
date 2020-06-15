@@ -96,15 +96,14 @@ const inviteLinkToGroupID = (url: URL) => {
 		);
 		return groupID;
 	}
-	throw new Error(`${url.toString()} is not an invite link`);
+	return null;
 };
 
-const inviteLinkIsManagedGroup = (url: URL) => {
-	try {
-		return managesGroup({ id: inviteLinkToGroupID(url) });
-	} catch (err) {
-		return false;
-	}
+const managesLinkedGroup = (url: URL) => {
+	const id = inviteLinkToGroupID(url);
+	const superId = +`-100${id}`;
+	const link = url.toString();
+	return managesGroup({ $or: [{ id }, { id: superId }, { link }] });
 };
 
 const dh = {
@@ -119,7 +118,7 @@ const dh = {
 			return Action.Nothing;
 		}
 		if (url.searchParams.has("start")) return Action.Warn("Bot reflink");
-		if (await inviteLinkIsManagedGroup(url)) return Action.Nothing;
+		if (await managesLinkedGroup(url)) return Action.Nothing;
 		const [, username] = R.match(/^\/(\w+)(?:\/\d*)?$/, url.pathname);
 		if (username && !(await isPublic("@" + username))) return Action.Nothing;
 		return Action.Warn("Link to a Telegram group or channel");
