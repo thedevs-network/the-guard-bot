@@ -46,7 +46,6 @@ composer.on(
 	deleteAfter(deleteJoinsAfter),
 	presenceLogHandler,
 );
-composer.use(antifloodHandler);
 composer.action(
 	/^\/del -chat_id=(-\d+) -msg_id=(\d+) Report handled/,
 	reportHandled,
