@@ -1,9 +1,15 @@
 'use strict';
 
+/**
+ * @typedef { { id: number } | { username: string } } UserQuery
+ * @exports UserQuery
+*/
+
 // Utils
 const { strip } = require('../utils/cmd');
 
 const Datastore = require('nedb-promise');
+const ms = require('millisecond');
 const R = require('ramda');
 
 const User = new Datastore({
@@ -117,10 +123,36 @@ const unban = ({ id }) =>
 		},
 	);
 
+/**
+ * @param {UserQuery} user
+ */
+const permit = (user, { by_id, date }) =>
+	User.update(
+		user,
+		{ $set: { permit: { by_id, date } } },
+		{ returnUpdatedDocs: true },
+	).then(getUpdatedDocument);
+
+/**
+ * @param {UserQuery} user
+ */
+permit.revoke = (user) =>
+	User.update(
+		{ permit: { $exists: true }, ...strip(user) },
+		{ $unset: { permit: true } },
+		{ returnUpdatedDocs: true },
+	).then(getUpdatedDocument);
+
+permit.isValid = (p) => Date.now() - ms('24h') < p?.date;
+
 const warn = ({ id }, reason, { amend }) =>
 	User.update(
 		{ id, $not: { status: 'admin' } },
-		{ $pop: { warns: +!!amend }, $push: { warns: reason } },
+		{
+			$pop: { warns: +!!amend },
+			$push: { warns: reason },
+			$unset: { permit: true },
+		},
 		{ returnUpdatedDocs: true },
 	).then(getUpdatedDocument);
 
@@ -145,6 +177,7 @@ module.exports = {
 	getUser,
 	isAdmin,
 	nowarns,
+	permit,
 	unadmin,
 	unban,
 	unwarn,

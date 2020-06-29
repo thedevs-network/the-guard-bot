@@ -1,10 +1,11 @@
 /* eslint new-cap: ["error", {"capIsNewExceptionPattern": "^(?:Action|jspack)\."}] */
 
 import * as R from "ramda";
+import { html, lrm } from "../../utils/html";
+import { isAdmin, permit } from "../../stores/user";
 import { config } from "../../utils/config";
 import type { ExtendedContext } from "../../typings/context";
 import fetch from "node-fetch";
-import { isAdmin } from "../../stores/user";
 import { jspack } from "jspack";
 import { managesGroup } from "../../stores/group";
 import type { MessageEntity } from "telegraf/typings/telegram-types";
@@ -222,6 +223,13 @@ export = async (ctx: ExtendedContext, next) => {
 
 		if (userToWarn.id === 777000) return next();
 		if (await isAdmin(userToWarn)) return next();
+
+		if (await permit.revoke(userToWarn)) {
+			await ctx.replyWithHTML(html`
+				${lrm}${userToWarn.first_name} used 🎟 permit!
+			`);
+			return next();
+		}
 
 		ctx.deleteMessage().catch(() => null);
 		return ctx.warn({

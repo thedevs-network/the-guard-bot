@@ -56,6 +56,7 @@ Command                 | Role       | Available at | Description
 `/warn <reason>`        | _Admin_    | _Groups_     | Warns the user.
 `/unwarn`               | _Admin_    | _Everywhere_ | Removes the last warn from the user.
 `/nowarns`              | _Admin_    | _Everywhere_ | Clears warns for the user.
+`/permit`               | _Admin_    | _Everywhere_ | Permits the user to advertise once, within 24 hours.
 `/ban <reason>`         | _Admin_    | _Groups_     | Bans the user from groups.
 `/unban`                | _Admin_    | _Everywhere_ | Removes the user from ban list.
 `/user`                 | _Admin_    | _Everywhere_ | Shows the status of the user.

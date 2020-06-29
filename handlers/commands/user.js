@@ -9,7 +9,7 @@ const { isMaster, isWarnNotExpired } = require('../../utils/config');
 const { parse, strip } = require('../../utils/cmd');
 
 // DB
-const { getUser } = require('../../stores/user');
+const { getUser, permit } = require('../../stores/user');
 
 /** @param {Date} date */
 const formatDate = date =>
@@ -100,9 +100,19 @@ const getWarnsHandler = async ({ from, message, replyWithHTML }) => {
 		formatDate(theUser.createdAt),
 	);
 
-	return replyWithHTML(TgHtml.join('\n\n', [
+	const permitS = permit.isValid(theUser.permit)
+		// eslint-disable-next-line max-len
+		? `🎟 ${(await getUser({ id: theUser.permit.by_id })).first_name}, ${formatDate(theUser.permit.date)}`
+		: '';
+
+	const oneliners = TgHtml.join('\n', [
 		header,
 		firstSeen,
+		permitS,
+	].filter(isNotEmpty));
+
+	return replyWithHTML(TgHtml.join('\n\n', [
+		oneliners,
 		userWarns,
 		banReason,
 	].filter(isNotEmpty))).then(scheduleDeletion());

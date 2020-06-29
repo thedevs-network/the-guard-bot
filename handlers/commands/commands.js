@@ -25,6 +25,7 @@ const adminCommands = `\
 <code>/warn &lt;reason&gt;</code> - Warns the user.
 <code>/unwarn</code> - Removes the last warn from the user.
 <code>/nowarns</code> - Clears warns for the user.
+<code>/permit</code> - Permits the user to advertise once, within 24 hours.
 <code>/ban &lt;reason&gt;</code> - Bans the user from groups.
 <code>/unban</code> - Removes the user from ban list.
 <code>/user</code> - Shows user's status and warns.

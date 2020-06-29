@@ -3,11 +3,12 @@
 const R = require('ramda');
 const { optional, passThru } = require('telegraf');
 
+const { permit } = require('../../stores/user');
+
+const { html, lrm } = require('../../utils/html');
 const { excludeLinks = [] } = require('../../utils/config').config;
 
 if (excludeLinks === false || excludeLinks === '*') {
-
-	/** @type { import('../../typings/context').GuardMiddlewareFn } */
 	module.exports = passThru();
 	return;
 }
@@ -46,7 +47,12 @@ const pred = R.allPass([
 ]);
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
-const handler = ctx => {
+const handler = async (ctx, next) => {
+	if (await permit.revoke(ctx.from)) {
+		await ctx.replyWithHTML(html`${lrm}${ctx.from.first_name} used 🎟 permit!`);
+		return next();
+	}
+
 	ctx.deleteMessage().catch(() => null);
 	return ctx.warn({
 		admin: ctx.botInfo,
