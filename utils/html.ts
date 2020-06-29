@@ -47,4 +47,4 @@ export class TgHtml {
 export const html = (raw: TemplateStringsArray, ...subs: Sub[]) =>
 	TgHtml.tag(raw, ...subs);
 
-export const lrm = html`&#8206;`;
+export const lrm = "\u200E";

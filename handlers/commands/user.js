@@ -2,6 +2,7 @@
 'use strict';
 
 // Utils
+const { inspect } = require('util');
 const { displayUser, scheduleDeletion } = require('../../utils/tg');
 const { html, lrm, TgHtml } = require('../../utils/html');
 const { isMaster, isWarnNotExpired } = require('../../utils/config');
@@ -21,7 +22,7 @@ const formatEntry = async (entry, defaultVal) => {
 	if (!entry || !entry.by_id) return html`${defaultVal}`;
 	const { first_name } = await getUser({ id: entry.by_id }) || {};
 	if (!first_name) return html`${lrm}${entry.reason} (${formatDate(entry.date)})`;
-	return html`${lrm};${entry.reason} (${first_name}, ${formatDate(entry.date)})`;
+	return html`${lrm}${entry.reason} (${first_name}, ${formatDate(entry.date)})`;
 };
 
 const formatWarn = async (warn, i) =>
@@ -56,7 +57,7 @@ const getWarnsHandler = async ({ from, message, replyWithHTML }) => {
 		).then(scheduleDeletion());
 	}
 
-	const { targets } = parse(message);
+	const { flags, targets } = parse(message);
 
 	if (targets.length > 1) {
 		return replyWithHTML(
@@ -71,6 +72,12 @@ const getWarnsHandler = async ({ from, message, replyWithHTML }) => {
 	if (!theUser) {
 		return replyWithHTML(
 			'❓ <b>User unknown.</b>',
+		).then(scheduleDeletion());
+	}
+
+	if (flags.has('raw') && from.status === 'admin') {
+		return replyWithHTML(
+			TgHtml.pre(inspect(theUser)),
 		).then(scheduleDeletion());
 	}
 

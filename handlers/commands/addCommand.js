@@ -81,6 +81,7 @@ const addCommandHandler = async (ctx) => {
 			'/removecommand <code>&lt;name&gt;</code>' +
 			' - to remove a command.',
 			Markup.keyboard([ [ `/addcommand -replace ${newCommand}` ] ])
+				.selective()
 				.oneTime()
 				.resize()
 				.extra(),
