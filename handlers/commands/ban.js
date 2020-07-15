@@ -12,7 +12,7 @@ const { getUser } = require('../../stores/user');
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const banHandler = async (ctx) => {
-	if (!ctx.message.chat.type.endsWith('group')) {
+	if (ctx.chat.type === 'private') {
 		return ctx.replyWithHTML(
 			'ℹ️ <b>This command is only available in groups.</b>',
 		);
