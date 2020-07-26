@@ -4,15 +4,12 @@
 process.chdir(__dirname);
 require('ts-node').register({ transpileOnly: true });
 
-const { telegrafThrottler } = require('telegraf-throttler');
-
 // Utils
 const { logError } = require('./utils/log');
 
 const bot = require('./bot');
 
 bot.use(
-	telegrafThrottler(),
 	require('./handlers/middlewares'),
 	require('./plugins'),
 	require('./handlers/commands'),
