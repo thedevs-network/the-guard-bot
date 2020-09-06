@@ -1,12 +1,16 @@
 'use strict';
 
-const Telegraf = require('telegraf');
+const ms = require('millisecond');
+const { Telegraf } = require('telegraf');
 const { config } = require('../utils/config');
 
 /** @typedef { import('../typings/context').ExtendedContext } ExtendedContext */
 
-/** @type { import('telegraf/typings').Telegraf<ExtendedContext> } */
-const bot = new Telegraf(config.token);
+/** @type { Telegraf<ExtendedContext> } */
+const bot = new Telegraf(config.token, {
+	handlerTimeout: ms('5s'),
+	telegram: { webhookReply: false },
+});
 
 if (process.env.NODE_ENV === 'development') {
 	bot.polling.offset = -1;
