@@ -30,7 +30,7 @@ const reportHandler = async ctx => {
 		.filter(isQualified)
 		.map(adminMention);
 	// eslint-disable-next-line max-len
-	const s = TgHtml.tag`❗️ ${link(ctx.from)} <b>reported the message to the admins</b>.${TgHtml.join('', admins)}`;
+	const s = TgHtml.tag`❗️ ${link(ctx.from)} <b>reported the message from ${link(ctx.message.reply_to_message.from)} to the admins</b>.${TgHtml.join('', admins)}`;
 	const report = await ctx.replyWithHTML(s, {
 		reply_to_message_id: ctx.message.reply_to_message.message_id,
 	});
@@ -39,7 +39,7 @@ const reportHandler = async ctx => {
 			chats.report,
 			TgHtml.tag`❗️ ${link(ctx.from)} reported <a href="${msgLink(
 				ctx.message.reply_to_message,
-			)}">a message</a> in ${ctx.chat.title}!`,
+			)}">a message</a> from ${link(ctx.message.reply_to_message.from)} in ${ctx.chat.title}!`,
 			{
 				parse_mode: 'HTML',
 				reply_markup: { inline_keyboard: [ [ {
