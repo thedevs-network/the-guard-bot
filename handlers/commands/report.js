@@ -35,6 +35,7 @@ const reportHandler = async ctx => {
 		reply_to_message_id: ctx.message.reply_to_message.message_id,
 	});
 	if (chats.report) {
+		await ctx.deleteMessage();
 		await ctx.tg.sendMessage(
 			chats.report,
 			TgHtml.tag`❗️ ${link(ctx.from)} reported <a href="${msgLink(
