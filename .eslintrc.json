@@ -278,12 +278,6 @@
 		"prefer-rest-params": "warn",
 		"prefer-spread": "warn",
 		"rest-spread-spacing": "error",
-		"sort-imports": [
-			"error",
-			{
-				"ignoreCase": true
-			}
-		],
 		"symbol-description": "error",
 		"template-curly-spacing": "error",
 		"require-atomic-updates": "warn"
