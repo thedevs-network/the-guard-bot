@@ -12,6 +12,7 @@ const composer = new Composer();
 const { deleteAfter } = require('../../utils/tg');
 const { deleteJoinsAfter = '2 minutes' } = require('../../utils/config').config;
 
+const markOldUpdate = require('./markOldUpdate');
 const addedToGroupHandler = require('./addedToGroup');
 const antibotHandler = require('./antibot');
 const checkLinksHandler = require('./checkLinks');
@@ -28,6 +29,7 @@ const syncStatusHandler = require('./syncStatus');
 const updateUserDataHandler = require('./updateUserData');
 const updateGroupTitleHandler = require('./updateGroupTitle');
 
+composer.use(markOldUpdate);
 composer.on('new_chat_members', addedToGroupHandler);
 composer.on('left_chat_member', kickedFromGroupHandler);
 composer.use(leaveUnmanagedHandler);

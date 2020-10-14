@@ -11,6 +11,7 @@ interface DbUser {
 }
 
 export interface ContextExtensions {
+	oldUpdate: boolean;
 	ban(
 		this: ExtendedContext,
 		options: {

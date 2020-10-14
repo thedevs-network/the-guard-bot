@@ -1,12 +1,13 @@
 // @ts-check
 'use strict';
 
+const ms = require('millisecond');
+
 /** @type { import('../typings/config').Config } */
 // @ts-ignore
 const config = require('../config');
 const eq = require('./eq');
-
-const ms = require('millisecond');
+const { throwError } = require('./errors');
 
 const { expireWarnsAfter = Infinity } = config;
 
@@ -31,8 +32,26 @@ const isMaster = user =>
 		user.id === Number(x) ||
 		user.username && eq.username(user.username, String(x)));
 
+/**
+ * A getter/setter pair for botStartTime
+ * @type {{
+ * 	get: () => Date;
+ * 	set: (date: Date) => Date
+ * }}
+ */
+const botStartTime = (() => {
+	let time;
+	return {
+		get: () => time,
+		set: (date) => time
+			? throwError('botStartTime cannot be set twice.')
+			: time = date,
+	};
+})();
+
 module.exports = {
 	config,
 	isMaster,
 	isWarnNotExpired,
+	botStartTime,
 };
