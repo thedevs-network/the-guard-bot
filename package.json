@@ -22,7 +22,9 @@
   "author": "Thomas Rory Gummerson <thomas@gummerson.no> (https://trgwii.no)",
   "contributors": [
     "Pouria Ezzati <pouria@thedevs.network> (https://thedevs.network)",
-    "Wojciech Pawlik <woj.pawlik@gmail.com>"
+    "Wojciech Pawlik <woj.pawlik@gmail.com>",
+    "Muthu Kumar <mkr@feathers.studio> (https://mkr.pw)",
+    "Simon Schürrle (https://sitischu.com)"
   ],
   "license": "AGPL-3.0",
   "bugs": {

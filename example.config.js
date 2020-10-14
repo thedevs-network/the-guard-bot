@@ -55,7 +55,7 @@ const config = {
 		 * Chat to send report notifications to.
 		 * Pass false to disable this feature.
 		 */
-		report: -1001148607297,
+		report: false,
 	},
 
 	/**
