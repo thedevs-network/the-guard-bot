@@ -12,5 +12,5 @@ const print = value =>
 
 module.exports = {
 	logError,
-	print
+	print,
 };

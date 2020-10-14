@@ -36,7 +36,7 @@ function log(ctx, next) {
 							],
 						],
 					},
-				}
+				},
 			)
 			.catch(() => null);
 	}

@@ -16,7 +16,7 @@ const addCommand = command =>
 	Command.update(
 		{ name: command.name },
 		{ $set: { isActive: false, ...command } },
-		{ upsert: true }
+		{ upsert: true },
 	);
 
 const updateCommand = (data) =>

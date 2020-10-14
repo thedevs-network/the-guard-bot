@@ -67,7 +67,7 @@ const config = {
 
 	deleteCustom: {
 		longerThan: 450, // UTF-16 characters
-		after: '20 minutes'
+		after: '20 minutes',
 	},
 
 	/**

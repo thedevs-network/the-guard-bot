@@ -19,6 +19,6 @@ exports.stringify = ({ command = '', flags = {}, reason = '' }) => {
 	return [
 		'/' + command,
 		flagS,
-		reason
+		reason,
 	].filter(Boolean).join(' ');
 };
