@@ -91,11 +91,14 @@ const isPublic = async (username: string) => {
 
 const inviteLinkToGroupID = (url: URL) => {
 	if (url.pathname.toLowerCase().startsWith("/joinchat/")) {
-		const [, groupID] = jspack.Unpack(
+		const res = jspack.Unpack(
 			">LLQ",
 			Buffer.from(url.pathname.split("/")[2], "base64")
 		);
-		return groupID;
+		if (Array.isArray(res)) {
+			const [, groupID] = res;
+			return groupID;
+		}
 	}
 	return null;
 };
