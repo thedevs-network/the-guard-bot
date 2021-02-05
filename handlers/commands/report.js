@@ -21,6 +21,8 @@ const adminMention = ({ user }) =>
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const reportHandler = async ctx => {
 	if (!ctx.chat.type.endsWith('group')) return null;
+	// Ignore monospaced reports
+	if (ctx.message.entities?.[0]?.type === "code" && ctx.message.entities[0].offset === 0) return null;
 	if (!ctx.message.reply_to_message) {
 		return ctx.replyWithHTML(
 			'ℹ️ <b>Reply to message you\'d like to report</b>',
@@ -35,6 +37,7 @@ const reportHandler = async ctx => {
 		reply_to_message_id: ctx.message.reply_to_message.message_id,
 	});
 	if (chats.report) {
+		await ctx.deleteMessage();
 		await ctx.tg.sendMessage(
 			chats.report,
 			TgHtml.tag`❗️ ${link(ctx.from)} reported <a href="${msgLink(
