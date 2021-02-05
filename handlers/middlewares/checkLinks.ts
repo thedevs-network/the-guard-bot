@@ -118,6 +118,7 @@ const dh = {
 	tme: async (url: URL) => {
 		if (url.pathname === "/") return Action.Nothing;
 		if (url.pathname.toLowerCase().startsWith("/c/")) return Action.Nothing;
+		if (url.pathname.toLowerCase().startsWith("/addtheme/")) return Action.Nothing;
 		if (url.pathname.toLowerCase().startsWith("/addstickers/")) {
 			return Action.Nothing;
 		}
