@@ -24,6 +24,7 @@ const reportHandler = async ctx => {
 	// Ignore monospaced reports
 	if (ctx.message.entities?.[0]?.type === "code" && ctx.message.entities[0].offset === 0) return null;
 	if (!ctx.message.reply_to_message) {
+		await ctx.deleteMessage();
 		return ctx.replyWithHTML(
 			'ℹ️ <b>Reply to message you\'d like to report</b>',
 		).then(scheduleDeletion());
