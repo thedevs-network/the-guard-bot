@@ -122,6 +122,9 @@ const dh = {
 		if (url.pathname.toLowerCase().startsWith("/addstickers/")) {
 			return Action.Nothing;
 		}
+		if (url.pathname.toLowerCase().startsWith("/setlanguage/")) {
+			return Action.Nothing;
+		}
 		if (url.searchParams.has("start")) return Action.Warn("Bot reflink");
 		if (await managesLinkedGroup(url)) return Action.Nothing;
 		const [, username] = R.match(/^\/(\w+)(?:\/\d*)?$/, url.pathname);
