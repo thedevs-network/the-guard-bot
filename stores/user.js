@@ -168,6 +168,9 @@ const unwarn = ({ id }, warnQuery) =>
 
 const nowarns = query => unwarn(query, {});
 
+const verifyCaptcha = ({ id }, captcha = true) =>
+	User.update({ id }, { $set: { captcha } });
+
 module.exports = {
 	admin,
 	ban,
@@ -182,5 +185,6 @@ module.exports = {
 	unban,
 	unwarn,
 	updateUser,
+	verifyCaptcha,
 	warn,
 };
