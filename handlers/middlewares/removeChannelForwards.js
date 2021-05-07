@@ -1,8 +1,7 @@
 'use strict';
 
 const R = require('ramda');
-const { optional, passThru } = require('telegraf');
-
+const { Telegraf: { optional, passThru } } = require('telegraf');
 const { permit } = require('../../stores/user');
 
 const { html, lrm } = require('../../utils/html');

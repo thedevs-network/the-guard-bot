@@ -33,7 +33,7 @@ const displayUser = user =>
 /** @param {number | string | false} ms */
 const deleteAfter = ms => (ctx, next) => {
 	if (ms !== false) {
-		setTimeout(ctx.deleteMessage, millisecond(ms));
+		setTimeout(ctx.deleteMessage.bind(ctx), millisecond(ms));
 	}
 	next();
 };

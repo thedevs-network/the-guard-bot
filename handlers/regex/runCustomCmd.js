@@ -1,6 +1,6 @@
 'use strict';
 
-const { hears } = require('telegraf');
+const { Telegraf: { hears } } = require('telegraf');
 const R = require('ramda');
 
 // DB
@@ -63,7 +63,11 @@ const runCustomCmdHandler = async (ctx, next) => {
 	};
 
 	return ctx[typeToMethod(type)](content, options)
-		.then(scheduleDeletion(autoDelete(command) && deleteCustom.after));
+		.then(({ message_id }) =>
+			scheduleDeletion(
+				autoDelete(command) && deleteCustom.after)({
+					chat: ctx.chat, message_id
+				}));
 };
 
 module.exports = hears(/^! ?(\w+)/, runCustomCmdHandler);

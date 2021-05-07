@@ -24,7 +24,7 @@ module.exports = (ctx, next) => {
 	Object.assign(cbCtx, contextCustomizations);
 	cbCtx.botInfo = ctx.botInfo;
 
-	cbCtx.reply = ctx.editMessageText;
+	cbCtx.reply = ctx.editMessageText.bind(ctx);
 
 	return next(cbCtx);
 };
