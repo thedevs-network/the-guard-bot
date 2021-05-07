@@ -50,33 +50,33 @@ const title = user => {
 };
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
-const getWarnsHandler = async ({ from, message, replyWithHTML }) => {
-	if (!from) {
-		return replyWithHTML(
+const getWarnsHandler = async (ctx) => {
+	if (!ctx.from) {
+		return ctx.replyWithHTML(
 			'ℹ️ <b>This command is not available in channels.</b>',
 		).then(scheduleDeletion());
 	}
 
-	const { flags, targets } = parse(message);
+	const { flags, targets } = parse(ctx.message);
 
 	if (targets.length > 1) {
-		return replyWithHTML(
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Specify one user.</b>',
 		).then(scheduleDeletion());
 	}
 
-	const theUser = targets.length && from.status === 'admin'
+	const theUser = targets.length && ctx.from.status === 'admin'
 		? await getUser(strip(targets[0]))
-		: from;
+		: ctx.from;
 
 	if (!theUser) {
-		return replyWithHTML(
+		return ctx.replyWithHTML(
 			'❓ <b>User unknown.</b>',
 		).then(scheduleDeletion());
 	}
 
-	if (flags.has('raw') && from.status === 'admin') {
-		return replyWithHTML(
+	if (flags.has('raw') && ctx.from.status === 'admin') {
+		return ctx.replyWithHTML(
 			TgHtml.pre(inspect(theUser)),
 		).then(scheduleDeletion());
 	}
@@ -111,7 +111,7 @@ const getWarnsHandler = async ({ from, message, replyWithHTML }) => {
 		permitS,
 	].filter(isNotEmpty));
 
-	return replyWithHTML(TgHtml.join('\n\n', [
+	return ctx.replyWithHTML(TgHtml.join('\n\n', [
 		oneliners,
 		userWarns,
 		banReason,

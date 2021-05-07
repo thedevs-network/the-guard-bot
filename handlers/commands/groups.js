@@ -30,7 +30,7 @@ const emojiRegex = XRegExp.tag('gx')`
 const stripEmoji = s => s.replace(emojiRegex, '');
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
-const groupsHandler = async ({ replyWithHTML }) => {
+const groupsHandler = async (ctx) => {
 	const groups = await listVisibleGroups();
 
 	groups.sort((a, b) =>
@@ -38,7 +38,7 @@ const groupsHandler = async ({ replyWithHTML }) => {
 
 	const entries = TgHtml.join('\n', groups.map(entry));
 
-	return replyWithHTML(TgHtml.tag`🛠 <b>Groups I manage</b>:\n\n${entries}`, {
+	return ctx.replyWithHTML(TgHtml.tag`🛠 <b>Groups I manage</b>:\n\n${entries}`, {
 		disable_web_page_preview: true,
 		reply_markup,
 	}).then(scheduleDeletion());

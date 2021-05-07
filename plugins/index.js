@@ -1,6 +1,6 @@
 'use strict';
 
-const { compose } = require('telegraf');
+const { Telegraf: { compose } } = require('telegraf');
 
 const { config } = require('../utils/config');
 const names = config.plugins || [];

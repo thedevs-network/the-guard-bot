@@ -1,6 +1,6 @@
 'use strict';
 
-const { hears } = require('telegraf');
+const { Telegraf: { hears } } = require('telegraf');
 const XRegExp = require('xregexp');
 
 const { managesGroup } = require.main.require('./stores/group');

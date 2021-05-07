@@ -29,13 +29,13 @@ const tgUnadmin = async (userToUnadmin) => {
 };
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
-const unAdminHandler = async ({ from, message, replyWithHTML }) => {
-	if (!isMaster(from)) return null;
+const unAdminHandler = async (ctx) => {
+	if (!isMaster(ctx.from)) return null;
 
-	const { targets } = parse(message);
+	const { targets } = parse(ctx.message);
 
 	if (targets.length !== 1) {
-		return replyWithHTML(
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Specify one user to unadmin.</b>',
 		).then(scheduleDeletion());
 	}
@@ -43,13 +43,13 @@ const unAdminHandler = async ({ from, message, replyWithHTML }) => {
 	const userToUnadmin = await getUser(strip(targets[0]));
 
 	if (!userToUnadmin) {
-		return replyWithHTML(
+		return ctx.replyWithHTML(
 			'❓ <b>User unknown.</b>',
 		).then(scheduleDeletion());
 	}
 
 	if (userToUnadmin.status !== 'admin') {
-		return replyWithHTML(
+		return ctx.replyWithHTML(
 			html`ℹ️ ${link(userToUnadmin)} <b>is not admin.</b>`,
 		);
 	}
@@ -58,7 +58,7 @@ const unAdminHandler = async ({ from, message, replyWithHTML }) => {
 
 	await unadmin(userToUnadmin);
 
-	return replyWithHTML(
+	return ctx.replyWithHTML(
 		html`❗️ ${link(userToUnadmin)} <b>is no longer admin.</b>`,
 	);
 };

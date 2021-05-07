@@ -41,7 +41,7 @@
     "require-directory": "^2.1.1",
     "spamwatch": "^0.2.0",
     "string-replace-async": "^1.2.1",
-    "telegraf": "^3.38.0",
+    "telegraf": "^4.3.0",
     "ts-node": "^8.9.1",
     "typescript": "^3.8.3",
     "xregexp": "^4.2.0"
