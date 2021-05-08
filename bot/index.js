@@ -18,6 +18,11 @@ if (process.env.NODE_ENV === 'development') {
 
 module.exports = bot;
 
+// Elsewhere the bot can't ban on reaching max warns due to botInfo not being available to get its admin ID
+Object.defineProperty(bot.context, "botInfo", {
+  get () { return bot.botInfo; }
+})
+
 // cyclic dependency
 // bot/index requires context requires actions/warn requires bot/index
 Object.assign(bot.context, require('./context'));
