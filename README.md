@@ -66,7 +66,7 @@ Command                 | Role       | Available at | Description
 `/ban <reason>`         | _Admin_    | _Groups_     | Bans the user from groups.
 `/unban`                | _Admin_    | _Everywhere_ | Removes the user from ban list.
 `/user`                 | _Admin_    | _Everywhere_ | Shows the status of the user.
-`/addcommand <name>`    | _Admin_    | _In-Bot_     | Create a custom command.
+`/addcommand <name>`    | _Admin_    | _In-Bot_     | Create a custom command. Message used to add the command must not be deleted. Optional -replace flag.
 `/removecommand <name>` | _Admin_    | _In-Bot_     | Remove a custom command.
 `/staff`                | _Everyone_ | _Everywhere_ | Shows a list of admins.
 `/link`                 | _Everyone_ | _Everywhere_ | Shows the current group's link.
@@ -82,7 +82,7 @@ If used by reply, `/ban` and `/warn` would remove the replied-to message.
 ## Plugins
 
 The guard is extensible in form of plugins where custom features and commands can be easily added to it. To use a plugin, put it in the [/plugins](/plugins) directory and add its name to plugins array in config.js.
-Checkout our [Plugins' Wiki](https://github.com/thedevs-network/the-guard-bot/wiki/Plugins) page for more information. 
+Checkout our [Plugins' Wiki](https://github.com/thedevs-network/the-guard-bot/wiki/Plugins) page for more information.
 
 **Known plugins**:
 
