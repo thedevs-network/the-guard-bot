@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'development') {
 
 module.exports = bot;
 
-// Elsewhere the bot can't ban on reaching max warns due to botInfo not being available to get its admin ID
+// Otherwise the bot can't ban on reaching max warns due to botInfo not being available to get its admin ID
 Object.defineProperty(bot.context, "botInfo", {
   get () { return bot.botInfo; }
 })

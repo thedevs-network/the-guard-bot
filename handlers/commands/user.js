@@ -13,7 +13,7 @@ const { getUser, permit } = require('../../stores/user');
 
 /** @param {Date} date */
 const formatDate = date =>
-	date && date.toISOString().slice(0, -5).replace('T', ' ');
+	date && date.toISOString().slice(0, -5).replace('T', ' ') + ' UTC';
 
 /**
  * @param {string} defaultVal

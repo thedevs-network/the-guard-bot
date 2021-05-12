@@ -83,8 +83,7 @@ const addCommandHandler = async (ctx) => {
 			Markup.keyboard([ [ `/addcommand -replace ${newCommand}` ] ])
 				.selective()
 				.oneTime()
-				.resize()
-				.extra(),
+				.resize(),
 		);
 	}
 	if (cmdExists && cmdExists.role === 'master' && !isMaster(ctx.from)) {
