@@ -18,7 +18,7 @@ const isChannelForward = R.pathEq(
 );
 const fromAdmin = R.pathEq([ 'from', 'status' ], 'admin');
 
-const inGroup = ctx => ctx.chat.type.endsWith('group');
+const inGroup = ctx => ctx.chat?.type.endsWith('group');
 
 const capturingGroups = R.tail;
 
