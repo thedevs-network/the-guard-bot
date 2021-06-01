@@ -15,7 +15,7 @@ function getId(user) {
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 function log(ctx, next) {
 	if (!chats.presenceLog) return next();
-	if (ctx.updateSubTypes[0] === 'new_chat_members') {
+	if (ctx.message.new_chat_members) {
 		ctx.telegram
 			.sendMessage(
 				chats.presenceLog,
