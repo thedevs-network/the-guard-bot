@@ -20,7 +20,7 @@ function log(ctx, next) {
 			.sendMessage(
 				chats.presenceLog,
 				ctx.message.new_chat_members.map(getUserLink).join(', ') +
-					' #joined ' +
+				'[' + ctx.message.new_chat_members.map(getId) + ']' + ' #joined ' +
 					ctx.chat.title,
 				{
 					parse_mode: 'HTML',
