@@ -5,7 +5,7 @@ const { chats = {} } = require('../../utils/config').config;
 function getUserLink(user) {
 	const lastName = user.last_name ? ` ${user.last_name}` : '';
 	const username = user.username ? ` @${user.username}` : '';
-	return `<a href="tg://user?id=${user.id}">${user.first_name}${lastName}${username}</a>`;
+	return `<a href="tg://user?id=${user.id}">${user.first_name}${lastName}${username}</a> [<code>${user.id}</code>]`;
 }
 
 function getId(user) {
@@ -20,7 +20,7 @@ function log(ctx, next) {
 			.sendMessage(
 				chats.presenceLog,
 				ctx.message.new_chat_members.map(getUserLink).join(', ') +
-				'[' + ctx.message.new_chat_members.map(getId) + ']' + ' #joined ' +
+					' #joined ' +
 					ctx.chat.title,
 				{
 					parse_mode: 'HTML',
