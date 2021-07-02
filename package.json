@@ -1,7 +1,7 @@
 {
   "name": "the_guard_bot",
   "version": "1.4.0",
-  "description": "Telegram guard bot to manage network of groups.",
+  "description": "Telegram guard bot to manage a network of groups.",
   "main": "index.js",
   "scripts": {
     "postversion": "git push --atomic --follow-tags origin develop develop:master",
@@ -24,7 +24,8 @@
     "Pouria Ezzati <pouria@thedevs.network> (https://thedevs.network)",
     "Wojciech Pawlik <woj.pawlik@gmail.com>",
     "Muthu Kumar <mkr@feathers.studio> (https://mkr.pw)",
-    "Simon Schürrle (https://sitischu.com)"
+    "Simon Schürrle (https://sitischu.com)",
+    "Martin Rys (https://rys.pw)"
   ],
   "license": "AGPL-3.0",
   "bugs": {
