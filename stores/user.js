@@ -33,7 +33,7 @@ User.update(
 	{ $unset: { username: true } },
 	{ multi: true },
 ).then(() =>
-	User.ensureIndex({ fieldName: 'username', sparse: true, unique: true }));
+	User.ensureIndex({ fieldName: 'username', sparse: true }));
 
 const normalizeTgUser = R.pipe(
 	R.pick([ 'first_name', 'id', 'last_name', 'username' ]),
