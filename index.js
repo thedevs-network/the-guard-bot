@@ -5,10 +5,8 @@ process.chdir(__dirname);
 require('ts-node').register({ transpileOnly: true });
 
 // Make sure data folder exists
-var fs = require('fs');
-if (!fs.existsSync('./data')){
-	fs.mkdirSync('./data');
-}
+const fs = require('fs');
+fs.mkdirSync('./data', { recursive: true });
 
 // Utils
 const { logError } = require('./utils/log');
