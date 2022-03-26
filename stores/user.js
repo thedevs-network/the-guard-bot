@@ -8,7 +8,7 @@
 // Utils
 const { strip } = require('../utils/cmd');
 
-const Datastore = require('nedb-promises');
+const Datastore = require('nedb-promise');
 const ms = require('millisecond');
 const R = require('ramda');
 
