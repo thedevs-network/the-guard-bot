@@ -1,6 +1,6 @@
 'use strict';
 
-const Datastore = require('nedb-promise');
+const Datastore = require('nedb-promises');
 
 const Command = new Datastore({
 	autoload: true,

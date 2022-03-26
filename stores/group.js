@@ -1,6 +1,6 @@
 'use strict';
 
-const Datastore = require('nedb-promise');
+const Datastore = require('nedb-promises');
 
 const Group = new Datastore({
 	autoload: true,
