@@ -52,7 +52,7 @@ export const parse = (message?: Message) => {
 	const textMentions = message.entities.filter(isTextMention);
 	const noTextMentions = textMentions.reduceRight(spliceOut, message.text);
 
-	const { flagS, ids, reason = "" } = XRegExp.exec(noTextMentions, regex)!;
+	const { flagS, ids, reason = "" } = XRegExp.exec(noTextMentions, regex)?.groups!;
 	const flags = new Map(extractFlags(flagS));
 	const users = textMentions.concat(ids.match(/@\w+|\d+/g) || []);
 	const { reply_to_message } = message;
