@@ -4,6 +4,12 @@
 process.chdir(__dirname);
 require('ts-node').register({ transpileOnly: true });
 
+// Make sure data folder exists
+var fs = require('fs');
+if (!fs.existsSync('./data')){
+	fs.mkdirSync('./data');
+}
+
 // Utils
 const { logError } = require('./utils/log');
 
