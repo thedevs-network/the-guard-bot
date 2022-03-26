@@ -43,7 +43,7 @@
     "spamwatch": "^0.4.0",
     "string-replace-async": "^1.2.1",
     "telegraf": "^4.7.0",
-    "ts-node": "^8.9.1",
+    "ts-node": "^10.7.0",
     "typescript": "^3.8.3",
     "xregexp": "^4.2.0"
   },
