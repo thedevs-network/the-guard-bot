@@ -53,7 +53,7 @@ const warnHandler = async (ctx) => {
 	return ctx.warn({
 		admin: ctx.from,
 		amend: flags.has('amend'),
-		reason: await substom(reason),
+		reason: '[' + ctx.chat.title + '] ' + await substom(reason),
 		userToWarn,
 		mode: 'manual',
 	});

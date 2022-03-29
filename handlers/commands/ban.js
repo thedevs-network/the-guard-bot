@@ -65,7 +65,7 @@ const banHandler = async (ctx) => {
 
 	return ctx.ban({
 		admin: ctx.from,
-		reason: await substom(reason),
+		reason: '[' + ctx.chat.title + '] ' + await substom(reason),
 		userToBan,
 	});
 };
