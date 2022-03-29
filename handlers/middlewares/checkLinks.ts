@@ -5,7 +5,6 @@ import { html, lrm } from "../../utils/html";
 import { isAdmin, permit } from "../../stores/user";
 import { config } from "../../utils/config";
 import type { ExtendedContext } from "../../typings/context";
-import fetch from "node-fetch";
 import { jspack } from "jspack";
 import { managesGroup } from "../../stores/group";
 import type { MessageEntity } from "telegraf/typings/telegram-types";
@@ -15,6 +14,7 @@ import { URL } from "url";
 import XRegExp = require("xregexp");
 
 const { excludeLinks = [], blacklistedDomains = [] } = config;
+const { fetch } = require('undici');
 
 if (excludeLinks === false) {
 	module.exports = (ctx, next) => next();
