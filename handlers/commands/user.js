@@ -100,7 +100,7 @@ const getWarnsHandler = async (ctx) => {
 		formatDate(theUser.createdAt),
 	);
 
-	const permitS = permit.isValid(theUser.permit)
+	const permits = permit.isValid(theUser.permit)
 		// eslint-disable-next-line max-len
 		? `🎟 ${(await getUser({ id: theUser.permit.by_id })).first_name}, ${formatDate(theUser.permit.date)}`
 		: '';
@@ -108,7 +108,7 @@ const getWarnsHandler = async (ctx) => {
 	const oneliners = TgHtml.join('\n', [
 		header,
 		firstSeen,
-		permitS,
+		permits,
 	].filter(isNotEmpty));
 
 	return ctx.replyWithHTML(TgHtml.join('\n\n', [
