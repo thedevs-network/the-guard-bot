@@ -44,13 +44,13 @@ const nowarnsHandler = async (ctx) => {
 
 	if (userToUnwarn.status === 'banned') {
 		await pMap(await listGroups({ type: 'supergroup' }), (group) =>
-			ctx.tg.unbanChatMember(group.id, userToUnwarn.id));
+			ctx.telegram.unbanChatMember(group.id, userToUnwarn.id));
 	}
 
 	await nowarns(userToUnwarn);
 
 	if (userToUnwarn.status === 'banned') {
-		ctx.tg.sendMessage(
+		ctx.telegram.sendMessage(
 			userToUnwarn.id,
 			'♻️ You were unbanned from all of the /groups!',
 		).catch(() => null);

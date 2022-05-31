@@ -9,6 +9,6 @@ export = (ctx: ExtendedContext) => {
 
 	return Promise.all([
 		ctx.deleteMessage(),
-		ctx.tg.deleteMessage(+chatId, +msgId),
+		ctx.telegram.deleteMessage(+chatId, +msgId),
 	]);
 };

@@ -19,7 +19,7 @@ const leaveCommandHandler = async (ctx: ExtendedContext) => {
 
 	await removeGroup(group);
 	await ctx.replyWithHTML(html`✅ <b>I no longer manage ${group.title}.</b>`);
-	return ctx.tg.leaveChat(group.id);
+	return ctx.telegram.leaveChat(group.id);
 };
 
 export = leaveCommandHandler;
