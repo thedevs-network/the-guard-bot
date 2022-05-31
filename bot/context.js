@@ -50,6 +50,6 @@ module.exports = {
 	},
 
 	replyWithCopy(content, options) {
-		return this.tg.sendCopy(this.chat.id, content, options);
+		return this.telegram.sendCopy(this.chat.id, content, options);
 	},
 };

@@ -37,11 +37,11 @@ const unbanHandler = async (ctx) => {
 	}
 
 	await pMap(await listGroups({ type: 'supergroup' }), (group) =>
-		ctx.tg.unbanChatMember(group.id, userToUnban.id));
+		ctx.telegram.unbanChatMember(group.id, userToUnban.id));
 
 	await unban(userToUnban);
 
-	ctx.tg.sendMessage(
+	ctx.telegram.sendMessage(
 		userToUnban.id,
 		'♻️ You were unbanned from all of the /groups!',
 	).catch(() => null);

@@ -40,7 +40,7 @@ const reportHandler = async ctx => {
 	});
 	if (chats.report) {
 		await ctx.deleteMessage();
-		await ctx.tg.sendMessage(
+		await ctx.telegram.sendMessage(
 			chats.report,
 			TgHtml.tag`❗️ ${link(ctx.from)} reported <a href="${msgLink(
 				ctx.message.reply_to_message,

@@ -6,9 +6,9 @@ const msgAlreadyDeleted = 'Bad Request: message to delete not found';
 
 /** @param { import('telegraf').Context } ctx */
 module.exports = (ctx, next) => {
-	ctx.tg.deleteMessage = async (chat_id, message_id) => {
+	ctx.telegram.deleteMessage = async (chat_id, message_id) => {
 		try {
-			return await ctx.tg.callApi('deleteMessage', {
+			return await ctx.telegram.callApi('deleteMessage', {
 				chat_id,
 				message_id,
 			});
@@ -19,9 +19,9 @@ module.exports = (ctx, next) => {
 			throw err;
 		}
 	};
-	telegram.deleteMessage = ctx.tg.deleteMessage;
-	ctx.tg.sendMessage = (chat_id, text, extra) =>
-		ctx.tg.callApi('sendMessage', {
+	telegram.deleteMessage = ctx.telegram.deleteMessage;
+	ctx.telegram.sendMessage = (chat_id, text, extra) =>
+		ctx.telegram.callApi('sendMessage', {
 			disable_web_page_preview: true,
 			chat_id,
 			text,

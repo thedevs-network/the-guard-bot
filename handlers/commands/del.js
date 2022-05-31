@@ -21,7 +21,7 @@ module.exports = async (ctx) => {
 		return;
 	}
 
-	await ctx.tg.deleteMessage(
+	await ctx.telegram.deleteMessage(
 		flags.get('chat_id') || ctx.chat.id,
 		flags.get('msg_id') || ctx.message.reply_to_message.message_id,
 	);
