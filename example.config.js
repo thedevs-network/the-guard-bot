@@ -110,8 +110,10 @@ const config = {
 	 * List of whitelisted links and usernames,
 	 * For channels and groups to stop warning users for them.
 	 * Pass false to whitelist all links and channels.
+	 * 777000 is the ID of Telegram. Keep it if you want to allow forwards from Telegram,
+	 * 	this allows channel posts to be forwarded when you link a channel for discussions.
 	 */
-	excludeLinks: [],
+	excludeLinks: [777000],
 
 	/**
 	 * @type {ms}
