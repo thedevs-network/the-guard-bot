@@ -52,6 +52,10 @@ const handler = async (ctx, next) => {
 		return next();
 	}
 
+	if (ctx.message?.is_automatic_forward) {
+		return next();
+	}
+
 	ctx.deleteMessage().catch(() => null);
 	return ctx.warn({
 		admin: ctx.botInfo,
