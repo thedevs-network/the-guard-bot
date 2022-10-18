@@ -1,14 +1,35 @@
 {
 	"parserOptions": {
-		"ecmaVersion": 2018
+		"ecmaVersion": 2018,
+		"project": "tsconfig.json",
+		"sourceType": "script"
 	},
+	"parser": "@typescript-eslint/parser",
+	"plugins": ["@typescript-eslint"],
 	"env": {
-		"browser": true,
-		"commonjs": true,
 		"es6": true,
 		"node": true
 	},
 	"extends": "eslint:recommended",
+	"overrides": [
+		{
+			"files": "*.ts",
+			"extends": [
+				"plugin:@typescript-eslint/recommended-requiring-type-checking",
+				"plugin:@typescript-eslint/eslint-recommended",
+				"plugin:@typescript-eslint/recommended",
+				"plugin:prettier/recommended",
+				"prettier/@typescript-eslint"
+			],
+			"rules": {
+				"@typescript-eslint/ban-ts-ignore": "warn",
+				"@typescript-eslint/camelcase": "off",
+				"@typescript-eslint/explicit-function-return-type": "off",
+				"@typescript-eslint/no-floating-promises": "error",
+				"@typescript-eslint/prefer-optional-chain": "error"
+			}
+		}
+	],
 	"rules": {
 		"indent": [
 			"error",
@@ -26,12 +47,13 @@
 			"error",
 			"always"
 		],
+		"@typescript-eslint/no-base-to-string": "error",
+		"@typescript-eslint/no-floating-promises": "error",
 		"no-console": [ "error", { "allow": [ "assert" ] } ],
 		"for-direction": "error",
 		"no-await-in-loop": "error",
 		"no-extra-parens": "error",
 		"no-template-curly-in-string": "error",
-		"valid-jsdoc": "error",
 		"accessor-pairs": "error",
 		"array-callback-return": "error",
 		"block-scoped-var": "error",
@@ -146,11 +168,12 @@
 				"allowArrowFunctions": true
 			}
 		],
-		"function-paren-newline": ["error", "multiline"],
+		"function-paren-newline": ["error", "multiline-arguments"],
+		"comma-dangle": ["warn", "always-multiline"],
 		"key-spacing": "error",
 		"keyword-spacing": "error",
 		"lines-around-comment": "error",
-		"max-len": "error",
+		"max-len": ["error", {"ignoreTemplateLiterals": true}],
 		"max-nested-callbacks": "error",
 		"max-params": "error",
 		"max-statements": "off",

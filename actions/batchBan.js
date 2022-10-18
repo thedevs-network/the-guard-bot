@@ -1,7 +1,8 @@
 'use strict';
 
 const { batchBan, ensureExists } = require('../stores/user');
-const { displayUser, escapeHtml } = require('../utils/tg');
+const { displayUser } = require('../utils/tg');
+const { TgHtml, lrm } = require('../utils/html');
 
 module.exports = async ({ admin, reason, targets }) => {
 	const by_id = admin.id;
@@ -10,9 +11,10 @@ module.exports = async ({ admin, reason, targets }) => {
 	await Promise.all(targets.map(ensureExists));
 
 	const banned = await batchBan(targets, { by_id, date, reason });
-	const bannedString = banned.map(displayUser).join(', ');
+	const bannedString = TgHtml.join(', ', banned.map(displayUser));
 
-	return `${displayUser(admin)} <b>banned</b> ${bannedString} <b>for:</b>
-
-${escapeHtml(reason)}`;
+	return TgHtml.tag`
+		${lrm}${admin.first_name} <b>banned</b> ${bannedString}.
+		<b>Reason</b>: ${lrm}${reason}
+	`;
 };

@@ -1,8 +1,8 @@
 'use strict';
 
-const dedent = require('dedent-js');
-
-const { escapeHtml, displayUser, link } = require('../utils/tg');
+const { displayUser } = require('../utils/tg');
+const { html, lrm } = require('../utils/html');
+const { pMap } = require('../utils/promise');
 const { telegram } = require('../bot');
 
 const { listVisibleGroups } = require('../stores/group');
@@ -16,13 +16,11 @@ module.exports = async ({ admin, reason, userToBan }) => {
 
 	await ban(userToBan, { by_id, date, reason });
 
-	const groups = await listVisibleGroups();
-
-	groups.forEach(group =>
+	await pMap(await listVisibleGroups(), group =>
 		telegram.kickChatMember(group.id, userToBan.id));
 
-	return dedent(`
-		🚫 ${link(admin)} <b>banned</b> ${displayUser(userToBan)} <b>for:</b>
-
-		${escapeHtml(reason)}`);
+	return html`
+		🚫 ${lrm}${admin.first_name} <b>banned</b> ${displayUser(userToBan)}.
+		<b>Reason</b>: ${lrm}${reason}
+	`;
 };

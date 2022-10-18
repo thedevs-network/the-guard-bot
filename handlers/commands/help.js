@@ -15,14 +15,15 @@ note that I'm more useful on a network of groups and \
 you also need to <b>setup a new bot.</b>
 `;
 
-const helpHandler = ({ chat, replyWithHTML }) => {
-	if (chat.type !== 'private') return null;
+/** @param { import('../../typings/context').ExtendedContext } ctx */
+const helpHandler = (ctx) => {
+	if (ctx.chat.type !== 'private') return null;
 
-	return replyWithHTML(
+	return ctx.replyWithHTML(
 		message,
 		Markup.inlineKeyboard([
-			Markup.urlButton('🛠 Setup a New Bot', homepage)
-		]).extra()
+			Markup.button.url('🛠 Setup a New Bot', homepage)
+		])
 	);
 };
 

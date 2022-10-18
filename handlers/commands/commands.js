@@ -21,9 +21,11 @@ const masterCommands = `\
 
 const adminCommands = `\
 <b>Admin commands</b>:
+<code>/del [reason]</code> - Deletes replied-to message.
 <code>/warn &lt;reason&gt;</code> - Warns the user.
 <code>/unwarn</code> - Removes the last warn from the user.
 <code>/nowarns</code> - Clears warns for the user.
+<code>/permit</code> - Permits the user to advertise once, within 24 hours.
 <code>/ban &lt;reason&gt;</code> - Bans the user from groups.
 <code>/unban</code> - Removes the user from ban list.
 <code>/user</code> - Shows user's status and warns.
@@ -40,6 +42,7 @@ const userCommands = `\
 const role = R.prop('role');
 const name = R.prop('name');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const commandReferenceHandler = async (ctx) => {
 	const customCommands = await listCommands();
 

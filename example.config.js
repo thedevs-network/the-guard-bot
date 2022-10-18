@@ -1,4 +1,10 @@
+// @ts-check
 'use strict';
+
+/**
+ * @typedef { import('./typings/config').Config } Config
+ * @typedef { import('./typings/config').InlineKeyboard } InlineKeyboard
+ */
 
 /*
  * Create `config.js` by running `cp example.config.js config.js`
@@ -15,7 +21,10 @@
  * @typedef {( number | string )} ms
  */
 
-module.exports = {
+/**
+ * @type {Config}
+ */
+const config = {
 
 	/**
 	 * @type {!( number | string | (number|string)[] )}
@@ -46,7 +55,7 @@ module.exports = {
 		 * Chat to send report notifications to.
 		 * Pass false to disable this feature.
 		 */
-		report: -1001148607297,
+		report: false,
 	},
 
 	/**
@@ -57,7 +66,7 @@ module.exports = {
 	deleteCommands: 'own',
 
 	deleteCustom: {
-		longerThan: 450, // utf16 characters
+		longerThan: 450, // UTF-16 characters
 		after: '20 minutes'
 	},
 
@@ -100,7 +109,7 @@ module.exports = {
 	 * @type {( string[] | false )}
 	 * List of whitelisted links and usernames,
 	 * For channels and groups to stop warning users for them.
-	 * Pass false to disable this feature
+	 * Pass false to whitelist all links and channels.
 	 */
 	excludeLinks: [],
 
@@ -112,7 +121,7 @@ module.exports = {
 	expireWarnsAfter: Infinity,
 
 	/**
-	 * @type {InlineKeyboardMarkup}
+	 * @type {InlineKeyboard}
 	 * Inline keyboard to be added to reply to /groups.
 	 * We use it to display button opening our webpage.
 	 */
@@ -128,11 +137,11 @@ module.exports = {
 	plugins: [],
 
 	/**
-	 * @type {InlineKeyboardMarkup}
+	 * @type {InlineKeyboard}
 	 * Inline keyboard to be added to warn message.
 	 * We use it to display button showing our rules.
 	 */
 	warnInlineKeyboard: [],
 };
 
-Object.freeze(module.exports);
+module.exports = Object.freeze(config);

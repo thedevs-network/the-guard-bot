@@ -1,13 +1,10 @@
 'use strict';
 
 // Utils
+const { html } = require('../../utils/html');
 const { isMaster } = require('../../utils/config');
 const { link, scheduleDeletion } = require('../../utils/tg');
-const { logError } = require('../../utils/log');
-const { parse, strip } = require('../../utils/parse');
-
-// Bot
-const { replyOptions } = require('../../bot/options');
+const { parse, strip } = require('../../utils/cmd');
 
 // DB
 const {
@@ -15,48 +12,42 @@ const {
 	getUser,
 } = require('../../stores/user');
 
-const adminHandler = async ({ from, message, reply }) => {
-	if (!isMaster(from)) return null;
+/** @param { import('../../typings/context').ExtendedContext } ctx */
+const adminHandler = async (ctx) => {
+	if (!isMaster(ctx.from)) return null;
 
-	const { targets } = parse(message);
+	const { targets } = parse(ctx.message);
 
 	if (targets.length > 1) {
-		return reply(
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Specify one user to promote.</b>',
-			replyOptions
 		).then(scheduleDeletion());
 	}
 
 	const userToAdmin = targets.length
 		? await getUser(strip(targets[0]))
-		: from;
+		: ctx.from;
 
 	if (!userToAdmin) {
-		return reply(
+		return ctx.replyWithHTML(
 			'❓ <b>User unknown.</b>\n' +
 			'Please forward their message, then try again.',
-			replyOptions
 		).then(scheduleDeletion());
 	}
 
 	if (userToAdmin.status === 'banned') {
-		return reply('ℹ️ <b>Can\'t admin banned user.</b>', replyOptions);
+		return ctx.replyWithHTML('ℹ️ <b>Can\'t admin banned user.</b>');
 	}
 
 	if (userToAdmin.status === 'admin') {
-		return reply(
-			`⭐️ ${link(userToAdmin)} <b>is already admin.</b>`,
-			replyOptions
+		return ctx.replyWithHTML(
+			html`⭐️ ${link(userToAdmin)} <b>is already admin.</b>`,
 		);
 	}
 
-	try {
-		await admin(userToAdmin);
-	} catch (err) {
-		logError(err);
-	}
+	await admin(userToAdmin);
 
-	return reply(`⭐️ ${link(userToAdmin)} <b>is now admin.</b>`, replyOptions);
+	return ctx.replyWithHTML(html`⭐️ ${link(userToAdmin)} <b>is now admin.</b>`);
 };
 
 module.exports = adminHandler;

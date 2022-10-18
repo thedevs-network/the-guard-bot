@@ -3,50 +3,44 @@
 // DB
 const { getCommand, removeCommand } = require('../../stores/command');
 
-// Bot
-const { replyOptions } = require('../../bot/options');
+const { isMaster } = require('../../utils/config');
 
-const removeCommandHandler = async ({ chat, message, reply, state }) => {
-	const { isAdmin, isMaster } = state;
-	const { text } = message;
-	if (chat.type !== 'private') return null;
+/** @param { import('../../typings/context').ExtendedContext } ctx */
+const removeCommandHandler = async (ctx) => {
+	const { text } = ctx.message;
+	if (ctx.chat.type !== 'private') return null;
 
-	if (!isAdmin) {
-		return reply(
+	if (ctx.from.status !== 'admin') {
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Sorry, only admins access this command.</b>',
-			replyOptions
 		);
 	}
 	const [ , commandName ] = text.split(' ');
 	if (!commandName) {
-		return reply(
+		return ctx.replyWithHTML(
 			'<b>Send a valid command.</b>\n\nExample:\n' +
 			'<code>/removecommand rules</code>',
-			replyOptions
 		);
 	}
 
 	const command = await getCommand({ name: commandName.toLowerCase() });
 	if (!command) {
-		return reply(
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Command couldn\'t be found.</b>',
-			replyOptions
 		);
 	}
 
 	const role = command.role.toLowerCase();
-	if (role === 'master' && !isMaster) {
-		return reply(
+	if (role === 'master' && !isMaster(ctx.from)) {
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Sorry, only master can remove this command.</b>',
-			replyOptions
 		);
 	}
 
 	await removeCommand({ name: commandName.toLowerCase() });
-	return reply(
+	return ctx.replyWithHTML(
 		`✅ <code>!${commandName}</code> ` +
 		'<b>has been removed successfully.</b>',
-		replyOptions
 	);
 };
 

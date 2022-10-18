@@ -1,20 +1,26 @@
 'use strict';
 
+/**
+ * @typedef { { id: number } | { username: string } } UserQuery
+ * @exports UserQuery
+*/
+
 // Utils
-const { logError } = require('../utils/log');
-const { strip } = require('../utils/parse');
+const { strip } = require('../utils/cmd');
 
 const Datastore = require('nedb-promise');
+const ms = require('millisecond');
 const R = require('ramda');
 
 const User = new Datastore({
 	autoload: true,
-	filename: 'data/User.db'
+	filename: 'data/User.db',
+	timestampData: true,
 });
 
 User.ensureIndex({
 	fieldName: 'id',
-	unique: true
+	unique: true,
 });
 
 User.ensureIndex({
@@ -25,9 +31,9 @@ User.ensureIndex({
 User.update(
 	{ username: '' },
 	{ $unset: { username: true } },
-	{ multi: true }
+	{ multi: true },
 ).then(() =>
-	User.ensureIndex({ fieldName: 'username', sparse: true, unique: true }));
+	User.ensureIndex({ fieldName: 'username', sparse: true }));
 
 const normalizeTgUser = R.pipe(
 	R.pick([ 'first_name', 'id', 'last_name', 'username' ]),
@@ -36,24 +42,6 @@ const normalizeTgUser = R.pipe(
 );
 
 const getUpdatedDocument = R.prop(1);
-
-const addUser = ({ id, first_name = '', last_name = '', username = '' }) =>
-	User.update(
-		{ id },
-		{
-			first_name,
-			id,
-			last_name,
-			status: 'member',
-			username: username.toLowerCase(),
-			warns: []
-		},
-		{ upsert: true }
-	)
-		.catch(logError);
-
-const isUser = ({ id }) =>
-	User.findOne({ id });
 
 const getUser = user =>
 	User.findOne(user);
@@ -72,7 +60,7 @@ const updateUser = async (rawTgUser) => {
 		return User.update(
 			{ id },
 			{ status: 'member', warns: [], ...tgUser },
-			{ returnUpdatedDocs: true, upsert: true }
+			{ returnUpdatedDocs: true, upsert: true },
 		).then(getUpdatedDocument);
 	}
 
@@ -82,7 +70,7 @@ const updateUser = async (rawTgUser) => {
 		return User.update(
 			{ id },
 			{ $set: tgUser },
-			{ returnUpdatedDocs: true }
+			{ returnUpdatedDocs: true },
 		).then(getUpdatedDocument);
 	}
 
@@ -92,7 +80,7 @@ const updateUser = async (rawTgUser) => {
 const admin = ({ id }) =>
 	User.update(
 		{ id },
-		{ $set: { status: 'admin', warns: [] } }
+		{ $set: { status: 'admin', warns: [] } },
 	);
 
 const getAdmins = () =>
@@ -113,14 +101,14 @@ const ban = ({ id }, ban_details) =>
 	User.update(
 		{ id, $not: { status: 'admin' } },
 		{ $set: { ban_details, status: 'banned' } },
-		{ upsert: true }
+		{ upsert: true },
 	);
 
 const batchBan = (users, ban_details) =>
 	User.update(
 		{ $or: users.map(strip), $not: { status: 'admin' } },
 		{ $set: { ban_details, status: 'banned' } },
-		{ multi: true, returnUpdatedDocs: true }
+		{ multi: true, returnUpdatedDocs: true },
 	).then(getUpdatedDocument);
 
 const ensureExists = ({ id }) =>
@@ -132,18 +120,40 @@ const unban = ({ id }) =>
 		{
 			$set: { status: 'member' },
 			$unset: { ban_details: true, ban_reason: true },
-		}
+		},
 	);
 
-const isBanned = ({ id }) =>
-	User.findOne({ id, status: 'banned' })
-		.then(user => user ? user.ban_reason : null);
+/**
+ * @param {UserQuery} user
+ */
+const permit = (user, { by_id, date }) =>
+	User.update(
+		user,
+		{ $set: { permit: { by_id, date } } },
+		{ returnUpdatedDocs: true },
+	).then(getUpdatedDocument);
+
+/**
+ * @param {UserQuery} user
+ */
+permit.revoke = (user) =>
+	User.update(
+		{ permit: { $exists: true }, ...strip(user) },
+		{ $unset: { permit: true } },
+		{ returnUpdatedDocs: true },
+	).then(getUpdatedDocument);
+
+permit.isValid = (p) => Date.now() - ms('24h') < p?.date;
 
 const warn = ({ id }, reason, { amend }) =>
 	User.update(
 		{ id, $not: { status: 'admin' } },
-		{ $pop: { warns: +!!amend }, $push: { warns: reason } },
-		{ returnUpdatedDocs: true }
+		{
+			$pop: { warns: +!!amend },
+			$push: { warns: reason },
+			$unset: { permit: true },
+		},
+		{ returnUpdatedDocs: true },
 	).then(getUpdatedDocument);
 
 const unwarn = ({ id }, warnQuery) =>
@@ -153,33 +163,28 @@ const unwarn = ({ id }, warnQuery) =>
 			$pull: { warns: warnQuery },
 			$set: { status: 'member' },
 			$unset: { ban_details: true, ban_reason: true },
-		}
+		},
 	);
 
 const nowarns = query => unwarn(query, {});
 
-const getWarns = ({ id }) =>
-	User.findOne({ id })
-		.then(user => user && user.warns.length > 0
-			? user.warns
-			: null);
+const verifyCaptcha = ({ id }, captcha = true) =>
+	User.update({ id }, { $set: { captcha } });
 
 module.exports = {
-	addUser,
 	admin,
 	ban,
 	batchBan,
 	ensureExists,
 	getAdmins,
 	getUser,
-	getWarns,
 	isAdmin,
-	isBanned,
-	isUser,
 	nowarns,
+	permit,
 	unadmin,
 	unban,
 	unwarn,
 	updateUser,
-	warn
+	verifyCaptcha,
+	warn,
 };

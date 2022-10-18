@@ -3,6 +3,7 @@
 const eq = require('../../utils/eq');
 const { isCommand } = require('../../utils/tg');
 
+/** @param { import('telegraf').ContextMessageUpdate } ctx */
 module.exports = ({ me, message }) => {
 	if (!isCommand(message)) return null;
 

@@ -2,6 +2,7 @@
 
 const { updateGroup } = require('../../stores/group');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 module.exports = async (ctx, next) => {
 	if (!ctx.state.isMaster) return next();
 

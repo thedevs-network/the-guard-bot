@@ -1,6 +1,6 @@
 'use strict';
 
-const { deleteCommands } = require('../../config');
+const { deleteCommands = 'own' } = require('../../utils/config').config;
 const { isCommand } = require('../../utils/tg.js');
 const { unmatched } = require('../unmatched');
 
@@ -17,6 +17,7 @@ if (!(deleteCommands in shouldDelete)) {
 
 const noop = Function.prototype;
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const removeCommandsHandler = async (ctx, next) => {
 	await next();
 	if (

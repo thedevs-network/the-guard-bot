@@ -1,13 +1,10 @@
 'use strict';
 
-// Bot
-const { replyOptions } = require('../../bot/options');
-
-// DB
-const { isAdmin } = require('../../stores/user');
+const { pMap } = require('../../utils/promise');
 
 const link = user => '@' + user.username;
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 const antibotHandler = async (ctx, next) => {
 	const msg = ctx.message;
 
@@ -18,17 +15,15 @@ const antibotHandler = async (ctx, next) => {
 		return next();
 	}
 
-	if (await isAdmin(ctx.from)) {
+	if (ctx.from.status === 'admin') {
 		return next();
 	}
 
-	for (const bot of bots) {
-		ctx.telegram.kickChatMember(ctx.chat.id, bot.id);
-	}
+	await pMap(bots, bot =>
+		ctx.kickChatMember(bot.id));
 
-	ctx.reply(
+	await ctx.replyWithHTML(
 		`🚫 <b>Kicked bot(s):</b> ${bots.map(link).join(', ')}`,
-		replyOptions
 	);
 
 	return next();

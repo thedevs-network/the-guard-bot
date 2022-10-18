@@ -5,9 +5,10 @@ const { isMaster } = require('../../utils/config');
 // DB
 const { updateUser } = require('../../stores/user');
 
+/** @param { import('telegraf').ContextMessageUpdate } ctx */
 const updateUserDataHandler = async (ctx, next) => {
 	if (ctx.message && ctx.message.forward_from) {
-		updateUser(ctx.message.forward_from);
+		updateUser(ctx.message.forward_from).catch(() => null);
 	}
 
 	const { entities = [] } = ctx.message || {};

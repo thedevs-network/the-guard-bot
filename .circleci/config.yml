@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:10.3
+      - image: circleci/node:12
 
     working_directory: ~/repo
 
@@ -11,14 +11,16 @@ jobs:
 
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies-
+          - v2-dependencies-{{ checksum "package-lock.json" }}
+          - v2-dependencies-
 
-      - run: npm install
+      - run: npm ci
 
       - save_cache:
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-        
+            - "$HOME/.npm"
+          key: v2-dependencies-{{ checksum "package-lock.json" }}
+
+      - run: npm run -s typecheck
+
       - run: npm run -s lint

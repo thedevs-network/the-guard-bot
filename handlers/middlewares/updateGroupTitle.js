@@ -2,6 +2,7 @@
 
 const { updateGroup } = require('../../stores/group');
 
+/** @param { import('../../typings/context').ExtendedContext } ctx */
 module.exports = (ctx, next) => {
 	const { id, title } = ctx.chat;
 	updateGroup({ id, title });

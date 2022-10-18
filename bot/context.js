@@ -7,9 +7,10 @@ const { scheduleDeletion } = require('../utils/tg');
 
 const {
 	warnInlineKeyboard,
+	chats = {},
 	deleteWarnsAfter = false,
 	deleteBansAfter = false,
-} = require('../config');
+} = require('../utils/config').config;
 
 const normalisedDeleteWarnsAfter = typeof deleteWarnsAfter === 'object'
 	? { auto: false, manual: false, ...deleteWarnsAfter }
@@ -17,20 +18,38 @@ const normalisedDeleteWarnsAfter = typeof deleteWarnsAfter === 'object'
 
 const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
+/** @type { import('../typings/context').ContextExtensions } */
 module.exports = {
 	async ban({ admin, reason, userToBan }) {
 		const banMessage = await ban({ admin, reason, userToBan });
-		return this.replyWithHTML(banMessage)
+		return this.loggedReply(banMessage)
 			.then(scheduleDeletion(deleteBansAfter));
 	},
-	batchBan({ admin, reason, targets }) {
-		return batchBan({ admin, reason, targets })
-			.then(this.replyWithHTML)
+	async batchBan({ admin, reason, targets }) {
+		const banMessage = await batchBan({ admin, reason, targets });
+		return this.loggedReply(banMessage)
 			.then(scheduleDeletion(deleteBansAfter));
 	},
 	async warn({ admin, amend, reason, userToWarn, mode }) {
 		const warnMessage = await warn({ admin, amend, reason, userToWarn });
-		return this.replyWithHTML(warnMessage, { reply_markup })
+		return this.loggedReply(warnMessage, { reply_markup })
 			.then(scheduleDeletion(normalisedDeleteWarnsAfter[mode]));
+	},
+
+	loggedReply(html, extra) {
+		if (chats.adminLog) {
+			this.tg
+				.sendMessage(
+					chats.adminLog,
+					html.toJSON().replace(/\[<code>(\d+)<\/code>\]/g, '[#u$1]'),
+					{ parse_mode: 'HTML' },
+				)
+				.catch(() => null);
+		}
+		return this.replyWithHTML(html, extra);
+	},
+
+	replyWithCopy(content, options) {
+		return this.telegram.sendCopy(this.chat.id, content, options);
 	},
 };

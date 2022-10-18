@@ -1,23 +1,22 @@
+// @ts-check
 'use strict';
 
 const { last } = require('ramda');
 const XRegExp = require('xregexp');
 
 // Utils
-const { escapeHtml, link, scheduleDeletion } = require('../../utils/tg');
-const { parse, strip } = require('../../utils/parse');
+const { html, lrm } = require('../../utils/html');
+const { link, scheduleDeletion } = require('../../utils/tg');
+const { isWarnNotExpired } = require('../../utils/config');
+const { parse, strip } = require('../../utils/cmd');
+const { pMap } = require('../../utils/promise');
 
 // Config
-const { numberOfWarnsToBan } = require('../../config');
-
-// Bot
-const { replyOptions } = require('../../bot/options');
+const { numberOfWarnsToBan } = require('../../utils/config').config;
 
 // DB
 const { listGroups } = require('../../stores/group');
 const { getUser, unwarn } = require('../../stores/user');
-
-const noop = Function.prototype;
 
 const dateRegex = XRegExp.tag('nix')`^
 	\d{4}       # year
@@ -30,41 +29,37 @@ const dateRegex = XRegExp.tag('nix')`^
 	)?)?)?)?)?
 $`;
 
-const unwarnHandler = async ({ from, message, reply, telegram }) => {
-	if (!from || from.status !== 'admin') return null;
+/** @param { import('../../typings/context').ExtendedContext } ctx */
+const unwarnHandler = async (ctx) => {
+	if (ctx.from?.status !== 'admin') return null;
 
-	const { reason, targets } = parse(message);
+	const { reason, targets } = parse(ctx.message);
 
 	if (targets.length !== 1) {
-		return reply(
+		return ctx.replyWithHTML(
 			'ℹ️ <b>Specify one user to unwarn.</b>',
-			replyOptions
 		).then(scheduleDeletion());
 	}
 
 	const userToUnwarn = await getUser(strip(targets[0]));
 
 	if (!userToUnwarn) {
-		return reply(
+		return ctx.replyWithHTML(
 			'❓ <b>User unknown</b>',
-			replyOptions
 		).then(scheduleDeletion());
 	}
 
-	const allWarns = userToUnwarn.warns;
+	const allWarns = userToUnwarn.warns.filter(isWarnNotExpired(new Date()));
 
 	if (allWarns.length === 0) {
-		return reply(
-			`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
-			replyOptions
+		return ctx.replyWithHTML(
+			html`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
 		);
 	}
 
 	if (userToUnwarn.status === 'banned') {
-		const groups = await listGroups();
-
-		groups.forEach(group =>
-			telegram.unbanChatMember(group.id, userToUnwarn.id));
+		await pMap(await listGroups({ type: 'supergroup' }), group =>
+			ctx.telegram.unbanChatMember(group.id, userToUnwarn.id));
 	}
 
 	let lastWarn;
@@ -75,38 +70,36 @@ const unwarnHandler = async ({ from, message, reply, telegram }) => {
 		lastWarn = allWarns.find(({ date }) =>
 			date && date.toISOString().startsWith(normalized));
 	} else {
-		return reply(
+		return ctx.replyWithHTML(
 			'⚠ <b>Invalid date</b>',
-			replyOptions
 		).then(scheduleDeletion());
 	}
 
 	if (!lastWarn) {
-		return reply(
+		return ctx.replyWithHTML(
 			'❓ <b>404: Warn not found</b>',
-			replyOptions
 		).then(scheduleDeletion());
 	}
 
 	await unwarn(userToUnwarn, lastWarn);
 
 	if (userToUnwarn.status === 'banned') {
-		telegram.sendMessage(
+		ctx.telegram.sendMessage(
 			userToUnwarn.id,
-			'♻️ You were unbanned from all of the /groups!'
-		).catch(noop);
+			'♻️ You were unbanned from all of the /groups!',
+		).catch(() => null);
 		// it's likely that the banned person haven't PMed the bot,
 		// which will cause the sendMessage to fail,
 		// hance .catch(noop)
 		// (it's an expected, non-critical failure)
 	}
 
-	return reply(
-		`❎ ${link(from)} <b>pardoned</b> ${link(userToUnwarn)} ` +
-		`<b>for:</b>\n\n${escapeHtml(lastWarn.reason || lastWarn)}` +
-		` (${allWarns.length - 1}/${numberOfWarnsToBan})`,
-		replyOptions
-	);
+	const count = html`<b>${allWarns.length}</b>/${numberOfWarnsToBan}`;
+
+	return ctx.loggedReply(html`
+		❎ ${lrm}${ctx.from.first_name} <b>pardoned</b> ${link(userToUnwarn)} for
+		${count}: ${lrm}${lastWarn.reason || lastWarn}
+	`);
 };
 
 
