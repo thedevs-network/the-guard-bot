@@ -35,4 +35,5 @@ module.exports = {
 	config,
 	isMaster,
 	isWarnNotExpired,
+	expireWarnsAfter,
 };
