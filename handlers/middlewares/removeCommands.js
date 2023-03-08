@@ -7,12 +7,13 @@ const { unmatched } = require('../unmatched');
 const shouldDelete = {
 	all: () => true,
 	none: () => false,
-	own: ctx => !ctx.state[unmatched],
+	own: (ctx) => !ctx.state[unmatched],
 };
 
 if (!(deleteCommands in shouldDelete)) {
-	throw new Error('Invalid value for `deleteCommands` in config file: ' +
-		deleteCommands);
+	throw new Error(
+		'Invalid value for `deleteCommands` in config file: ' + deleteCommands
+	);
 }
 
 const noop = Function.prototype;

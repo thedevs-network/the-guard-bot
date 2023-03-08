@@ -25,7 +25,6 @@
  * @type {Config}
  */
 const config = {
-
 	/**
 	 * @type {!( number | string | (number|string)[] )}
 	 * ID (number) or username (string) of master,
@@ -40,9 +39,7 @@ const config = {
 	 */
 	token: '',
 
-
 	chats: {
-
 		/**
 		 * @type {(number | false)}
 		 * Chat to send member join/leave notifications to.
@@ -67,7 +64,7 @@ const config = {
 
 	deleteCustom: {
 		longerThan: 450, // UTF-16 characters
-		after: '20 minutes'
+		after: '20 minutes',
 	},
 
 	/**

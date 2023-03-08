@@ -13,4 +13,4 @@ exports.shouldKick = (function () {
 
 	const client = new Client(config.spamwatch.token, config.spamwatch.host);
 	return ({ id }) => client.getBan(id);
-}());
+})();

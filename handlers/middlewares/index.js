@@ -37,17 +37,17 @@ composer.use(updateUserDataHandler);
 composer.on('new_chat_members', syncStatusHandler, antibotHandler);
 composer.on('message', kickBannedHandler);
 composer.use(removeChannelForwardsHandler);
-composer.on([ 'edited_message', 'message' ], checkLinksHandler);
+composer.on(['edited_message', 'message'], checkLinksHandler);
 composer.on('new_chat_title', updateGroupTitleHandler);
 composer.on('text', removeCommandsHandler);
 composer.on(
-	[ 'new_chat_members', 'left_chat_member' ],
+	['new_chat_members', 'left_chat_member'],
 	deleteAfter(deleteJoinsAfter),
-	presenceLogHandler,
+	presenceLogHandler
 );
 composer.action(
 	/^\/del -chat_id=(-\d+) -msg_id=(\d+) Report handled/,
-	reportHandled,
+	reportHandled
 );
 composer.on('callback_query', commandButtons);
 

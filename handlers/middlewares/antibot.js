@@ -2,14 +2,15 @@
 
 const { pMap } = require('../../utils/promise');
 
-const link = user => '@' + user.username;
+const link = (user) => '@' + user.username;
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const antibotHandler = async (ctx, next) => {
 	const msg = ctx.message;
 
-	const bots = msg.new_chat_members.filter(user =>
-		user.is_bot && user.username !== ctx.me);
+	const bots = msg.new_chat_members.filter(
+		(user) => user.is_bot && user.username !== ctx.me
+	);
 
 	if (bots.length === 0) {
 		return next();
@@ -19,11 +20,10 @@ const antibotHandler = async (ctx, next) => {
 		return next();
 	}
 
-	await pMap(bots, bot =>
-		ctx.kickChatMember(bot.id));
+	await pMap(bots, (bot) => ctx.banChatMember(bot.id));
 
 	await ctx.replyWithHTML(
-		`🚫 <b>Kicked bot(s):</b> ${bots.map(link).join(', ')}`,
+		`🚫 <b>Kicked bot(s):</b> ${bots.map(link).join(', ')}`
 	);
 
 	return next();

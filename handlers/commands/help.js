@@ -25,7 +25,7 @@ const helpHandler = (ctx) => {
 	return ctx.replyWithHTML(
 		message,
 		Markup.inlineKeyboard([
-			Markup.button.url('🛠 Setup a New Bot', homepage)
+			Markup.button.url('🛠 Setup a New Bot', homepage),
 		])
 	);
 };

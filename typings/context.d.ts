@@ -1,13 +1,9 @@
-import type {
-	ExtraReplyMessage,
-	Message,
-	User,
-} from "telegraf/typings/telegram-types";
-import type { Context } from "telegraf";
-import type { TgHtml } from "../utils/html";
+import type { Convenience, Message, User } from 'telegraf/types';
+import type { Context } from 'telegraf';
+import type { TgHtml } from '../utils/html';
 
 interface DbUser {
-	status: "member" | "admin" | "banned";
+	status: 'member' | 'admin' | 'banned';
 }
 
 export interface ContextExtensions {
@@ -34,24 +30,24 @@ export interface ContextExtensions {
 			amend?: boolean;
 			reason: string;
 			userToWarn: User;
-			mode: "auto" | "manual";
+			mode: 'auto' | 'manual';
 		}
 	): Promise<Message>;
 
 	loggedReply(
 		this: ExtendedContext,
 		html: TgHtml,
-		extra?: ExtraReplyMessage
+		extra?: Convenience.ExtraReplyMessage
 	): Promise<Message>;
 	replyWithHTML(
 		this: void,
 		html: string | TgHtml,
-		extra?: ExtraReplyMessage
+		extra?: Convenience.ExtraReplyMessage
 	): Promise<Message>;
 	replyWithCopy(
 		this: ExtendedContext,
 		content: Message,
-		options?: ExtraReplyMessage
+		options?: Convenience.ExtraReplyMessage
 	): Promise<Message>;
 }
 

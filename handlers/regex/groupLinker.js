@@ -1,6 +1,8 @@
 'use strict';
 
-const { Telegraf: { hears } } = require('telegraf');
+const {
+	Telegraf: { hears },
+} = require('telegraf');
 const XRegExp = require('xregexp');
 
 const { managesGroup } = require.main.require('./stores/group');
@@ -16,7 +18,7 @@ $`;
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const handler = async (ctx, next) => {
-	let [ , groupName ] = ctx.match;
+	let [, groupName] = ctx.match;
 	if (groupName.toLowerCase() === 'this') {
 		if (!ctx.chat.title) return next();
 		groupName = ctx.chat.title;

@@ -1,12 +1,14 @@
-import { managesGroup, removeGroup } from "../../stores/group";
-import { ExtendedContext } from "../../typings/context";
-import { html } from "../../utils/html";
-import { isMaster } from "../../utils/config";
+import { managesGroup, removeGroup } from '../../stores/group';
+import { ExtendedContext } from '../../typings/context';
+import { html } from '../../utils/html';
+import { isMaster } from '../../utils/config';
 
 const leaveCommandHandler = async (ctx: ExtendedContext) => {
 	if (!isMaster(ctx.from)) return null;
+	if (typeof ctx.message === 'undefined') return null;
+	if (!('text' in ctx.message)) return null;
 
-	const query = ctx.message!.text!.split(" ").slice(1).join(" ");
+	const query = ctx.message.text.split(' ').slice(1).join(' ');
 
 	const group = query
 		? await managesGroup(
@@ -14,7 +16,7 @@ const leaveCommandHandler = async (ctx: ExtendedContext) => {
 		  )
 		: ctx.chat;
 	if (!group) {
-		return ctx.replyWithHTML("❓ <b>Unknown group.</b>");
+		return ctx.replyWithHTML('❓ <b>Unknown group.</b>');
 	}
 
 	await removeGroup(group);

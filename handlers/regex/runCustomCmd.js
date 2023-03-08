@@ -1,6 +1,8 @@
 'use strict';
 
-const { Telegraf: { hears } } = require('telegraf');
+const {
+	Telegraf: { hears },
+} = require('telegraf');
 const R = require('ramda');
 
 // DB
@@ -16,32 +18,30 @@ const deleteCustom = config.deleteCustom || { longerThan: Infinity };
 
 const capitalize = R.replace(/^./, R.toUpper);
 
-const getRepliedToId = R.path([ 'reply_to_message', 'message_id' ]);
+const getRepliedToId = R.path(['reply_to_message', 'message_id']);
 
-const typeToMethod = type =>
-	type === 'text'
-		? 'replyWithHTML'
-		: `replyWith${capitalize(type)}`;
+const typeToMethod = (type) =>
+	type === 'text' ? 'replyWithHTML' : `replyWith${capitalize(type)}`;
 
 const autoDelete = ({ content, type }) => {
 	switch (type) {
-	case 'text':
-		return content.length > deleteCustom.longerThan;
-	case 'copy':
-		return (content.text || '').length > deleteCustom.longerThan;
-	default:
-		return false;
+		case 'text':
+			return content.length > deleteCustom.longerThan;
+		case 'copy':
+			return (content.text || '').length > deleteCustom.longerThan;
+		default:
+			return false;
 	}
 };
 
 const hasRole = (role, from) => {
 	switch (role.toLowerCase()) {
-	case 'master':
-		return isMaster(from);
-	case 'admins':
-		return from && from.status === 'admin';
-	default:
-		return true;
+		case 'master':
+			return isMaster(from);
+		case 'admins':
+			return from && from.status === 'admin';
+		default:
+			return true;
 	}
 };
 
@@ -57,17 +57,17 @@ const runCustomCmdHandler = async (ctx, next) => {
 	const { caption, content, type } = command;
 
 	const options = {
-		...caption && { caption },
+		...(caption && { caption }),
 		disable_web_page_preview: true,
 		reply_to_message_id: getRepliedToId(ctx.message),
 	};
 
-	return ctx[typeToMethod(type)](content, options)
-		.then(({ message_id }) =>
-			scheduleDeletion(
-				autoDelete(command) && deleteCustom.after)({
-					chat: ctx.chat, message_id
-				}));
+	return ctx[typeToMethod(type)](content, options).then(({ message_id }) =>
+		scheduleDeletion(autoDelete(command) && deleteCustom.after)({
+			chat: ctx.chat,
+			message_id,
+		})
+	);
 };
 
 module.exports = hears(/^! ?(\w+)/, runCustomCmdHandler);

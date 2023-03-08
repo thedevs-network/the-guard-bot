@@ -12,35 +12,33 @@ const removeCommandHandler = async (ctx) => {
 
 	if (ctx.from.status !== 'admin') {
 		return ctx.replyWithHTML(
-			'ℹ️ <b>Sorry, only admins access this command.</b>',
+			'ℹ️ <b>Sorry, only admins access this command.</b>'
 		);
 	}
-	const [ , commandName ] = text.split(' ');
+	const [, commandName] = text.split(' ');
 	if (!commandName) {
 		return ctx.replyWithHTML(
 			'<b>Send a valid command.</b>\n\nExample:\n' +
-			'<code>/removecommand rules</code>',
+				'<code>/removecommand rules</code>'
 		);
 	}
 
 	const command = await getCommand({ name: commandName.toLowerCase() });
 	if (!command) {
-		return ctx.replyWithHTML(
-			'ℹ️ <b>Command couldn\'t be found.</b>',
-		);
+		return ctx.replyWithHTML("ℹ️ <b>Command couldn't be found.</b>");
 	}
 
 	const role = command.role.toLowerCase();
 	if (role === 'master' && !isMaster(ctx.from)) {
 		return ctx.replyWithHTML(
-			'ℹ️ <b>Sorry, only master can remove this command.</b>',
+			'ℹ️ <b>Sorry, only master can remove this command.</b>'
 		);
 	}
 
 	await removeCommand({ name: commandName.toLowerCase() });
 	return ctx.replyWithHTML(
 		`✅ <code>!${commandName}</code> ` +
-		'<b>has been removed successfully.</b>',
+			'<b>has been removed successfully.</b>'
 	);
 };
 

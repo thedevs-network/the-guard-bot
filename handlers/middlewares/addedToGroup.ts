@@ -1,7 +1,7 @@
-import { Context, Middleware } from "telegraf";
-import { addGroup } from "../../stores/group";
-import { admin } from "../../stores/user";
-import { isMaster } from "../../utils/config";
+import { Context, Middleware } from 'telegraf';
+import { addGroup } from '../../stores/group';
+import { admin } from '../../stores/user';
+import { isMaster } from '../../utils/config';
 
 const addedToGroupHandler: Middleware<Context> = async (ctx, next) => {
 	const wasAdded = ctx.message?.new_chat_members?.some(
@@ -11,15 +11,15 @@ const addedToGroupHandler: Middleware<Context> = async (ctx, next) => {
 		await admin(ctx.from!);
 		const link = ctx.chat!.username
 			? `https://t.me/${ctx.chat!.username.toLowerCase()}`
-			: await ctx.exportChatInviteLink().catch(() => "");
+			: await ctx.exportChatInviteLink().catch(() => '');
 		if (!link) {
 			await ctx.replyWithHTML(
-				"⚠️ <b>Failed to export chat invite link.</b>\n" +
+				'⚠️ <b>Failed to export chat invite link.</b>\n' +
 					"Group won't be visible in /groups list.\n" +
-					"\n" +
+					'\n' +
 					"If this isn't your intention, " +
-					"make sure I am permitted to export chat invite link, " +
-					"and then run /showgroup."
+					'make sure I am permitted to export chat invite link, ' +
+					'and then run /showgroup.'
 			);
 		}
 		const { id, title, type } = ctx.chat!;

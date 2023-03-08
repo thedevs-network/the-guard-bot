@@ -12,7 +12,7 @@ Command.ensureIndex({
 	unique: true,
 });
 
-const addCommand = command =>
+const addCommand = (command) =>
 	Command.update(
 		{ name: command.name },
 		{ $set: { isActive: false, ...command } },
@@ -22,7 +22,7 @@ const addCommand = command =>
 const updateCommand = (data) =>
 	Command.update({ id: data.id, isActive: false }, { $set: data });
 
-const removeCommand = command => Command.remove(command);
+const removeCommand = (command) => Command.remove(command);
 
 const getCommand = (data) => Command.findOne(data);
 

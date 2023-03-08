@@ -35,9 +35,7 @@ const roleKbRow = (cmdData) => [
 
 const normalizeRole = (role = '') => {
 	const lower = role.toLowerCase();
-	return lower === 'master' || lower === 'admins'
-		? lower
-		: 'everyone';
+	return lower === 'master' || lower === 'admins' ? lower : 'everyone';
 };
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
@@ -48,7 +46,7 @@ const addCommandHandler = async (ctx) => {
 
 	if (ctx.from.status !== 'admin') {
 		return ctx.replyWithHTML(
-			'ℹ️ <b>Sorry, only admins access this command.</b>',
+			'ℹ️ <b>Sorry, only admins access this command.</b>'
 		);
 	}
 
@@ -59,13 +57,15 @@ const addCommandHandler = async (ctx) => {
 	if (!isValidName) {
 		return ctx.replyWithHTML(
 			'<b>Send a valid command.</b>\n\nExample:\n' +
-			'<code>/addcommand rules</code>',
+				'<code>/addcommand rules</code>'
 		);
 	}
 	const newCommand = isValidName[1].toLowerCase();
 	if (preserved.has(newCommand)) {
-		return reply('❗️ Sorry you can\'t use this name, it\'s preserved.\n\n' +
-			'Try another one.');
+		return reply(
+			"❗️ Sorry you can't use this name, it's preserved.\n\n" +
+				'Try another one.'
+		);
 	}
 
 	const replaceCmd = flags.has('replace');
@@ -76,19 +76,19 @@ const addCommandHandler = async (ctx) => {
 	if (!replaceCmd && cmdExists) {
 		return ctx.replyWithHTML(
 			'ℹ️ <b>This command already exists.</b>\n\n' +
-			'/commands - to see the list of commands.\n' +
-			'/addcommand <code>&lt;name&gt;</code> - to add a command.\n' +
-			'/removecommand <code>&lt;name&gt;</code>' +
-			' - to remove a command.',
-			Markup.keyboard([ [ `/addcommand -replace ${newCommand}` ] ])
+				'/commands - to see the list of commands.\n' +
+				'/addcommand <code>&lt;name&gt;</code> - to add a command.\n' +
+				'/removecommand <code>&lt;name&gt;</code>' +
+				' - to remove a command.',
+			Markup.keyboard([[`/addcommand -replace ${newCommand}`]])
 				.selective()
 				.oneTime()
-				.resize(),
+				.resize()
 		);
 	}
 	if (cmdExists && cmdExists.role === 'master' && !isMaster(ctx.from)) {
 		return ctx.replyWithHTML(
-			'ℹ️ <b>Sorry, only master can replace this command.</b>',
+			'ℹ️ <b>Sorry, only master can replace this command.</b>'
 		);
 	}
 
@@ -102,17 +102,17 @@ const addCommandHandler = async (ctx) => {
 			caption: null,
 			isActive: true,
 			name: newCommand,
-			...softReplace || { content },
+			...(softReplace || { content }),
 		});
 		return ctx.replyWithHTML(
 			`✅ <b>Successfully added <code>!${isValidName[1]}</code></b>.\n` +
-			'Who should be able to use it?',
-			inlineKeyboard(roleKbRow({ currentRole: role, newCommand })),
+				'Who should be able to use it?',
+			inlineKeyboard(roleKbRow({ currentRole: role, newCommand }))
 		);
 	}
 
 	// eslint-disable-next-line max-len
-	return ctx.replyWithHTML('ℹ️ <b>Reply to a message you\'d like to save</b>');
+	return ctx.replyWithHTML("ℹ️ <b>Reply to a message you'd like to save</b>");
 };
 
 module.exports = addCommandHandler;

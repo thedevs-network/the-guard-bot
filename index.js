@@ -18,7 +18,7 @@ bot.use(
 	require('./plugins'),
 	require('./handlers/commands'),
 	require('./handlers/regex'),
-	require('./handlers/unmatched'),
+	require('./handlers/unmatched')
 );
 
 bot.catch(logError);

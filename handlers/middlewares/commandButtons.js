@@ -15,7 +15,7 @@ module.exports = (ctx, next) => {
 			from: ctx.from,
 			chat: ctx.chat,
 			text: ctx.callbackQuery.data,
-			entities: [ { offset: 0, type: 'bot_command' } ],
+			entities: [{ offset: 0, type: 'bot_command' }],
 		},
 	};
 

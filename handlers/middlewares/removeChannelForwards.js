@@ -1,7 +1,9 @@
 'use strict';
 
 const R = require('ramda');
-const { Telegraf: { optional, passThru } } = require('telegraf');
+const {
+	Telegraf: { optional, passThru },
+} = require('telegraf');
 const { permit } = require('../../stores/user');
 
 const { html, lrm } = require('../../utils/html');
@@ -13,29 +15,29 @@ if (excludeLinks === false || excludeLinks === '*') {
 }
 
 const isChannelForward = R.pathEq(
-	[ 'message', 'forward_from_chat', 'type' ],
-	'channel',
+	['message', 'forward_from_chat', 'type'],
+	'channel'
 );
-const fromAdmin = R.pathEq([ 'from', 'status' ], 'admin');
+const fromAdmin = R.pathEq(['from', 'status'], 'admin');
 
-const inGroup = ctx => ctx.chat?.type.endsWith('group');
+const inGroup = (ctx) => ctx.chat?.type.endsWith('group');
 
 const capturingGroups = R.tail;
 
 const toUsername = R.compose(
 	capturingGroups,
-	R.match(/^(?:@|(?:https?:\/\/)?(?:t\.me|telegram\.(?:me|dog))\/)(\w+)/i),
+	R.match(/^(?:@|(?:https?:\/\/)?(?:t\.me|telegram\.(?:me|dog))\/)(\w+)/i)
 );
 
 const customWhitelist = R.pipe(
 	R.chain(toUsername),
 	R.map(R.toLower),
-	R.constructN(1, Set),
+	R.constructN(1, Set)
 )(excludeLinks);
 
-const isWhitelisted = username => customWhitelist.has(username.toLowerCase());
+const isWhitelisted = (username) => customWhitelist.has(username.toLowerCase());
 
-const fromWhitelisted = ctx =>
+const fromWhitelisted = (ctx) =>
 	isWhitelisted(ctx.message.forward_from_chat.username || '');
 
 const pred = R.allPass([
@@ -48,7 +50,9 @@ const pred = R.allPass([
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const handler = async (ctx, next) => {
 	if (await permit.revoke(ctx.from)) {
-		await ctx.replyWithHTML(html`${lrm}${ctx.from.first_name} used 🎟 permit!`);
+		await ctx.replyWithHTML(
+			html`${lrm}${ctx.from.first_name} used 🎟 permit!`
+		);
 		return next();
 	}
 

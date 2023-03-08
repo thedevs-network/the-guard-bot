@@ -3,7 +3,7 @@
 /**
  * @typedef { { id: number } | { username: string } } UserQuery
  * @exports UserQuery
-*/
+ */
 
 // Utils
 const { strip } = require('../utils/cmd');
@@ -31,27 +31,25 @@ User.ensureIndex({
 User.update(
 	{ username: '' },
 	{ $unset: { username: true } },
-	{ multi: true },
-).then(() =>
-	User.ensureIndex({ fieldName: 'username', sparse: true }));
+	{ multi: true }
+).then(() => User.ensureIndex({ fieldName: 'username', sparse: true }));
 
 const normalizeTgUser = R.pipe(
-	R.pick([ 'first_name', 'id', 'last_name', 'username' ]),
+	R.pick(['first_name', 'id', 'last_name', 'username']),
 	R.evolve({ username: R.toLower }),
-	R.merge({ first_name: '', last_name: '' }),
+	R.mergeDeepRight({ first_name: '', last_name: '' })
 );
 
 const getUpdatedDocument = R.prop(1);
 
-const getUser = user =>
-	User.findOne(user);
+const getUser = (user) => User.findOne(user);
 
 const updateUser = async (rawTgUser) => {
 	const tgUser = normalizeTgUser(rawTgUser);
 
 	const { id, username } = tgUser;
 
-	const [ rawDbUser ] = await Promise.all([
+	const [rawDbUser] = await Promise.all([
 		getUser({ id }),
 		User.update({ $not: { id }, username }, { $unset: { username: true } }),
 	]);
@@ -60,7 +58,7 @@ const updateUser = async (rawTgUser) => {
 		return User.update(
 			{ id },
 			{ status: 'member', warns: [], ...tgUser },
-			{ returnUpdatedDocs: true, upsert: true },
+			{ returnUpdatedDocs: true, upsert: true }
 		).then(getUpdatedDocument);
 	}
 
@@ -70,7 +68,7 @@ const updateUser = async (rawTgUser) => {
 		return User.update(
 			{ id },
 			{ $set: tgUser },
-			{ returnUpdatedDocs: true },
+			{ returnUpdatedDocs: true }
 		).then(getUpdatedDocument);
 	}
 
@@ -78,16 +76,11 @@ const updateUser = async (rawTgUser) => {
 };
 
 const admin = ({ id }) =>
-	User.update(
-		{ id },
-		{ $set: { status: 'admin', warns: [] } },
-	);
+	User.update({ id }, { $set: { status: 'admin', warns: [] } });
 
-const getAdmins = () =>
-	User.find({ status: 'admin' });
+const getAdmins = () => User.find({ status: 'admin' });
 
-const unadmin = ({ id }) =>
-	User.update({ id }, { $set: { status: 'member' } });
+const unadmin = ({ id }) => User.update({ id }, { $set: { status: 'member' } });
 
 const isAdmin = (user) => {
 	if (!user) return false;
@@ -101,14 +94,14 @@ const ban = ({ id }, ban_details) =>
 	User.update(
 		{ id, $not: { status: 'admin' } },
 		{ $set: { ban_details, status: 'banned' } },
-		{ upsert: true },
+		{ upsert: true }
 	);
 
 const batchBan = (users, ban_details) =>
 	User.update(
 		{ $or: users.map(strip), $not: { status: 'admin' } },
 		{ $set: { ban_details, status: 'banned' } },
-		{ multi: true, returnUpdatedDocs: true },
+		{ multi: true, returnUpdatedDocs: true }
 	).then(getUpdatedDocument);
 
 const ensureExists = ({ id }) =>
@@ -120,7 +113,7 @@ const unban = ({ id }) =>
 		{
 			$set: { status: 'member' },
 			$unset: { ban_details: true, ban_reason: true },
-		},
+		}
 	);
 
 /**
@@ -130,7 +123,7 @@ const permit = (user, { by_id, date }) =>
 	User.update(
 		user,
 		{ $set: { permit: { by_id, date } } },
-		{ returnUpdatedDocs: true },
+		{ returnUpdatedDocs: true }
 	).then(getUpdatedDocument);
 
 /**
@@ -140,7 +133,7 @@ permit.revoke = (user) =>
 	User.update(
 		{ permit: { $exists: true }, ...strip(user) },
 		{ $unset: { permit: true } },
-		{ returnUpdatedDocs: true },
+		{ returnUpdatedDocs: true }
 	).then(getUpdatedDocument);
 
 permit.isValid = (p) => Date.now() - ms('24h') < p?.date;
@@ -153,7 +146,7 @@ const warn = ({ id }, reason, { amend }) =>
 			$push: { warns: reason },
 			$unset: { permit: true },
 		},
-		{ returnUpdatedDocs: true },
+		{ returnUpdatedDocs: true }
 	).then(getUpdatedDocument);
 
 const unwarn = ({ id }, warnQuery) =>
@@ -163,10 +156,10 @@ const unwarn = ({ id }, warnQuery) =>
 			$pull: { warns: warnQuery },
 			$set: { status: 'member' },
 			$unset: { ban_details: true, ban_reason: true },
-		},
+		}
 	);
 
-const nowarns = query => unwarn(query, {});
+const nowarns = (query) => unwarn(query, {});
 
 const verifyCaptcha = ({ id }, captcha = true) =>
 	User.update({ id }, { $set: { captcha } });

@@ -14,7 +14,8 @@ const ms = require('millisecond');
 const z = (n, d = 2) => String(n).padStart(d, '0');
 
 /** @type {(d: Date) => string} */
-const yyyymmdd = d => `${z(d.getFullYear(), 4)}-${z(d.getMonth() + 1)}-${z(d.getDate())}`;
+const yyyymmdd = (d) =>
+	`${z(d.getFullYear(), 4)}-${z(d.getMonth() + 1)}-${z(d.getDate())}`;
 
 /** @type {(a: number, b: number) => number} */
 const cmp = (a, b) => Math.sign(a - b);
@@ -26,7 +27,7 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 	const { warns } = await warn(
 		userToWarn,
 		{ by_id, date, reason },
-		{ amend },
+		{ amend }
 	);
 
 	const recentWarns = warns.filter(isWarnNotExpired(date));
@@ -35,13 +36,21 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 		'-1': html`<b>${recentWarns.length}</b>/${numberOfWarnsToBan}`,
 		0: html`<b>Final warning</b>`,
 		// eslint-disable-next-line max-len
-		1: html`<b>${recentWarns.length}</b>/${numberOfWarnsToBan} (🚫 <b>banned</b>)`,
+		1: html`<b>${recentWarns.length}</b>/${numberOfWarnsToBan} (🚫
+			<b>banned</b>)`,
 	}[cmp(recentWarns.length + 1, numberOfWarnsToBan)];
+
+	const expiryText =
+		typeof expireWarnsAfter === 'undefined' || expireWarnsAfter === Infinity
+			? ''
+			: `Expires on ${yyyymmdd(
+					new Date(date.getTime() + ms(expireWarnsAfter))
+			  )}`;
 
 	const warnMessage = html`
 		⚠️ ${lrm}${admin.first_name} <b>warned</b> ${link(userToWarn)}.
 		${count}: ${lrm}${reason}
-		<i>${typeof expireWarnsAfter === 'undefined' || expireWarnsAfter === Infinity ? '' : `Expires on ${yyyymmdd(new Date(date.getTime() + ms(expireWarnsAfter)))}`}</i>
+		<i>${expiryText}</i>
 	`;
 
 	if (recentWarns.length >= numberOfWarnsToBan) {

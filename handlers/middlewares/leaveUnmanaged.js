@@ -6,7 +6,6 @@ const { chats = {} } = require('../../utils/config').config;
 
 const pkg = require('../../package.json');
 
-
 const caption = `\
 Sorry, you need to set up your own instance \
 to use me in your group or a network of groups.
@@ -15,10 +14,14 @@ If you don't wish to self host, \
 you can try @MissRose_bot instead.
 `;
 
-const inline_keyboard = [ [ {
-	text: '🛠 Setup a New Bot',
-	url: pkg.homepage,
-} ] ];
+const inline_keyboard = [
+	[
+		{
+			text: '🛠 Setup a New Bot',
+			url: pkg.homepage,
+		},
+	],
+];
 
 const reply_markup = JSON.stringify({ inline_keyboard });
 
@@ -30,15 +33,13 @@ const gifIds = [
 	'3XiQswSmbjBiU',
 ];
 
-const gifs = gifIds.map(x => `https://media.giphy.com/media/${x}/giphy.gif`);
-
+const gifs = gifIds.map((x) => `https://media.giphy.com/media/${x}/giphy.gif`);
 
 /**
  * @template T
  * @param {Array<T>} arr
  */
-const randomChoice = arr => arr[Math.floor(Math.random() * arr.length)];
-
+const randomChoice = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 /** @param { import('telegraf').Context } ctx */
 const leaveUnmanagedHandler = async (ctx, next) => {
@@ -50,7 +51,8 @@ const leaveUnmanagedHandler = async (ctx, next) => {
 	if (
 		ctx.chat.type === 'private' ||
 		Object.values(chats).includes(ctx.chat.id) ||
-		await managesGroup({ id: ctx.chat.id })) {
+		(await managesGroup({ id: ctx.chat.id }))
+	) {
 		return next();
 	}
 

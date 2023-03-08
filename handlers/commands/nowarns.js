@@ -17,43 +17,48 @@ const { listGroups } = require('../../stores/group');
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const nowarnsHandler = async (ctx) => {
 	if (ctx.from?.status !== 'admin') return null;
+	if (typeof ctx.message === 'undefined') return null;
+	if (!('text' in ctx.message)) return null;
 
 	const { targets } = parse(ctx.message);
 
 	if (targets.length !== 1) {
-		return ctx.replyWithHTML(
-			'ℹ️ <b>Specify one user to pardon.</b>',
-		).then(scheduleDeletion());
+		return ctx
+			.replyWithHTML('ℹ️ <b>Specify one user to pardon.</b>')
+			.then(scheduleDeletion());
 	}
 
 	const userToUnwarn = await getUser(strip(targets[0]));
 
 	if (!userToUnwarn) {
-		return ctx.replyWithHTML(
-			'❓ <b>User unknown.</b>',
-		).then(scheduleDeletion());
+		return ctx
+			.replyWithHTML('❓ <b>User unknown.</b>')
+			.then(scheduleDeletion());
 	}
 
 	const { warns } = userToUnwarn;
 
 	if (warns.length === 0) {
 		return ctx.replyWithHTML(
-			html`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`,
+			html`ℹ️ ${link(userToUnwarn)} <b>already has no warnings.</b>`
 		);
 	}
 
 	if (userToUnwarn.status === 'banned') {
 		await pMap(await listGroups({ type: 'supergroup' }), (group) =>
-			ctx.telegram.unbanChatMember(group.id, userToUnwarn.id));
+			ctx.telegram.unbanChatMember(group.id, userToUnwarn.id)
+		);
 	}
 
 	await nowarns(userToUnwarn);
 
 	if (userToUnwarn.status === 'banned') {
-		ctx.telegram.sendMessage(
-			userToUnwarn.id,
-			'♻️ You were unbanned from all of the /groups!',
-		).catch(() => null);
+		ctx.telegram
+			.sendMessage(
+				userToUnwarn.id,
+				'♻️ You were unbanned from all of the /groups!'
+			)
+			.catch(() => null);
 		// it's likely that the banned person haven't PMed the bot,
 		// which will cause the sendMessage to fail,
 		// hance .catch(noop)
@@ -65,6 +70,5 @@ const nowarnsHandler = async (ctx) => {
 		for all of their warnings.
 	`);
 };
-
 
 module.exports = nowarnsHandler;

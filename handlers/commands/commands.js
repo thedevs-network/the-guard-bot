@@ -49,29 +49,24 @@ const commandReferenceHandler = async (ctx) => {
 	const customCommandsGrouped = R.groupBy(role, customCommands);
 	const userCustomCommands = customCommandsGrouped.everyone
 		? '[everyone]\n<code>' +
-		customCommandsGrouped.everyone
-			.map(name)
-			.join(', ') +
-		'</code>\n\n'
+		  customCommandsGrouped.everyone.map(name).join(', ') +
+		  '</code>\n\n'
 		: '';
 
 	const adminCustomCommands = customCommandsGrouped.admins
 		? '[admins]\n<code>' +
-		customCommandsGrouped.admins
-			.map(name)
-			.join(', ') +
-		'</code>\n\n'
+		  customCommandsGrouped.admins.map(name).join(', ') +
+		  '</code>\n\n'
 		: '';
 
 	const masterCustomCommands = customCommandsGrouped.master
 		? '[master]\n<code>' +
-		customCommandsGrouped.master
-			.map(name)
-			.join(', ') +
-		'</code>\n\n'
+		  customCommandsGrouped.master.map(name).join(', ') +
+		  '</code>\n\n'
 		: '';
 
-	const customCommandsText = masterCommands.repeat(isMaster(ctx.from)) +
+	const customCommandsText =
+		masterCommands.repeat(isMaster(ctx.from)) +
 		adminCommands.repeat(ctx.from && ctx.from.status === 'admin') +
 		userCommands +
 		'\n<b>Custom commands(prefix with !):</b>\n' +
@@ -79,8 +74,7 @@ const commandReferenceHandler = async (ctx) => {
 		adminCustomCommands.repeat(ctx.from && ctx.from.status === 'admin') +
 		userCustomCommands;
 
-	return ctx.replyWithHTML(customCommandsText)
-		.then(scheduleDeletion());
+	return ctx.replyWithHTML(customCommandsText).then(scheduleDeletion());
 };
 
 module.exports = commandReferenceHandler;

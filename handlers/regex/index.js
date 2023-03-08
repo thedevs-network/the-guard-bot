@@ -1,6 +1,8 @@
 'use strict';
 
-const { Telegraf: { compose, hears } } = require('telegraf');
+const {
+	Telegraf: { compose, hears },
+} = require('telegraf');
 
 /* eslint-disable global-require */
 

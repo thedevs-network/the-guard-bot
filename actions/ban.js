@@ -16,8 +16,9 @@ module.exports = async ({ admin, reason, userToBan }) => {
 
 	await ban(userToBan, { by_id, date, reason });
 
-	await pMap(await listVisibleGroups(), group =>
-		telegram.kickChatMember(group.id, userToBan.id));
+	await pMap(await listVisibleGroups(), (group) =>
+		telegram.banChatMember(group.id, userToBan.id)
+	);
 
 	return html`
 		🚫 ${lrm}${admin.first_name} <b>banned</b> ${displayUser(userToBan)}.

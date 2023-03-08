@@ -17,14 +17,16 @@ const noop = Function.prototype;
 
 const tgUnadmin = async (userToUnadmin) => {
 	for (const group of await listGroups()) {
-		telegram.promoteChatMember(group.id, userToUnadmin.id, {
-			can_change_info: false,
-			can_delete_messages: false,
-			can_invite_users: false,
-			can_pin_messages: false,
-			can_promote_members: false,
-			can_restrict_members: false,
-		}).catch(noop);
+		telegram
+			.promoteChatMember(group.id, userToUnadmin.id, {
+				can_change_info: false,
+				can_delete_messages: false,
+				can_invite_users: false,
+				can_pin_messages: false,
+				can_promote_members: false,
+				can_restrict_members: false,
+			})
+			.catch(noop);
 	}
 };
 
@@ -35,22 +37,22 @@ const unAdminHandler = async (ctx) => {
 	const { targets } = parse(ctx.message);
 
 	if (targets.length !== 1) {
-		return ctx.replyWithHTML(
-			'ℹ️ <b>Specify one user to unadmin.</b>',
-		).then(scheduleDeletion());
+		return ctx
+			.replyWithHTML('ℹ️ <b>Specify one user to unadmin.</b>')
+			.then(scheduleDeletion());
 	}
 
 	const userToUnadmin = await getUser(strip(targets[0]));
 
 	if (!userToUnadmin) {
-		return ctx.replyWithHTML(
-			'❓ <b>User unknown.</b>',
-		).then(scheduleDeletion());
+		return ctx
+			.replyWithHTML('❓ <b>User unknown.</b>')
+			.then(scheduleDeletion());
 	}
 
 	if (userToUnadmin.status !== 'admin') {
 		return ctx.replyWithHTML(
-			html`ℹ️ ${link(userToUnadmin)} <b>is not admin.</b>`,
+			html`ℹ️ ${link(userToUnadmin)} <b>is not admin.</b>`
 		);
 	}
 
@@ -59,7 +61,7 @@ const unAdminHandler = async (ctx) => {
 	await unadmin(userToUnadmin);
 
 	return ctx.replyWithHTML(
-		html`❗️ ${link(userToUnadmin)} <b>is no longer admin.</b>`,
+		html`❗️ ${link(userToUnadmin)} <b>is no longer admin.</b>`
 	);
 };
 

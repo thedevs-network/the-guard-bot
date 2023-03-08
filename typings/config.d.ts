@@ -1,6 +1,6 @@
-import type { InlineKeyboardMarkup } from "telegraf/typings/telegram-types";
+import type { InlineKeyboardMarkup } from 'telegraf/types';
 
-export type InlineKeyboard = InlineKeyboardMarkup["inline_keyboard"];
+export type InlineKeyboard = InlineKeyboardMarkup['inline_keyboard'];
 
 /**
  * String to be parsed by https://npmjs.com/millisecond,
@@ -44,7 +44,7 @@ export interface Config {
 	 * Which messages with commands should be deleted?
 	 * Defaults to 'own' -- don't delete commands meant for other bots.
 	 */
-	deleteCommands?: "all" | "own" | "none";
+	deleteCommands?: 'all' | 'own' | 'none';
 
 	deleteCustom?: {
 		longerThan: number; // UTF-16 characters
