@@ -4,12 +4,19 @@
 const { context } = require('../bot');
 const { html, lrm } = require('../utils/html');
 const { link } = require('../utils/tg');
-const { isWarnNotExpired } = require('../utils/config');
+const { isWarnNotExpired, expireWarnsAfter } = require('../utils/config');
 const { numberOfWarnsToBan } = require('../utils/config').config;
 const { warn } = require('../stores/user');
 const ban = require('./ban');
+const ms = require('millisecond');
 
+/** @type {(n: number, d?: number) => string} */
+const z = (n, d = 2) => String(n).padStart(d, '0');
 
+/** @type {(d: Date) => string} */
+const yyyymmdd = d => `${z(d.getFullYear(), 4)}-${z(d.getMonth() + 1)}-${z(d.getDate())}`;
+
+/** @type {(a: number, b: number) => number} */
 const cmp = (a, b) => Math.sign(a - b);
 
 module.exports = async ({ admin, amend, reason, userToWarn }) => {
@@ -34,6 +41,7 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 	const warnMessage = html`
 		⚠️ ${lrm}${admin.first_name} <b>warned</b> ${link(userToWarn)}.
 		${count}: ${lrm}${reason}
+		${typeof expireWarnsAfter === 'undefined' || expireWarnsAfter === Infinity ? '' : `(expires on ${yyyymmdd(new Date(date.getTime() + ms(expireWarnsAfter)))})`}
 	`;
 
 	if (recentWarns.length >= numberOfWarnsToBan) {
