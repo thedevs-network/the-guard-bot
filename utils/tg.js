@@ -15,7 +15,9 @@ const inlineKeyboard = (...inline_keyboard) =>
 	({ reply_markup: { inline_keyboard } });
 
 const msgLink = msg =>
-	`https://t.me/c/${msg.chat.id.toString().slice(4)}/${msg.message_id}`;
+	msg.chat.username
+		? `https://t.me/${msg.chat.username}/${msg.message_id}`
+		: `https://t.me/c/${msg.chat.id.toString().slice(4)}/${msg.message_id}`;
 
 const link = ({ id, first_name }) =>
 	html`${lrm}<a href="tg://user?id=${id}">${first_name}</a> [<code>${id}</code>]`;
