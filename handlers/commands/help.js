@@ -5,17 +5,12 @@ const { homepage } = require('../../package.json');
 const message = `\
 Hey there!
 
-I'm an <b>administration</b> bot that helps you to keep \
-your <b>groups</b> safe from <b>spammers.</b>
+I'm an <b>administration</b> bot for @werewolfquicker group which helps to keep \
+rid of <b>spammers.</b>
 
-Send /commands to get the list of available commands.
+Send /commands for the available list of commands.
 
-If you want to use me for your groups, \
-note that I'm more useful on a network of groups and \
-you also need to <b>setup a new bot.</b>
-
-So if you don't wish to self-host, @MissRose_bot \
-might be a better choice for you.
+Note that you can't use me in your group.
 `;
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
