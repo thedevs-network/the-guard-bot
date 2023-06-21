@@ -21,4 +21,4 @@ jobs:
             - "$HOME/.npm"
           key: v2-dependencies-{{ checksum "package-lock.json" }}
 
-      - run: npm star
+      - run: npm start
