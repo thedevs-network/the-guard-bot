@@ -21,6 +21,4 @@ jobs:
             - "$HOME/.npm"
           key: v2-dependencies-{{ checksum "package-lock.json" }}
 
-      - run: npm run -s typecheck
-
-      - run: npm run -s lint
+      - run: npm star
