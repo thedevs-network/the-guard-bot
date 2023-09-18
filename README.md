@@ -88,7 +88,7 @@ Checkout our [Plugins' Wiki](https://github.com/thedevs-network/the-guard-bot/wi
 
 * [Captcha](https://gist.github.com/poeti8/d84dfc4538510366a2d89294ff52b4ae): Adds a simple captcha to the bot to kick spam bots on join.
 * [Banfiles](https://gist.github.com/poeti8/133796200d66049c9bd58e6265a52f68): Ban users that send files with specified extentions.
-* [Anti Arabic](https://gist.github.com/poeti8/966ccef35d61ad2735dc0120ce3e8760): Bans users that send an Arabic/Persian message.
+* [Anti Sandland](https://gist.github.com/MKRhere/b6403db5ca37b9c23b2f703877954751): Bans users that send many Arabic/Persian characters in a message.
 * [Anti X-POST](https://gist.github.com/poeti8/c3057f973466676ca8dbbb1183cd0624): Removes same messages sent by user across one or multiple groups.
 
 ## Support
