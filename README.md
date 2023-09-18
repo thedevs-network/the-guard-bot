@@ -6,9 +6,6 @@ The Guard is a Telegram bot made to help admins manage their groups.
 
 Initially created to moderate [The Devs Network](https://thedevs.network).
 
-**NOTE: The Guard is in beta phase;**
-**it has known issues, but it's successfully being used in production**
-
 ## Table of Contents
 * [Key Features](#key-features)
 * [Setup](#setup)
@@ -18,20 +15,20 @@ Initially created to moderate [The Devs Network](https://thedevs.network).
 * [License](#license)
 
 ## Key Features
-* Synchronized across multiple groups.
-* Adding admins to the bot.
-* Auto-remove and warn channels and groups ads.
-* Kick bots added by users.
-* Warn and ban users to control the group.
-* Commands work with replying, mentioning and ID.
-* Removes commands and temporary bot messages.
-* Ability to create custom commands.
-* Supports plugins.
+* Synchronized across multiple groups
+* Adding admins to the bot
+* Auto-remove and warn channels and groups ads
+* Kick bots added by users
+* Warn and ban users to control the group
+* Commands work with replying, mentioning and ID
+* Removes commands and temporary bot messages
+* Ability to create custom commands
+* Supports plugins
 
 Overall, keeps the groups clean and healthy to use.
 
 ## Setup
-You need [Node.js](https://nodejs.org/) (>= 12) to run this bot.
+You need [Node.js](https://nodejs.org/) (>= 18) to run this bot.
 
 1. Create a bot via [@BotFather](https://t.me/BotFather) and grab a **token**.
 2. Clone this repository or [download zip](https://github.com/TheDevs-Network/the-guard-bot/archive/master.zip).
@@ -81,21 +78,12 @@ If used by reply, `/ban` and `/warn` would remove the replied-to message.
 
 ## Plugins
 
-The guard is extensible in form of plugins where custom features and commands can be easily added to it. To use a plugin, put it in the [/plugins](/plugins) directory and add its name to plugins array in config.js.
-Checkout our [Plugins' Wiki](https://github.com/thedevs-network/the-guard-bot/wiki/Plugins) page for more information. 
-
-**Known plugins**:
-
-* [Captcha](https://gist.github.com/poeti8/d84dfc4538510366a2d89294ff52b4ae): Adds a simple captcha to the bot to kick spam bots on join.
-* [Banfiles](https://gist.github.com/poeti8/133796200d66049c9bd58e6265a52f68): Ban users that send files with specified extentions.
-* [Anti Sandland](https://gist.github.com/MKRhere/b6403db5ca37b9c23b2f703877954751): Bans users that send many Arabic/Persian characters in a message.
-* [Anti X-POST](https://gist.github.com/poeti8/c3057f973466676ca8dbbb1183cd0624): Removes same messages sent by user across one or multiple groups.
+The guard is extensible in form of plugins where custom features and commands can be easily added to it.
+See the [Plugins page on the Wiki](https://github.com/thedevs-network/the-guard-bot/wiki/Plugins) for more information.
 
 ## Support
 
 If you need help with using the Bot or setting it up, join our [Support Chat](https://t.me/theguardsupport).
-
-The bot is still in beta phase so feel free to [open issues](https://github.com/thedevs-network/the-guard-bot/issues/new) and ask for features.
 
 [**Roadmap**](https://github.com/TheDevs-Network/the-guard-bot/projects/1)
 
