@@ -38,7 +38,7 @@ User.update(
 const normalizeTgUser = R.pipe(
 	R.pick([ 'first_name', 'id', 'last_name', 'username' ]),
 	R.evolve({ username: R.toLower }),
-	R.merge({ first_name: '', last_name: '' }),
+	R.mergeRight({ first_name: '', last_name: '' }),
 );
 
 const getUpdatedDocument = R.prop(1);

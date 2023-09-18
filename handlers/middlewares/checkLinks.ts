@@ -67,7 +67,7 @@ const actionPriority = (action: Action) => action.type;
 const maxByActionPriority = R.maxBy(actionPriority);
 const highestPriorityAction = R.reduce(maxByActionPriority, Action.Nothing);
 
-const assumeProtocol = R.unless(R.contains("://"), R.concat("http://"));
+const assumeProtocol = R.unless(R.includes("://"), R.concat("http://"));
 const isHttp = R.propSatisfies(R.test(/^https?:$/i), "protocol");
 const isLink = (entity: MessageEntity) =>
 	["url", "text_link", "mention"].includes(entity.type);
@@ -162,7 +162,9 @@ const checkLinkByDomain = (url: URL) => {
 	return handler(url);
 };
 
-const classifyAsync = R.memoize(async (url: URL) => {
+const urlToKey = (url: URL) => url.toString();
+
+const classifyAsync = R.memoizeWith(urlToKey, async (url: URL) => {
 	if (isWhitelisted(url)) return Action.Nothing;
 
 	if (blacklisted.protocol(url)) return Action.Warn("Link using tg protocol");
