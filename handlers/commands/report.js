@@ -27,7 +27,7 @@ const reportHandler = async ctx => {
 	if (!ctx.message.reply_to_message) {
 		await ctx.deleteMessage();
 		return ctx.replyWithHTML(
-			'ℹ️ <b>Reply to message you\'d like to report</b>',
+			'ℹ️ <b>Reply to the message you\'d like to report</b>',
 		).then(scheduleDeletion());
 	}
 	const admins = (await ctx.getChatAdministrators())

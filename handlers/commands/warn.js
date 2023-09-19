@@ -45,17 +45,13 @@ const warnHandler = async (ctx) => {
 			.then(scheduleDeletion());
 	}
 
-	if (ctx.message.reply_to_message) {
-		ctx.deleteMessage(ctx.message.reply_to_message.message_id)
-			.catch(() => null);
-	}
-
 	return ctx.warn({
 		admin: ctx.from,
 		amend: flags.has('amend'),
 		reason: '[' + ctx.chat.title + '] ' + await substom(reason),
 		userToWarn,
 		mode: 'manual',
+		msg: ctx.message.reply_to_message,
 	});
 };
 
