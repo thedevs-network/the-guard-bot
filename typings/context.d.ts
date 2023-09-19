@@ -1,4 +1,4 @@
-import type { Convenience, Message, MessageId, User } from "telegraf/types";
+import type { Convenience, Message, Update, User } from "telegraf/types";
 import type { Context } from "telegraf";
 import type { TgHtml } from "../utils/html";
 
@@ -46,7 +46,7 @@ export interface ContextExtensions {
 	): Promise<Message>;
 }
 
-export type ExtendedContext = ContextExtensions &
-	Context & {
+export type ExtendedContext<U extends Update = Update> = ContextExtensions &
+	Context<U> & {
 		from?: DbUser;
 	};
