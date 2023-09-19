@@ -24,8 +24,8 @@ export const extn: ContextExtensions = {
 	async ban({ admin, reason, userToBan, msg }) {
 		const banMessage = await ban({ admin, reason, userToBan });
 
-		const done = this.loggedReply(banMessage, msg).then(
-			scheduleDeletion(deleteBansAfter)
+		const done = await this.loggedReply(banMessage, msg).then(
+			scheduleDeletion(deleteBansAfter),
 		);
 
 		if (msg)
@@ -44,9 +44,9 @@ export const extn: ContextExtensions = {
 	async warn({ admin, amend, reason, userToWarn, mode, msg }) {
 		const warnMessage = await warn({ admin, amend, reason, userToWarn });
 
-		const done = this.loggedReply(warnMessage, msg, { reply_markup }).then(
-			scheduleDeletion(normalisedDeleteWarnsAfter[mode])
-		);
+		const done = await this.loggedReply(warnMessage, msg, {
+			reply_markup,
+		}).then(scheduleDeletion(normalisedDeleteWarnsAfter[mode]));
 
 		if (msg)
 			this.telegram
@@ -63,7 +63,7 @@ export const extn: ContextExtensions = {
 				(await this.telegram.forwardMessage(
 					chats.adminLog,
 					reply.chat.id,
-					reply.message_id
+					reply.message_id,
 				));
 			this.telegram
 				// @ts-expect-error sendMessage is monkeypatched to accept TgHtml
