@@ -38,10 +38,10 @@ module.exports = {
 
 	loggedReply(html, extra) {
 		if (chats.adminLog) {
-			this.tg
+			this.telegram
 				.sendMessage(
 					chats.adminLog,
-					html.toJSON().replace(/\[<code>(\d+)<\/code>\]/g, '[#u$1]'),
+					html,
 					{ parse_mode: 'HTML' },
 				)
 				.catch(() => null);

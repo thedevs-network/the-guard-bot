@@ -3,6 +3,7 @@
 // Utils
 const { parse, strip, substom } = require('../../utils/cmd');
 const { scheduleDeletion } = require('../../utils/tg');
+const { chats = {} } = require('../../utils/config').config;
 
 // DB
 const { getUser } = require('../../stores/user');
@@ -46,6 +47,9 @@ const warnHandler = async (ctx) => {
 	}
 
 	if (ctx.message.reply_to_message) {
+		if (chats.adminLog) {
+			await ctx.telegram.forwardMessage(chats.adminLog, ctx.message.chat.id, ctx.message.reply_to_message.message_id)
+		}
 		ctx.deleteMessage(ctx.message.reply_to_message.message_id)
 			.catch(() => null);
 	}

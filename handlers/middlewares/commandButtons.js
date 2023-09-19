@@ -20,7 +20,7 @@ module.exports = (ctx, next) => {
 	};
 
 	/** @type { import('../../typings/context').ExtendedContext } */
-	const cbCtx = new Context(cbUpdate, ctx.tg, ctx.options);
+	const cbCtx = new Context(cbUpdate, ctx.telegram, ctx.options);
 	Object.assign(cbCtx, contextCustomizations);
 	cbCtx.botInfo = ctx.botInfo;
 

@@ -3,13 +3,13 @@
 // Utils
 const Cmd = require('../../utils/cmd');
 const { TgHtml } = require('../../utils/html');
+const { chats = {} } = require('../../utils/config').config;
 const {
 	link,
 	msgLink,
 	scheduleDeletion,
 } = require('../../utils/tg');
 
-const { chats = {} } = require('../../utils/config').config;
 
 const isQualified = member => member.status === 'creator' ||
 	member.can_delete_messages &&
@@ -27,7 +27,7 @@ const reportHandler = async ctx => {
 	if (!ctx.message.reply_to_message) {
 		await ctx.deleteMessage();
 		return ctx.replyWithHTML(
-			'ℹ️ <b>Reply to message you\'d like to report</b>',
+			'ℹ️ <b>Reply to the message you\'d like to report</b>',
 		).then(scheduleDeletion());
 	}
 	const admins = (await ctx.getChatAdministrators())
@@ -58,6 +58,18 @@ const reportHandler = async ctx => {
 						reason: 'Report handled',
 					}),
 				} ] ] } },
+		);
+	}
+	if (chats.adminLog) {
+		await ctx.telegram.forwardMessage(chats.adminLog, ctx.message.chat.id, ctx.message.reply_to_message.message_id)
+		await ctx.telegram.sendMessage(
+			chats.adminLog,
+			TgHtml.tag`❗️ ${link(ctx.from)} reported <a href="${msgLink(
+				ctx.message.reply_to_message,
+			)}">a message</a> from ${link(ctx.message.reply_to_message.from)} in ${ctx.chat.title}!`,
+			{
+				parse_mode: 'HTML'
+			},
 		);
 	}
 	return null;

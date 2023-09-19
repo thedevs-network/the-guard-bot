@@ -11,7 +11,7 @@ const leaveCommandHandler = async (ctx: ExtendedContext) => {
 	const group = query
 		? await managesGroup(
 				/^-?\d+/.test(query) ? { id: +query } : { title: query }
-		  )
+			)
 		: ctx.chat;
 	if (!group) {
 		return ctx.replyWithHTML("❓ <b>Unknown group.</b>");

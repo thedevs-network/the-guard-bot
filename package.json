@@ -1,6 +1,6 @@
 {
   "name": "the_guard_bot",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Telegram guard bot to manage a network of groups.",
   "main": "index.js",
   "scripts": {

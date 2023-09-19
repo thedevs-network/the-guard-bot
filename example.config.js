@@ -42,6 +42,12 @@ const config = {
 
 
 	chats: {
+		/**
+		 * @type {(number | false)}
+		 * Chat to send member (un)ban/(un)warn/report notifications and relevant messages to.
+		 * Pass false to disable this feature.
+		 */
+		adminLog: false,
 
 		/**
 		 * @type {(number | false)}
