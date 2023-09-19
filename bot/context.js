@@ -1,55 +1,79 @@
-'use strict';
+import warn from "../actions/warn";
+import ban from "../actions/ban";
+import batchBan from "../actions/batchBan";
+import { scheduleDeletion } from "../utils/tg";
 
-const warn = require('../actions/warn');
-const ban = require('../actions/ban');
-const batchBan = require('../actions/batchBan');
-const { scheduleDeletion } = require('../utils/tg');
+import { config } from "../utils/config";
+import { ContextExtensions } from "../typings/context";
 
 const {
 	warnInlineKeyboard,
 	chats = {},
 	deleteWarnsAfter = false,
 	deleteBansAfter = false,
-} = require('../utils/config').config;
+} = config;
 
-const normalisedDeleteWarnsAfter = typeof deleteWarnsAfter === 'object'
-	? { auto: false, manual: false, ...deleteWarnsAfter }
-	: { auto: deleteWarnsAfter, manual: deleteWarnsAfter };
+const normalisedDeleteWarnsAfter =
+	typeof deleteWarnsAfter === "object"
+		? deleteWarnsAfter
+		: { auto: deleteWarnsAfter, manual: deleteWarnsAfter };
 
 const reply_markup = { inline_keyboard: warnInlineKeyboard };
 
-/** @type { import('../typings/context').ContextExtensions } */
-module.exports = {
-	async ban({ admin, reason, userToBan }) {
+export const extn: ContextExtensions = {
+	async ban({ admin, reason, userToBan, msg }) {
 		const banMessage = await ban({ admin, reason, userToBan });
-		return this.loggedReply(banMessage)
-			.then(scheduleDeletion(deleteBansAfter));
+
+		const done = this.loggedReply(banMessage, msg).then(
+			scheduleDeletion(deleteBansAfter)
+		);
+
+		if (msg)
+			this.telegram
+				.deleteMessage(msg.chat.id, msg.message_id)
+				.catch(() => null);
+
+		return done;
 	},
+
 	async batchBan({ admin, reason, targets }) {
 		const banMessage = await batchBan({ admin, reason, targets });
-		return this.loggedReply(banMessage)
-			.then(scheduleDeletion(deleteBansAfter));
-	},
-	async warn({ admin, amend, reason, userToWarn, mode }) {
-		const warnMessage = await warn({ admin, amend, reason, userToWarn });
-		return this.loggedReply(warnMessage, { reply_markup })
-			.then(scheduleDeletion(normalisedDeleteWarnsAfter[mode]));
+		return this.loggedReply(banMessage).then(scheduleDeletion(deleteBansAfter));
 	},
 
-	loggedReply(html, extra) {
+	async warn({ admin, amend, reason, userToWarn, mode, msg }) {
+		const warnMessage = await warn({ admin, amend, reason, userToWarn });
+
+		const done = this.loggedReply(warnMessage, msg, { reply_markup }).then(
+			scheduleDeletion(normalisedDeleteWarnsAfter[mode])
+		);
+
+		if (msg)
+			this.telegram
+				.deleteMessage(msg.chat.id, msg.message_id)
+				.catch(() => null);
+
+		return done;
+	},
+
+	async loggedReply(html, reply, extra) {
 		if (chats.adminLog) {
-			this.tg
-				.sendMessage(
+			const msg =
+				reply &&
+				(await this.telegram.forwardMessage(
 					chats.adminLog,
-					html.toJSON().replace(/\[<code>(\d+)<\/code>\]/g, '[#u$1]'),
-					{ parse_mode: 'HTML' },
-				)
+					reply.chat.id,
+					reply.message_id
+				));
+			this.telegram
+				// @ts-expect-error sendMessage is monkeypatched to accept TgHtml
+				.sendMessage(chats.adminLog, html, {
+					parse_mode: "HTML",
+					reply_to_message_id: msg?.message_id,
+				})
 				.catch(() => null);
 		}
+		// @ts-expect-error sendMessage is monkeypatched to accept TgHtml
 		return this.replyWithHTML(html, extra);
-	},
-
-	replyWithCopy(content, options) {
-		return this.telegram.sendCopy(this.chat.id, content, options);
 	},
 };
