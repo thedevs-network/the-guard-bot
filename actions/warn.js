@@ -41,7 +41,7 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 	const warnMessage = html`
 		⚠️ ${lrm}${admin.first_name} <b>warned</b> ${link(userToWarn)}.
 		${count}: ${lrm}${reason}
-		<i>${typeof expireWarnsAfter === 'undefined' || expireWarnsAfter === Infinity ? '' : `Expires on ${yyyymmdd(new Date(date.getTime() + ms(expireWarnsAfter)))}`}</i>
+		<i>${typeof expireWarnsAfter === 'undefined' || expireWarnsAfter === Infinity ? '' : `This warning expires on ${yyyymmdd(new Date(date.getTime() + ms(expireWarnsAfter)))}`}</i>
 	`;
 
 	if (recentWarns.length >= numberOfWarnsToBan) {
