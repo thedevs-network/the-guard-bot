@@ -38,6 +38,12 @@ export interface Config {
 		 * Pass false to disable this feature.
 		 */
 		report?: number | false;
+
+		/**
+		 * Disable whether clicking on `[Report handled]` deletes the
+		 * report chat message.
+		 */
+		noReportChatDeletion: boolean;
 	};
 
 	/**

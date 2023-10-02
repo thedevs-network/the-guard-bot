@@ -42,10 +42,11 @@ const config = {
 
 
 	chats: {
+
 		/**
 		 * @type {(number | false)}
-		 * Chat to send member (un)ban/(un)warn/report notifications and relevant messages to.
-		 * Pass false to disable this feature.
+		 * Chat to send member (un)ban/(un)warn/report notifications and
+		 * relevant messages to. Pass false to disable this feature.
 		 */
 		adminLog: false,
 
@@ -62,6 +63,13 @@ const config = {
 		 * Pass false to disable this feature.
 		 */
 		report: false,
+
+		/**
+		 * @type {(true | false)}
+		 * Disable whether clicking on `[Report handled]` deletes the
+		 * report chat message.
+		 */
+		noReportChatDeletion: false,
 	},
 
 	/**
@@ -73,7 +81,7 @@ const config = {
 
 	deleteCustom: {
 		longerThan: 450, // UTF-16 characters
-		after: '20 minutes'
+		after: '20 minutes',
 	},
 
 	/**
