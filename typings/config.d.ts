@@ -43,7 +43,7 @@ export interface Config {
 		 * Disable whether clicking on `[Report handled]` deletes the
 		 * report chat message.
 		 */
-		noReportChatDeletion: boolean;
+		noReportChatDeletion?: boolean;
 	};
 
 	/**
