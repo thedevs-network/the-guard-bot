@@ -1,4 +1,4 @@
-import type { InlineKeyboardMarkup } from "telegraf/typings/telegram-types";
+import type { InlineKeyboardMarkup } from "telegraf/types";
 
 export type InlineKeyboard = InlineKeyboardMarkup["inline_keyboard"];
 
@@ -25,7 +25,7 @@ export interface Config {
 		/**
 		 * Chat to log all admin actions to.
 		 */
-		adminLog?: number;
+		adminLog?: number | false;
 
 		/**
 		 * Chat to send member join/leave notifications to.
@@ -38,6 +38,12 @@ export interface Config {
 		 * Pass false to disable this feature.
 		 */
 		report?: number | false;
+
+		/**
+		 * Disable whether clicking on `[Report handled]` deletes the
+		 * report chat message.
+		 */
+		noReportChatDeletion: boolean;
 	};
 
 	/**

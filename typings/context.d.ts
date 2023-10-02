@@ -1,14 +1,12 @@
-import type {
-	ExtraReplyMessage,
-	Message,
-	User,
-} from "telegraf/typings/telegram-types";
+import type { Convenience, Message, Update, User } from "telegraf/types";
 import type { Context } from "telegraf";
 import type { TgHtml } from "../utils/html";
 
 interface DbUser {
 	status: "member" | "admin" | "banned";
 }
+
+type ExtraReplyMessage = Convenience.ExtraReplyMessage;
 
 export interface ContextExtensions {
 	ban(
@@ -17,6 +15,7 @@ export interface ContextExtensions {
 			admin: User;
 			reason: string;
 			userToBan: User;
+			msg?: Message;
 		}
 	): Promise<Message>;
 	batchBan(
@@ -35,27 +34,19 @@ export interface ContextExtensions {
 			reason: string;
 			userToWarn: User;
 			mode: "auto" | "manual";
+			msg?: Message;
 		}
 	): Promise<Message>;
 
 	loggedReply(
 		this: ExtendedContext,
 		html: TgHtml,
+		msg?: Message,
 		extra?: ExtraReplyMessage
-	): Promise<Message>;
-	replyWithHTML(
-		this: void,
-		html: string | TgHtml,
-		extra?: ExtraReplyMessage
-	): Promise<Message>;
-	replyWithCopy(
-		this: ExtendedContext,
-		content: Message,
-		options?: ExtraReplyMessage
 	): Promise<Message>;
 }
 
-export type ExtendedContext = ContextExtensions &
-	Context & {
+export type ExtendedContext<U extends Update = Update> = ContextExtensions &
+	Context<U> & {
 		from?: DbUser;
 	};

@@ -25,4 +25,4 @@ Object.defineProperty(bot.context, "botInfo", {
 
 // cyclic dependency
 // bot/index requires context requires actions/warn requires bot/index
-Object.assign(bot.context, require('./context'));
+Object.assign(bot.context, require('./context').extn);
