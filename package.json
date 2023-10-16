@@ -44,7 +44,7 @@
     "telegraf": "^4.13.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
-    "undici": "^5.24.0",
+    "undici": "^5.26.2",
     "xregexp": "^5.1.1"
   },
   "engines": {
