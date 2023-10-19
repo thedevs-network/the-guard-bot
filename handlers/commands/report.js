@@ -8,7 +8,7 @@ const {
 	msgLink,
 	scheduleDeletion,
 } = require('../../utils/tg');
-
+const { logError } = require('../../utils/log');
 const { chats = {} } = require('../../utils/config').config;
 
 const isQualified = member => member.status === 'creator' ||
@@ -41,12 +41,21 @@ const reportHandler = async ctx => {
 	});
 	if (chats.report) {
 		const msg = await ctx.telegram.forwardMessage(chats.report, ctx.chat.id, reply.message_id);
+
+		const parts = ctx.message.text.split(/\s+/)
+		parts.shift();
+		const reportMessage = parts.join(' ');
+		let reportReason = ''
+		if (reportMessage.trim() !== '') {
+			reportReason = `\nReport reason: ${reportMessage}`
+		}
+
 		await ctx.deleteMessage();
 		await ctx.telegram.sendMessage(
 			chats.report,
 			TgHtml.tag`❗️ ${link(ctx.from)} reported <a href="${msgLink(
 				reply,
-			)}">a message</a> from ${link(reply.from)} in ${ctx.chat.title}!`,
+			)}">a message</a> from ${link(reply.from)} in ${ctx.chat.title}!<i>${reportReason}</i>`,
 			{
 				parse_mode: 'HTML',
 				reply_to_message_id: msg.message_id,
