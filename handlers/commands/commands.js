@@ -37,7 +37,7 @@ const userCommands = `\
 <code>/staff</code> - Shows a list of admins.
 <code>/link</code> - Show the current group's link.
 <code>/groups</code> - Show a list of groups which the bot is admin in.
-<code>/report</code> - Reports the replied-to message to admins.\n
+<code>/report [reason]</code> - Reports the replied-to message to admins, reason is optional.\n
 `;
 const role = R.prop('role');
 const name = R.prop('name');
