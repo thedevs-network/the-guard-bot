@@ -8,7 +8,7 @@ const {
 	msgLink,
 	scheduleDeletion,
 } = require('../../utils/tg');
-const { logError } = require('../../utils/log');
+
 const { chats = {} } = require('../../utils/config').config;
 
 const isQualified = member => member.status === 'creator' ||
@@ -47,7 +47,7 @@ const reportHandler = async ctx => {
 		const reportMessage = parts.join(' ');
 		let reportReason = ''
 		if (reportMessage.trim() !== '') {
-			reportReason = `\nReport reason: ${reportMessage}`
+			reportReason = TgHtml.tag`\n\n\nReport reason: <i>${reportMessage}</i>`
 		}
 
 		await ctx.deleteMessage();
@@ -55,7 +55,7 @@ const reportHandler = async ctx => {
 			chats.report,
 			TgHtml.tag`❗️ ${link(ctx.from)} reported <a href="${msgLink(
 				reply,
-			)}">a message</a> from ${link(reply.from)} in ${ctx.chat.title}!<i>${reportReason}</i>`,
+			)}">a message</a> from ${link(reply.from)} in ${ctx.chat.title}!${reportReason}`,
 			{
 				parse_mode: 'HTML',
 				reply_to_message_id: msg.message_id,
