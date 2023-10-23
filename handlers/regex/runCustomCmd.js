@@ -62,6 +62,11 @@ const runCustomCmdHandler = async (ctx, next) => {
 		reply_to_message_id: getRepliedToId(ctx.message),
 	};
 
+	// Delete !trigger message
+	await ctx.deleteMessage()
+
+	// How to rework this to allow editing it in the bot?
+
 	return ctx[typeToMethod(type)](content, options)
 		.then(({ message_id }) =>
 			scheduleDeletion(
