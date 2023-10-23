@@ -68,7 +68,7 @@ Command                 | Role       | Available at | Description
 `/staff`                | _Everyone_ | _Everywhere_ | Shows a list of admins.
 `/link`                 | _Everyone_ | _Everywhere_ | Shows the current group's link.
 `/groups`               | _Everyone_ | _Everywhere_ | Shows a list of groups which the bot is admin in.
-`/report`               | _Everyone_ | _Everywhere_ | Reports the replied-to message to admins.
+`/report [reason]`      | _Everyone_ | _Everywhere_ | Reports the replied-to message to admins, reason is optional.
 `/commands`             | _Everyone_ | _In-Bot_     | Shows a list of available commands.
 `/help` \| `/start`     | _Everyone_ | _In-Bot_     | How to use the bot.
 
