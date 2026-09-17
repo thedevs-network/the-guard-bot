@@ -34,14 +34,14 @@ composer.use(leaveUnmanagedHandler);
 composer.use(monkeyPatchHandler);
 composer.use(updateUserDataHandler);
 
-composer.on('new_chat_members', syncStatusHandler, antibotHandler);
+composer.on(['new_chat_members', 'community_chat_joined'], syncStatusHandler, antibotHandler);
 composer.on('message', kickBannedHandler);
 composer.use(removeChannelForwardsHandler);
 composer.on([ 'edited_message', 'message' ], checkLinksHandler);
 composer.on('new_chat_title', updateGroupTitleHandler);
 composer.on('text', removeCommandsHandler);
 composer.on(
-	[ 'new_chat_members', 'left_chat_member' ],
+	[ 'new_chat_members', 'left_chat_member', 'community_chat_joined' ],
 	deleteAfter(deleteJoinsAfter),
 	presenceLogHandler,
 );

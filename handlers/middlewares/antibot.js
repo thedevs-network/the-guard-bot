@@ -1,14 +1,16 @@
 'use strict';
 
 const { pMap } = require('../../utils/promise');
+const { getNewChatMembers } = require('../../utils/config');
 
 const link = user => '@' + user.username;
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const antibotHandler = async (ctx, next) => {
 	const msg = ctx.message;
+	const newChatMembers = getNewChatMembers(msg);
 
-	const bots = msg.new_chat_members.filter(user =>
+	const bots = newChatMembers.filter(user =>
 		user.is_bot && user.username !== ctx.me);
 
 	if (bots.length === 0) {

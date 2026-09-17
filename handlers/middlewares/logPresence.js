@@ -1,6 +1,7 @@
 'use strict';
 
 const { chats = {} } = require('../../utils/config').config;
+const { getNewChatMembers } = require('../../utils/config');
 
 function getUserLink(user) {
 	const lastName = user.last_name ? ` ${user.last_name}` : '';
@@ -15,11 +16,12 @@ function getId(user) {
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 function log(ctx, next) {
 	if (!chats.presenceLog) return next();
-	if (ctx.message.new_chat_members) {
+	const newChatMembers = getNewChatMembers(ctx.message);
+	if (newChatMembers) {
 		ctx.telegram
 			.sendMessage(
 				chats.presenceLog,
-				ctx.message.new_chat_members.map(getUserLink).join(', ') +
+				newChatMembers.map(getUserLink).join(', ') +
 					' #joined ' +
 					ctx.chat.title,
 				{
@@ -28,8 +30,8 @@ function log(ctx, next) {
 						inline_keyboard: [
 							[
 								{
-									text: `🚫 Ban ${ctx.message.new_chat_members.length}`,
-									callback_data: `/ban ${ctx.message.new_chat_members
+									text: `🚫 Ban ${newChatMembers.length}`,
+									callback_data: `/ban ${newChatMembers
 										.map(getId)
 										.join(' ')} [joining]`,
 								},

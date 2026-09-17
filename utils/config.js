@@ -31,9 +31,14 @@ const isMaster = user =>
 		user.id === Number(x) ||
 		user.username && eq.username(user.username, String(x)));
 
+const getNewChatMembers = message =>
+	message?.new_chat_members ||
+	message?.community_chat_joined && [ message.from ];
+
 module.exports = {
 	config,
 	isMaster,
 	isWarnNotExpired,
 	expireWarnsAfter,
+	getNewChatMembers,
 };

@@ -4,6 +4,7 @@ const ms = require('millisecond');
 const spamwatch = require('../../utils/spamwatch');
 const { getUser } = require('../../stores/user');
 const { pMap } = require('../../utils/promise');
+const { getNewChatMembers } = require('../../utils/config');
 
 /**
  * @param { import('../../typings/context').ExtendedContext } ctx
@@ -20,7 +21,8 @@ const handleNewMember = async (ctx, newMember) => {
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const syncStatusHandler = (ctx, next) => {
-	pMap(ctx.message.new_chat_members, async newMember => {
+	const newChatMembers = getNewChatMembers(ctx.message);
+	pMap(newChatMembers, async newMember => {
 		if (newMember.is_bot) {
 			return null;
 		}
@@ -37,7 +39,7 @@ const syncStatusHandler = (ctx, next) => {
 				can_pin_messages: true,
 				can_promote_members: false,
 				can_restrict_members: true,
-			});
+			}).catch(err => console.log(err));
 		case 'banned':
 			return ctx.kickChatMember(newMember.id);
 		case 'member':
