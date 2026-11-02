@@ -28,11 +28,11 @@ Initially created to moderate [The Devs Network](https://thedevs.network).
 Overall, keeps the groups clean and healthy to use.
 
 ## Setup
-You need [Node.js](https://nodejs.org/) (>= 18) to run this bot.
+You need [Node.js](https://nodejs.org/) (>= 22) to run this bot. Older versions may work, but are not supported.
 
 1. Create a bot via [@BotFather](https://t.me/BotFather) and grab a **token**.
 2. Clone this repository or [download zip](https://github.com/TheDevs-Network/the-guard-bot/archive/master.zip).
-3. Install dependencies via `npm install`.
+3. Install the locked dependencies via `npm ci`.
 4. Copy `example.config.js` to `config.js` and edit it.
 5. Start the bot via `npm start`.
 
