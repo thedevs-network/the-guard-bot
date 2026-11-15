@@ -25,7 +25,7 @@
     "Wojciech Pawlik <woj.pawlik@gmail.com>",
     "Muthu Kumar <mkr@feathers.studio> (https://mkr.pw)",
     "Simon Schürrle (https://sitischu.com)",
-    "Martin Rys (https://rys.pw)"
+    "Martin Rys (https://rys.rs)"
   ],
   "license": "AGPL-3.0",
   "bugs": {
@@ -51,15 +51,15 @@
     "node": ">=22.23.4"
   },
   "devDependencies": {
-    "@types/node": "^13.13.52",
+    "@types/node": "^26.6.6",
     "@types/node-fetch": "^2.6.13",
-    "@types/ramda": "^0.25.51",
+    "@types/ramda": "^0.32.0",
     "@types/xregexp": "^4.4.0",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.72.2",
+    "@typescript-eslint/parser": "^8.72.2",
+    "eslint": "^10.15.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.7",
-    "prettier": "^3.9.10"
+    "prettier": "^3.10.1"
   }
 }
