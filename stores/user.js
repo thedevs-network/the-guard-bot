@@ -8,11 +8,12 @@
 // Utils
 const { strip } = require('../utils/cmd');
 
-const Datastore = require('nedb-promise');
+const Datastore = require('nedb-promises');
+const { logFatalError } = require('../utils/log');
 const ms = require('millisecond');
 const R = require('ramda');
 
-const User = new Datastore({
+const User = Datastore.create({
 	autoload: true,
 	filename: 'data/User.db',
 	timestampData: true,
@@ -21,27 +22,25 @@ const User = new Datastore({
 User.ensureIndex({
 	fieldName: 'id',
 	unique: true,
-});
+}).catch(logFatalError);
 
 User.ensureIndex({
 	fieldName: 'status',
-});
+}).catch(logFatalError);
 
 // Migration
 User.update(
 	{ username: '' },
 	{ $unset: { username: true } },
 	{ multi: true },
-).then(() =>
-	User.ensureIndex({ fieldName: 'username', sparse: true }));
+).then(() => User.ensureIndex({ fieldName: 'username', sparse: true }))
+	.catch(logFatalError);
 
 const normalizeTgUser = R.pipe(
 	R.pick([ 'first_name', 'id', 'last_name', 'username' ]),
 	R.evolve({ username: R.toLower }),
 	R.mergeRight({ first_name: '', last_name: '' }),
 );
-
-const getUpdatedDocument = R.prop(1);
 
 const getUser = user =>
 	User.findOne(user);
@@ -61,7 +60,7 @@ const updateUser = async (rawTgUser) => {
 			{ id },
 			{ status: 'member', warns: [], ...tgUser },
 			{ returnUpdatedDocs: true, upsert: true },
-		).then(getUpdatedDocument);
+		);
 	}
 
 	const dbUser = rawDbUser;
@@ -71,7 +70,7 @@ const updateUser = async (rawTgUser) => {
 			{ id },
 			{ $set: tgUser },
 			{ returnUpdatedDocs: true },
-		).then(getUpdatedDocument);
+		);
 	}
 
 	return dbUser;
@@ -109,7 +108,7 @@ const batchBan = (users, ban_details) =>
 		{ $or: users.map(strip), $not: { status: 'admin' } },
 		{ $set: { ban_details, status: 'banned' } },
 		{ multi: true, returnUpdatedDocs: true },
-	).then(getUpdatedDocument);
+	);
 
 const ensureExists = ({ id }) =>
 	id && User.insert({ id, status: 'member', warns: [] }).catch(R.F);
@@ -131,7 +130,7 @@ const permit = (user, { by_id, date }) =>
 		user,
 		{ $set: { permit: { by_id, date } } },
 		{ returnUpdatedDocs: true },
-	).then(getUpdatedDocument);
+	);
 
 /**
  * @param {UserQuery} user
@@ -141,7 +140,7 @@ permit.revoke = (user) =>
 		{ permit: { $exists: true }, ...strip(user) },
 		{ $unset: { permit: true } },
 		{ returnUpdatedDocs: true },
-	).then(getUpdatedDocument);
+	);
 
 permit.isValid = (p) => Date.now() - ms('24h') < p?.date;
 
@@ -154,7 +153,7 @@ const warn = ({ id }, reason, { amend }) =>
 			$unset: { permit: true },
 		},
 		{ returnUpdatedDocs: true },
-	).then(getUpdatedDocument);
+	);
 
 const unwarn = ({ id }, warnQuery) =>
 	User.update(

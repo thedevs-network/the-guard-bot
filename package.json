@@ -36,7 +36,7 @@
     "dedent-js": "^1.0.1",
     "jspack": "0.0.4",
     "millisecond": "^0.1.2",
-    "nedb-promise": "^2.0.1",
+    "nedb-promises": "^6.2.4",
     "ramda": "^0.29.1",
     "require-directory": "^2.1.1",
     "spamwatch": "^0.4.1",

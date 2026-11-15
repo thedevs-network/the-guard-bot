@@ -1,8 +1,9 @@
 'use strict';
 
-const Datastore = require('nedb-promise');
+const Datastore = require('nedb-promises');
+const { logFatalError } = require('../utils/log');
 
-const Command = new Datastore({
+const Command = Datastore.create({
 	autoload: true,
 	filename: 'data/Command.db',
 });
@@ -10,13 +11,13 @@ const Command = new Datastore({
 Command.ensureIndex({
 	fieldName: 'name',
 	unique: true,
-});
+}).catch(logFatalError);
 
 const addCommand = command =>
 	Command.update(
 		{ name: command.name },
 		{ $set: { isActive: false, ...command } },
-		{ upsert: true }
+		{ upsert: true },
 	);
 
 const updateCommand = (data) =>
@@ -27,7 +28,7 @@ const removeCommand = command => Command.remove(command);
 const getCommand = (data) => Command.findOne(data);
 
 const listCommands = () =>
-	Command.cfind({ isActive: true }).sort({ name: 1 }).exec();
+	Command.find({ isActive: true }).sort({ name: 1 }).exec();
 
 module.exports = {
 	addCommand,

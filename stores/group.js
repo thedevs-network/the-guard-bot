@@ -1,8 +1,9 @@
 'use strict';
 
-const Datastore = require('nedb-promise');
+const Datastore = require('nedb-promises');
+const { logFatalError } = require('../utils/log');
 
-const Group = new Datastore({
+const Group = Datastore.create({
 	autoload: true,
 	filename: 'data/Group.db',
 });
@@ -10,7 +11,7 @@ const Group = new Datastore({
 Group.ensureIndex({
 	fieldName: 'id',
 	unique: true,
-});
+}).catch(logFatalError);
 
 const addGroup = group =>
 	Group.update({ id: group.id }, group, { upsert: true });
