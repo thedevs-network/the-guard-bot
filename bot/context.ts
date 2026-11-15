@@ -75,8 +75,4 @@ export const extn: ContextExtensions = {
 		// @ts-expect-error sendMessage is monkeypatched to accept TgHtml
 		return this.replyWithHTML(html, extra);
 	},
-
-	replyWithCopy(content, options) {
-		return this.telegram.sendCopy(this.chat.id, content, options);
-	},
 };
