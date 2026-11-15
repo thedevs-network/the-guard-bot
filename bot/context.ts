@@ -1,10 +1,9 @@
-import warn from "../actions/warn";
 import ban from "../actions/ban";
 import batchBan from "../actions/batchBan";
-import { scheduleDeletion } from "../utils/tg";
-
 import { config } from "../utils/config";
 import { ContextExtensions } from "../typings/context";
+import { scheduleDeletion } from "../utils/tg";
+import warn from "../actions/warn";
 
 const {
 	warnInlineKeyboard,
