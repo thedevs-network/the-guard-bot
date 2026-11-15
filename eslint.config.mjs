@@ -1,22 +1,12 @@
 import { defineConfig } from "eslint/config";
-import { fileURLToPath } from "node:url";
-import { FlatCompat } from "@eslint/eslintrc";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
 import globals from "globals";
 import js from "@eslint/js";
-import path from "node:path";
 import tsParser from "@typescript-eslint/parser";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-	baseDirectory: __dirname,
-	recommendedConfig: js.configs.recommended,
-	allConfig: js.configs.all
-});
-
 export default defineConfig([{
-	extends: compat.extends("eslint:recommended"),
+	extends: [js.configs.recommended],
 
 	plugins: {
 		"@typescript-eslint": typescriptEslint,
@@ -256,12 +246,10 @@ export default defineConfig([{
 }, {
 	files: ["**/*.ts"],
 
-	extends: compat.extends(
-		"plugin:@typescript-eslint/recommended-requiring-type-checking",
-		"plugin:@typescript-eslint/eslint-recommended",
-		"plugin:@typescript-eslint/recommended",
-		"prettier",
-	),
+	extends: [
+		typescriptEslint.configs["flat/recommended-type-checked"],
+		eslintConfigPrettier,
+	],
 
 	rules: {
 		"@typescript-eslint/ban-ts-comment": "warn",
