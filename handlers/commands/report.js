@@ -22,8 +22,12 @@ const adminMention = ({ user }) =>
 const reportHandler = async ctx => {
 	if (!ctx.chat.type.endsWith('group')) return null;
 	// Ignore monospaced reports
-	if (ctx.message.entities?.[0]?.type === 'code' && ctx.message.entities[0].offset === 0)
+	if (
+		ctx.message.entities?.[0]?.type === 'code' &&
+		ctx.message.entities[0].offset === 0
+	) {
 		return null;
+	}
 	const reply = ctx.message.reply_to_message;
 	if (!reply) {
 		await ctx.deleteMessage();
@@ -34,20 +38,23 @@ const reportHandler = async ctx => {
 	const admins = (await ctx.getChatAdministrators())
 		.filter(isQualified)
 		.map(adminMention);
-	// eslint-disable-next-line max-len
 	const s = TgHtml.tag`❗️ <b>Message from ${link(reply.from)} was reported to the admins</b>.${TgHtml.join('', admins)}`;
 	const report = await ctx.replyWithHTML(s, {
 		reply_to_message_id: reply.message_id,
 	});
 	if (chats.report) {
-		const msg = await ctx.telegram.forwardMessage(chats.report, ctx.chat.id, reply.message_id);
+		const msg = await ctx.telegram.forwardMessage(
+			chats.report,
+			ctx.chat.id,
+			reply.message_id,
+		);
 
-		const parts = ctx.message.text.split(/\s+/)
+		const parts = ctx.message.text.split(/\s+/);
 		parts.shift();
 		const reportMessage = parts.join(' ');
-		let reportReason = ''
+		let reportReason = '';
 		if (reportMessage.trim() !== '') {
-			reportReason = TgHtml.tag`\n\n\nReport reason: <i>${reportMessage}</i>`
+			reportReason = TgHtml.tag`\n\n\nReport reason: <i>${reportMessage}</i>`;
 		}
 
 		await ctx.deleteMessage();

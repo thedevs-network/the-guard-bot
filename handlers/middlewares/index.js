@@ -34,7 +34,11 @@ composer.use(leaveUnmanagedHandler);
 composer.use(monkeyPatchHandler);
 composer.use(updateUserDataHandler);
 
-composer.on(['new_chat_members', 'community_chat_joined'], syncStatusHandler, antibotHandler);
+composer.on(
+	[ 'new_chat_members', 'community_chat_joined' ],
+	syncStatusHandler,
+	antibotHandler,
+);
 composer.on('message', kickBannedHandler);
 composer.use(removeChannelForwardsHandler);
 composer.on([ 'edited_message', 'message' ], checkLinksHandler);

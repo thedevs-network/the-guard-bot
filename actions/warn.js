@@ -34,7 +34,6 @@ module.exports = async ({ admin, amend, reason, userToWarn }) => {
 	const count = {
 		'-1': html`<b>${recentWarns.length}</b>/${numberOfWarnsToBan}`,
 		0: html`<b>Final warning</b>`,
-		// eslint-disable-next-line max-len
 		1: html`<b>${recentWarns.length}</b>/${numberOfWarnsToBan} (🚫 <b>banned</b>)`,
 	}[cmp(recentWarns.length + 1, numberOfWarnsToBan)];
 

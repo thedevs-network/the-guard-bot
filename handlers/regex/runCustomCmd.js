@@ -65,9 +65,10 @@ const runCustomCmdHandler = async (ctx, next) => {
 	return ctx[typeToMethod(type)](content, options)
 		.then(({ message_id }) =>
 			scheduleDeletion(
-				autoDelete(command) && deleteCustom.after)({
-					chat: ctx.chat, message_id
-				}));
+				autoDelete(command) && deleteCustom.after,
+			)({
+				chat: ctx.chat, message_id,
+			}));
 };
 
 module.exports = hears(/^! ?(\w+)/, runCustomCmdHandler);
