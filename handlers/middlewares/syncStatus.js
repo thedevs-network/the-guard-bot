@@ -1,23 +1,8 @@
 'use strict';
 
-const ms = require('millisecond');
-const spamwatch = require('../../utils/spamwatch');
 const { getUser } = require('../../stores/user');
 const { pMap } = require('../../utils/promise');
 const { getNewChatMembers } = require('../../utils/config');
-
-/**
- * @param { import('../../typings/context').ExtendedContext } ctx
- * @param { import('telegraf/typings/telegram-types').User } newMember
- */
-const handleNewMember = async (ctx, newMember) => {
-	if (await spamwatch.shouldKick(newMember)) {
-		const until_date = (Date.now() + ms('24h')) / 1000;
-		return ctx.banChatMember(newMember.id, until_date);
-	}
-
-	return null;
-};
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const syncStatusHandler = (ctx, next) => {
@@ -43,7 +28,7 @@ const syncStatusHandler = (ctx, next) => {
 		case 'banned':
 			return ctx.banChatMember(newMember.id);
 		case 'member':
-			return handleNewMember(ctx, newMember);
+			return null; // Used to have SpamWatch integration
 		default:
 			throw new Error(`Unexpected member status: ${dbUser.status}`);
 		}

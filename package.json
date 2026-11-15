@@ -39,7 +39,6 @@
     "nedb-promises": "^6.2.4",
     "ramda": "^0.32.0",
     "require-directory": "^2.1.1",
-    "spamwatch": "^0.4.1",
     "string-replace-async": "^3.0.2",
     "telegraf": "^4.16.3",
     "ts-node": "^10.9.2",

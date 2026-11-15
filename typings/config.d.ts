@@ -115,11 +115,6 @@ export interface Config {
 	 */
 	plugins?: string[];
 
-	spamwatch?: {
-		token: string;
-		host?: string;
-	};
-
 	/**
 	 * Inline keyboard to be added to warn message.
 	 * We use it to display button showing our rules.
