@@ -22,7 +22,7 @@ const antibotHandler = async (ctx, next) => {
 	}
 
 	await pMap(bots, bot =>
-		ctx.kickChatMember(bot.id));
+		ctx.banChatMember(bot.id));
 
 	await ctx.replyWithHTML(
 		`🚫 <b>Kicked bot(s):</b> ${bots.map(link).join(', ')}`,

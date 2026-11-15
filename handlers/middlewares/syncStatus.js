@@ -13,7 +13,7 @@ const { getNewChatMembers } = require('../../utils/config');
 const handleNewMember = async (ctx, newMember) => {
 	if (await spamwatch.shouldKick(newMember)) {
 		const until_date = (Date.now() + ms('24h')) / 1000;
-		return ctx.kickChatMember(newMember.id, until_date);
+		return ctx.banChatMember(newMember.id, until_date);
 	}
 
 	return null;
@@ -41,7 +41,7 @@ const syncStatusHandler = (ctx, next) => {
 				can_restrict_members: true,
 			}).catch(err => console.log(err));
 		case 'banned':
-			return ctx.kickChatMember(newMember.id);
+			return ctx.banChatMember(newMember.id);
 		case 'member':
 			return handleNewMember(ctx, newMember);
 		default:
