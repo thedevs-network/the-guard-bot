@@ -51,6 +51,8 @@
     "node": ">=22.23.4"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.7",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^26.6.6",
     "@types/node-fetch": "^2.6.13",
     "@types/ramda": "^0.32.0",
@@ -60,6 +62,7 @@
     "eslint": "^10.15.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.7",
+    "globals": "^17.14.0",
     "prettier": "^3.10.1"
   }
 }
