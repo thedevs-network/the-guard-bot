@@ -1,5 +1,5 @@
-import replace = require("string-replace-async");
 import { getCommand } from "../../stores/command";
+import replace from "string-replace-async";
 
 export const substom = (reason: string): Promise<string> =>
 	replace(reason, /!\s?(\w+)\s*|.+/g, async (match, name) => {
