@@ -46,6 +46,7 @@
 			"error",
 			"always"
 		],
+		"@typescript-eslint/no-deprecated": "warn",
 		"@typescript-eslint/no-base-to-string": "error",
 		"@typescript-eslint/no-floating-promises": "error",
 		"no-console": [ "error", { "allow": [ "assert" ] } ],
