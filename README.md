@@ -80,7 +80,7 @@ If used by reply, `/ban` and `/warn` would remove the replied-to message.
 
 The guard is extensible in form of plugins where custom features and commands can be easily added to it.
 
-See the [Plugins page on the Wiki](https://github.com/thedevs-network/the-guard-bot/wiki/Plugins) for more information.
+See the [Plugins page on the Wiki](https://github.com/thedevs-network/the-guard-bot/wiki/Plugins) for more information and the [the-guard-bot-plugins](https://github.com/thedevs-network/the-guard-bot-plugins) repository for example plugins.
 
 ## Support
 
