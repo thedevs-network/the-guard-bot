@@ -18,10 +18,16 @@ const capitalize = R.replace(/^./, R.toUpper);
 
 const getRepliedToId = R.path([ 'reply_to_message', 'message_id' ]);
 
-const typeToMethod = type =>
-	type === 'text'
-		? 'replyWithHTML'
-		: `replyWith${capitalize(type)}`;
+const typeToMethod = type => {
+	switch (type) {
+	case 'text':
+		return 'replyWithHTML';
+	case 'copy':
+		return 'copyMessage';
+	default:
+		return `replyWith${capitalize(type)}`;
+	}
+};
 
 const autoDelete = ({ content, type }) => {
 	switch (type) {
@@ -62,7 +68,17 @@ const runCustomCmdHandler = async (ctx, next) => {
 		reply_to_message_id: getRepliedToId(ctx.message),
 	};
 
-	return ctx[typeToMethod(type)](content, options)
+	const method = typeToMethod(type);
+	const response = method === 'copyMessage'
+		? ctx.telegram[method](
+			ctx.chat.id,
+			content.chat.id,
+			content.message_id,
+			options,
+		)
+		: ctx[method](content, options);
+
+	return response
 		.then(({ message_id }) =>
 			scheduleDeletion(
 				autoDelete(command) && deleteCustom.after,
