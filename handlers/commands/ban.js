@@ -12,7 +12,7 @@ const { getUser } = require('../../stores/user');
 
 /** @param { import('../../typings/context').ExtendedContext } ctx */
 const banHandler = async (ctx) => {
-	if (ctx.chat.type === 'private') {
+        if (ctx.chat.type === 'private') {
 		return ctx.replyWithHTML(
 			'ℹ️ <b>This command is only available in groups.</b>',
 		);
@@ -52,12 +52,19 @@ const banHandler = async (ctx) => {
 		return ctx.replyWithHTML('ℹ️ <b>Can\'t ban other admins.</b>');
 	}
 
-	if (!flags.has('amend') && userToBan.status === 'banned') {
+        if (!flags.has('amend') && userToBan.status === 'banned') {
+	        if (ctx.message.reply_to_message) {
+		    ctx.telegram
+			.deleteMessage(
+			    ctx.message.reply_to_message.chat.id,
+			    ctx.message.reply_to_message.message_id
+			).catch(() => null)
+	        }
 		return ctx.replyWithHTML(
 			html`🚫 ${displayUser(userToBan)} <b>is already banned.</b>`,
-		);
+		).then(scheduleDeletion(10 * 1000));
 	}
-
+        
 	return ctx.ban({
 		admin: ctx.from,
 		reason: '[' + ctx.chat.title + '] ' + await substom(reason),
